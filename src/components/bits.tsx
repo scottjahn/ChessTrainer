@@ -16,15 +16,48 @@ export const formatDate = (iso: string | null | undefined): string =>
     ? new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
     : '—';
 
-/** "180" and "600+5" are chess.com's raw time controls; show them as minutes. */
+const DURATION_UNITS: [number, string][] = [
+  [86400, 'day'],
+  [3600, 'hour'],
+  [60, 'min'],
+  [1, 'sec'],
+];
+
+/** Seconds as the largest unit that fits: 259200 -> "3 days", 180 -> "3 min". */
+function formatDuration(seconds: number): string {
+  const [size, unit] = DURATION_UNITS.find(([s]) => seconds >= s) ?? DURATION_UNITS[3];
+  const value = seconds / size;
+  const shown = Number.isInteger(value) ? String(value) : value.toFixed(1);
+  const plural = value === 1 || unit === 'min' || unit === 'sec' ? '' : 's';
+  return `${shown} ${unit}${plural}`;
+}
+
+/**
+ * chess.com's raw time controls: "180" and "600+5" are live games in seconds
+ * (base + increment), "1/259200" is a daily game at one move per 3 days.
+ */
 export function formatTimeControl(tc: string | null | undefined, cls?: string | null): string {
   if (!tc) return cls ?? '—';
+
+  const daily = /^(\d+)\/(\d+)$/.exec(tc);
+  if (daily) {
+    const perMove = formatDuration(Number(daily[2]));
+    return daily[1] === '1' ? `${perMove}/move` : `${daily[1]} moves / ${perMove}`;
+  }
+
   const [base, inc] = tc.split('+');
   const seconds = Number(base);
+  const increment = Number(inc ?? 0);
   if (!Number.isFinite(seconds)) return cls ? `${cls} · ${tc}` : tc;
-  const minutes = seconds % 60 === 0 ? `${seconds / 60}` : (seconds / 60).toFixed(1);
-  const label = `${minutes}${inc && inc !== '0' ? `+${inc}` : ''}`;
-  return cls ? `${label} ${cls}` : `${label} min`;
+
+  // Chess shorthand puts the base in minutes and the increment in seconds:
+  // "120+1" is 2+1 min. Under a minute there are no minutes to shorten.
+  const minutes = seconds / 60;
+  const label =
+    seconds >= 60 && increment
+      ? `${Number.isInteger(minutes) ? minutes : minutes.toFixed(1)}+${increment} min`
+      : `${formatDuration(seconds)}${increment ? ` +${increment} sec` : ''}`;
+  return cls ? `${label} ${cls}` : label;
 }
 
 const RESULT_WORD: Record<string, string> = { win: 'Won', loss: 'Lost', draw: 'Drew' };

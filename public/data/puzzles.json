@@ -1,10 +1,165 @@
 {
   "version": 1,
-  "exportedAt": "2026-09-18T00:40:06.663Z",
+  "exportedAt": "2026-09-18T23:05:17.348Z",
   "counts": {
-    "puzzles": 0,
-    "games": 0
+    "puzzles": 5,
+    "games": 1
   },
-  "games": {},
-  "puzzles": []
+  "games": {
+    "1": {
+      "id": 1,
+      "url": "https://www.chess.com/game/daily/1023653644",
+      "event": "Let's Play!",
+      "white": "imapotato921",
+      "black": "scottjahn",
+      "whiteElo": 716,
+      "blackElo": 698,
+      "result": "1-0",
+      "playedAt": "2026-09-03T13:32:49Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "C45",
+      "ecoUrl": "https://www.chess.com/openings/Scotch-Game-Scotch-Gambit-Haxo-Gambit-5.c3",
+      "termination": "imapotato921 won by resignation",
+      "hero": "scottjahn",
+      "heroColor": "b",
+      "heroResult": "loss",
+      "whiteAccuracy": 89.32,
+      "blackAccuracy": 84.47
+    }
+  },
+  "puzzles": [
+    {
+      "id": 1,
+      "gameId": 1,
+      "ply": 31,
+      "fen": "r2qkr2/ppp4p/5np1/4Q3/6b1/8/PB3PPP/RN3RK1 b - - 0 16",
+      "sideToMove": "b",
+      "playedSan": "Qe7",
+      "playedUci": "d8e7",
+      "solutionSan": "Kf7",
+      "solutionUci": "e8f7",
+      "altSolutions": [],
+      "classification": "inaccuracy",
+      "wpLoss": 9.176711281233647,
+      "evalBefore": {
+        "type": "cp",
+        "value": -186
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -308
+      },
+      "fenPrev": "r2qkr2/ppp4p/5np1/4n1Q1/6b1/8/PB3PPP/RN3RK1 w - - 0 16",
+      "prevSan": "Qxe5+",
+      "prevUci": "g5e5",
+      "note": "Allows for Ba3 skewer after white queen moves to safety"
+    },
+    {
+      "id": 2,
+      "gameId": 1,
+      "ply": 33,
+      "fen": "r3kr2/ppp1q2p/5np1/6Q1/6b1/8/PB3PPP/RN3RK1 b - - 2 17",
+      "sideToMove": "b",
+      "playedSan": "Be6",
+      "playedUci": "g4e6",
+      "solutionSan": "Kf7",
+      "solutionUci": "e8f7",
+      "altSolutions": [
+        "g4f5"
+      ],
+      "classification": "mistake",
+      "wpLoss": 10.032066944862734,
+      "evalBefore": {
+        "type": "cp",
+        "value": -291
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -461
+      },
+      "fenPrev": "r3kr2/ppp1q2p/5np1/4Q3/6b1/8/PB3PPP/RN3RK1 w - - 1 17",
+      "prevSan": "Qg5",
+      "prevUci": "e5g5",
+      "note": "Avoiding skewer following Ba3 (.. c5 blocks, and the queen can recapture if Bxc5)"
+    },
+    {
+      "id": 3,
+      "gameId": 1,
+      "ply": 35,
+      "fen": "r3kr2/ppp1q2p/4bnp1/6Q1/8/8/PB1N1PPP/R4RK1 b - - 4 18",
+      "sideToMove": "b",
+      "playedSan": "Kf7",
+      "playedUci": "e8f7",
+      "solutionSan": "Nd5",
+      "solutionUci": "f6d5",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 19.84937880931563,
+      "evalBefore": {
+        "type": "cp",
+        "value": -49
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -289
+      },
+      "fenPrev": "r3kr2/ppp1q2p/4bnp1/6Q1/8/8/PB3PPP/RN3RK1 w - - 3 18",
+      "prevSan": "Nd2",
+      "prevUci": "b1d2",
+      "note": "Make him trade queens or back off"
+    },
+    {
+      "id": 4,
+      "gameId": 1,
+      "ply": 41,
+      "fen": "3r1r2/ppp1qk1p/4b1p1/4N1Q1/6n1/8/PB3PPP/R3R1K1 b - - 10 21",
+      "sideToMove": "b",
+      "playedSan": "Ke8",
+      "playedUci": "f7e8",
+      "solutionSan": "Nxe5",
+      "solutionUci": "g4e5",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 13.735503422741576,
+      "evalBefore": {
+        "type": "cp",
+        "value": -307
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -577
+      },
+      "fenPrev": "3r1r2/ppp1qk1p/4b1p1/6Q1/6n1/5N2/PB3PPP/R3R1K1 w - - 9 21",
+      "prevSan": "Ne5+",
+      "prevUci": "f3e5",
+      "note": null
+    },
+    {
+      "id": 5,
+      "gameId": 1,
+      "ply": 57,
+      "fen": "2k1r3/pp5N/6p1/2p5/6P1/8/PB3P1P/5K2 b - - 0 29",
+      "sideToMove": "b",
+      "playedSan": "Re7",
+      "playedUci": "e8e7",
+      "solutionSan": "b5",
+      "solutionUci": "b7b5",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 10.146988585357231,
+      "evalBefore": {
+        "type": "cp",
+        "value": -188
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -325
+      },
+      "fenPrev": "2k1r3/pp5N/6p1/2p5/8/8/PB3PPP/5K2 w - - 0 29",
+      "prevSan": "g4",
+      "prevUci": "g2g4",
+      "note": "Need to push pawns, no time to move rook"
+    }
+  ]
 }

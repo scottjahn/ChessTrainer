@@ -340,6 +340,7 @@ label.field > span {
   font-size: 16px;
   font-weight: 600;
 }
+.board-nav { justify-content: center; }
 .verdict { font-size: 15px; font-weight: 650; min-height: 24px; display: flex; align-items: center; gap: 7px; }
 .verdict.good { color: var(--c-best); }
 .verdict.bad { color: var(--c-blunder); }
