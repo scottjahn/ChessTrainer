@@ -1,0 +1,13 @@
+node_modules/
+dist/
+
+# Your game library lives here. It is personal data and stays on your machine;
+# the -wal/-shm files are SQLite's write-ahead log sidecars.
+data/*.db
+data/*.db-*
+
+# Stockfish WASM, restored by the postinstall script.
+engine/
+
+.DS_Store
+*.local
