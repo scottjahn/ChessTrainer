@@ -13,8 +13,13 @@ try {
   console.error(
     `\nThis app stores games in SQLite using Node's built-in node:sqlite module,\n` +
     `which is not available in the Node you are running (${process.version}).\n\n` +
-    `  Fix:  install Node 24 (nvm install 24 && nvm use 24)\n` +
-    `  Or:   on Node 22.x, start it with  node --experimental-sqlite server/index.mjs\n`
+    `Node 24 is required. Use whichever tool you already have:\n\n` +
+    `  Homebrew   brew install node        then reopen your terminal\n` +
+    `  nvm        nvm install 24 && nvm use 24\n` +
+    `  fnm        fnm install 24 && fnm use 24\n` +
+    `  Installer  https://nodejs.org/en/download\n\n` +
+    `Already on Node 22.x? You can instead start the API as:\n` +
+    `  node --experimental-sqlite server/index.mjs\n`
   );
   process.exit(1);
 }
