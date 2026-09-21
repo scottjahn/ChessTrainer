@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { HashRouter, NavLink, Navigate, Route, Routes } from 'react-router-dom';
 import { checkLocalApi } from './lib/api';
+import { CONTACT_EMAIL, REPO_URL } from './lib/links';
 import { Trainer } from './pages/Trainer';
 import { Progress } from './pages/Progress';
 import { AdminHome } from './pages/AdminHome';
@@ -43,12 +44,21 @@ export function App() {
           <main className="main">
             <Routes>
               <Route path="/" element={<Trainer />} />
+              <Route path="/puzzle/:puzzleId" element={<Trainer />} />
               <Route path="/progress" element={<Progress />} />
               <Route path="/admin" element={local ? <AdminHome /> : <Navigate to="/" replace />} />
               <Route path="/admin/game/:id" element={local ? <AdminGame /> : <Navigate to="/" replace />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
+
+          <footer className="sitefoot">
+            <a href={`mailto:${CONTACT_EMAIL}`}>Contact</a>
+            <span aria-hidden>•</span>
+            <a href={`${REPO_URL}/issues`} target="_blank" rel="noreferrer">
+              Report Issue
+            </a>
+          </footer>
         </div>
       </HashRouter>
     </LocalApiContext.Provider>

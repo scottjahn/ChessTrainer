@@ -250,6 +250,19 @@ app.delete('/api/puzzles/:id', wrap((req, res) => {
 
 app.get('/api/puzzles', (_req, res) => res.json(buildPuzzlePayload()));
 
+/**
+ * A flat list of every puzzle for the admin's finder — including disabled ones,
+ * which the trainer payload leaves out, and with just enough of the game to
+ * recognise it in a result row.
+ */
+app.get('/api/puzzles/index', (_req, res) => {
+  res.json(db.prepare(`
+    SELECT p.id, p.game_id, p.ply, p.played_san, p.solution_san, p.classification,
+           p.note, p.enabled, g.white, g.black, g.played_at
+    FROM puzzles p JOIN games g ON g.id = p.game_id
+    ORDER BY p.id DESC`).all().map((r) => ({ ...r, enabled: !!r.enabled })));
+});
+
 /* ------------------------------------------------------------------- stats */
 
 app.get('/api/stats', (_req, res) => res.json(db.prepare('SELECT * FROM stats').all()));

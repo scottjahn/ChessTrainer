@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatDate, formatTimeControl } from '../components/bits';
 import { api } from '../lib/api';
-import type { Game, RemoteGame, Settings } from '../lib/types';
+import { CLASSIFICATION_META } from '../lib/classify';
+import type { Game, PuzzleIndexRow, RemoteGame, Settings } from '../lib/types';
 
 export function AdminHome() {
   const [settings, setSettings] = useState<Settings | null>(null);
@@ -64,6 +65,8 @@ export function AdminHome() {
         } />
       </div>
 
+      <FindPuzzleCard />
+
       <RecentGamesCard
         username={settings.heroUsername}
         onImport={(url) =>
@@ -90,6 +93,90 @@ export function AdminHome() {
           })
         }
       />
+    </div>
+  );
+}
+
+/**
+ * Puzzles live under the game they came from, which is no help when all you
+ * have is an id from a bug report. This looks one up directly.
+ */
+function FindPuzzleCard() {
+  const [rows, setRows] = useState<PuzzleIndexRow[] | null>(null);
+  const [query, setQuery] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    api.puzzleIndex().then(setRows).catch((e) => setError((e as Error).message));
+  }, []);
+
+  // "12", "#12" and a pasted trainer link all mean puzzle 12.
+  const term = query.trim().replace(/^.*#\/puzzle\//, '').replace(/^#/, '').toLowerCase();
+
+  const hits = useMemo(() => {
+    if (!rows || !term) return [];
+    const byId = Number(term);
+    const matches = Number.isInteger(byId) && String(byId) === term
+      ? rows.filter((r) => r.id === byId)
+      : rows.filter((r) =>
+        [r.solution_san, r.played_san, r.classification, r.white, r.black, r.note]
+          .some((f) => f?.toLowerCase().includes(term))
+      );
+    return matches.slice(0, 12);
+  }, [rows, term]);
+
+  return (
+    <div className="card">
+      <div className="card-head">
+        <h2>Find a puzzle</h2>
+        <input
+          type="search"
+          style={{ width: 260 }}
+          value={query}
+          placeholder="puzzle id, move, or opponent"
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <span className="tiny faint">{rows ? `${rows.length} puzzles` : 'loading…'}</span>
+      </div>
+
+      {error && <div className="banner err">{error}</div>}
+
+      {!term ? (
+        <p className="tiny faint" style={{ margin: 0 }}>
+          Search by id (from a puzzle link or a bug report), or by move, classification or opponent.
+        </p>
+      ) : !hits.length ? (
+        <p className="tiny faint" style={{ margin: 0 }}>Nothing matches “{query.trim()}”.</p>
+      ) : (
+        <table className="table">
+          <tbody>
+            {hits.map((r) => (
+              <tr key={r.id}>
+                <td className="mono" style={{ width: 54 }}>#{r.id}</td>
+                <td style={{ width: 34 }}>
+                  <span title={r.classification} style={{ color: CLASSIFICATION_META[r.classification].color }}>
+                    {CLASSIFICATION_META[r.classification].icon}
+                  </span>
+                </td>
+                <td>
+                  <span className="faint mono">{r.played_san}</span>
+                  <span className="faint"> → </span>
+                  <b className="mono">{r.solution_san}</b>
+                  {!r.enabled && <span className="tiny faint"> · disabled</span>}
+                </td>
+                <td className="tiny muted">
+                  {r.white} <span className="faint">vs</span> {r.black}
+                  <div className="tiny faint">{formatDate(r.played_at)}</div>
+                </td>
+                <td className="num" style={{ whiteSpace: 'nowrap' }}>
+                  <Link className="btn small" to={`/admin/game/${r.game_id}?puzzle=${r.id}`}>Edit</Link>{' '}
+                  <a className="btn small" href={`#/puzzle/${r.id}`}>Train</a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

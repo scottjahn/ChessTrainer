@@ -101,6 +101,19 @@ a { color: var(--accent); }
 
 .main { flex: 1; padding: 22px 20px 48px; max-width: 1240px; width: 100%; margin: 0 auto; }
 
+.sitefoot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px 22px;
+  border-top: 1px solid var(--border-soft);
+  font-size: 13px;
+  color: var(--text-faint);
+}
+.sitefoot a { color: var(--text-dim); text-decoration: none; }
+.sitefoot a:hover { color: var(--accent); text-decoration: underline; }
+
 /* ----------------------------------------------------------------- layout */
 
 .cols {
@@ -128,6 +141,23 @@ a { color: var(--accent); }
   margin-bottom: 12px;
 }
 .card-head h2 { margin-right: auto; }
+
+details.collapsible > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  list-style: none;
+}
+details.collapsible > summary::-webkit-details-marker { display: none; }
+details.collapsible > summary::after {
+  content: '\25be';
+  margin-left: auto;
+  color: var(--text-faint);
+  transition: transform 0.15s;
+}
+details.collapsible[open] > summary::after { transform: rotate(180deg); }
+details.collapsible > summary > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ------------------------------------------------------------------ board */
 
@@ -341,10 +371,30 @@ label.field > span {
   font-weight: 600;
 }
 .board-nav { justify-content: center; }
+
+/* A red ring the moment a move is refused — the verdict text sits off to the
+   side, so the board has to say it too. */
+.board-alert {
+  position: absolute;
+  inset: -3px;
+  border: 3px solid var(--c-blunder);
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 3;
+  animation: wrong-flash 0.5s ease-out;
+}
+@keyframes wrong-flash {
+  0% { box-shadow: 0 0 0 0 rgba(250, 65, 45, 0.5); }
+  100% { box-shadow: 0 0 0 16px rgba(250, 65, 45, 0); }
+}
+
+.controls { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-soft); }
+button.wide { justify-content: center; }
 .verdict { font-size: 15px; font-weight: 650; min-height: 24px; display: flex; align-items: center; gap: 7px; }
-.verdict.good { color: var(--c-best); }
-.verdict.bad { color: var(--c-blunder); }
-.verdict.shown { color: var(--c-inaccuracy); }
+/* The state word is a span inside .verdict, so colour the descendant. */
+.verdict .good { color: var(--c-best); }
+.verdict .bad { color: var(--c-blunder); }
+.verdict .shown { color: var(--c-inaccuracy); }
 
 .meta-grid {
   display: grid;

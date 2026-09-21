@@ -62,6 +62,15 @@ export function formatTimeControl(tc: string | null | undefined, cls?: string | 
 
 const RESULT_WORD: Record<string, string> = { win: 'Won', loss: 'Lost', draw: 'Drew' };
 
+/** The one-liner that stands in for the game card while it is collapsed. */
+export function gameSummary(game: ExportedGame | undefined, side: 'w' | 'b'): string {
+  if (!game) return 'details missing';
+  const heroIsWhite = (game.heroColor ?? side) === 'w';
+  const them = (heroIsWhite ? game.black : game.white) ?? 'opponent';
+  const result = game.heroResult ? RESULT_WORD[game.heroResult] : game.result ?? '—';
+  return `${result} vs ${them} · ${formatDate(game.playedAt)}`;
+}
+
 export function GameMeta({ game, side }: { game: ExportedGame | undefined; side: 'w' | 'b' }) {
   if (!game) return <p className="muted tiny">Game details are missing from this export.</p>;
 

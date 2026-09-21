@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Chess } from 'chess.js';
 import { Board } from '../components/Board';
 import { ClassPill, formatDate, formatTimeControl } from '../components/bits';
@@ -25,6 +25,7 @@ interface Progress {
 
 export function AdminGame() {
   const gameId = Number(useParams().id);
+  const [search, setSearch] = useSearchParams();
   const [detail, setDetail] = useState<GameDetail | null>(null);
   const [settings, setSettings] = useState<Settings | null>(null);
   const [rows, setRows] = useState<Map<number, AnalysisRow>>(new Map());
@@ -178,6 +179,18 @@ export function AdminGame() {
     },
     [puzzles, rows]
   );
+
+  // ?puzzle=<id> arrives from the admin's finder: open that one for editing.
+  const wantedPuzzle = search.get('puzzle');
+  useEffect(() => {
+    if (!detail || !wantedPuzzle) return;
+    const match = puzzles.find((p) => String(p.id) === wantedPuzzle);
+    if (match) startEdit(match.ply);
+    else setError(`Puzzle ${wantedPuzzle} does not belong to this game.`);
+    // Drop the parameter so a later edit of another puzzle is not undone by it.
+    setSearch({}, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detail, wantedPuzzle]);
 
   const savePuzzle = useCallback(async () => {
     if (editPly == null || !draft?.uci || !detail) return;
@@ -652,6 +665,7 @@ function SavedPuzzles({
           <tbody>
             {puzzles.map((p) => (
               <tr key={p.id}>
+                <td className="mono faint tiny" style={{ width: 40 }}>#{p.id}</td>
                 <td className="mono" style={{ width: 70 }}>{moveLabel(p.ply)}</td>
                 <td>
                   <span className="faint mono">{p.played_san}</span>

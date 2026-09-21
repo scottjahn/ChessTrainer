@@ -12,6 +12,10 @@ export interface BoardProps {
   arrows?: { startSquare: string; endSquare: string; color: string }[];
   lastMove?: { from: string; to: string } | null;
   animate?: boolean;
+  /** Ring the board to show how the last attempt went. */
+  status?: 'wrong' | null;
+  /** Change this to replay the ring's flash on a repeat attempt. */
+  statusKey?: number;
 }
 
 const HINT_DOT: React.CSSProperties = {
@@ -31,6 +35,8 @@ export function Board({
   arrows,
   lastMove,
   animate = true,
+  status = null,
+  statusKey = 0,
 }: BoardProps) {
   const [selected, setSelected] = useState<string | null>(null);
   const [promotion, setPromotion] = useState<{ from: string; to: string } | null>(null);
@@ -101,6 +107,7 @@ export function Board({
 
   return (
     <div className="board-wrap">
+      {status === 'wrong' && <div key={statusKey} className="board-alert" aria-hidden />}
       <Chessboard
         options={{
           position: fen,

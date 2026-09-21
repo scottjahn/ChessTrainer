@@ -137,6 +137,21 @@ export interface Puzzle {
   created_at: string;
 }
 
+/** One row of the admin's puzzle finder. */
+export interface PuzzleIndexRow {
+  id: number;
+  game_id: number;
+  ply: number;
+  played_san: string | null;
+  solution_san: string;
+  classification: Classification;
+  note: string | null;
+  enabled: boolean;
+  white: string | null;
+  black: string | null;
+  played_at: string | null;
+}
+
 /* ---- the exported (public) shape the trainer reads ---- */
 
 export interface ExportedGame {

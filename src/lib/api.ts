@@ -1,4 +1,4 @@
-import type { AnalysisRow, Game, Ply, Puzzle, PuzzlePack, RemoteGame, Settings } from './types';
+import type { AnalysisRow, Game, Ply, Puzzle, PuzzleIndexRow, PuzzlePack, RemoteGame, Settings } from './types';
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(path, {
@@ -72,6 +72,7 @@ export const api = {
   deletePuzzle: (id: number) => request<{ ok: true }>(`/api/puzzles/${id}`, { method: 'DELETE' }),
 
   puzzles: () => request<PuzzlePack>('/api/puzzles'),
+  puzzleIndex: () => request<PuzzleIndexRow[]>('/api/puzzles/index'),
   exportPuzzles: () =>
     post<{ ok: true; path: string; bytes: number; counts: { puzzles: number; games: number } }>(
       '/api/export'

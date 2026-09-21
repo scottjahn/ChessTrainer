@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "exportedAt": "2026-09-18T23:05:17.348Z",
+  "exportedAt": "2026-09-21T21:07:07.777Z",
   "counts": {
-    "puzzles": 5,
-    "games": 1
+    "puzzles": 8,
+    "games": 2
   },
   "games": {
     "1": {
@@ -26,6 +26,27 @@
       "heroResult": "loss",
       "whiteAccuracy": 89.32,
       "blackAccuracy": 84.47
+    },
+    "2": {
+      "id": 2,
+      "url": "https://www.chess.com/game/daily/1025634380",
+      "event": "Let's Play!",
+      "white": "scottjahn",
+      "black": "testaccount1999",
+      "whiteElo": 677,
+      "blackElo": 1375,
+      "result": "0-1",
+      "playedAt": "2026-09-07T16:25:57Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "C40",
+      "ecoUrl": "https://www.chess.com/openings/Kings-Pawn-Opening-Kings-Knight-Variation",
+      "termination": "testaccount1999 won by resignation",
+      "hero": "scottjahn",
+      "heroColor": "w",
+      "heroResult": "loss",
+      "whiteAccuracy": 69.84,
+      "blackAccuracy": 81.91
     }
   },
   "puzzles": [
@@ -160,6 +181,84 @@
       "prevSan": "g4",
       "prevUci": "g2g4",
       "note": "Need to push pawns, no time to move rook"
+    },
+    {
+      "id": 6,
+      "gameId": 2,
+      "ply": 16,
+      "fen": "r1bqk2r/p1p2ppp/3p1n2/1nb5/2N1P3/8/PPPPBPPP/R1BQ1RK1 w kq - 0 9",
+      "sideToMove": "w",
+      "playedSan": "Nxd6+",
+      "playedUci": "c4d6",
+      "solutionSan": "c3",
+      "solutionUci": "c2c3",
+      "altSolutions": [],
+      "classification": "blunder",
+      "wpLoss": 38.15208434977813,
+      "evalBefore": {
+        "type": "cp",
+        "value": 80
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -391
+      },
+      "fenPrev": "r1bqk2r/p1p2ppp/3p1n2/1Nb5/2NnP3/8/PPPPBPPP/R1BQ1RK1 b kq - 0 8",
+      "prevSan": "Nxb5",
+      "prevUci": "d4b5",
+      "note": null
+    },
+    {
+      "id": 7,
+      "gameId": 2,
+      "ply": 22,
+      "fen": "r1b1k2r/p1p2ppp/3P4/2b5/4n2q/8/PPPPBPPP/R1BQ1RK1 w kq - 1 12",
+      "sideToMove": "w",
+      "playedSan": "g3",
+      "playedUci": "g2g3",
+      "solutionSan": "d4",
+      "solutionUci": "d2d4",
+      "altSolutions": [],
+      "classification": "blunder",
+      "wpLoss": 38.86171495618236,
+      "evalBefore": {
+        "type": "cp",
+        "value": 0
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -564
+      },
+      "fenPrev": "r1bqk2r/p1p2ppp/3P4/2b5/4n3/8/PPPPBPPP/R1BQ1RK1 b kq - 0 11",
+      "prevSan": "Qh4",
+      "prevUci": "d8h4",
+      "note": "blocks the pin on f2, and allows for loss of castling rights + material win after a long series of checks and trades"
+    },
+    {
+      "id": 8,
+      "gameId": 2,
+      "ply": 24,
+      "fen": "r1b1k2r/p1p2ppp/3P4/2b5/7q/6n1/PPPPBP1P/R1BQ1RK1 w kq - 0 13",
+      "sideToMove": "w",
+      "playedSan": "hxg3",
+      "playedUci": "h2g3",
+      "solutionSan": "Bb5+",
+      "solutionUci": "e2b5",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 11.358833698592179,
+      "evalBefore": {
+        "type": "cp",
+        "value": -558
+      },
+      "evalAfter": {
+        "type": "mate",
+        "value": -11
+      },
+      "fenPrev": "r1b1k2r/p1p2ppp/3P4/2b5/4n2q/6P1/PPPPBP1P/R1BQ1RK1 b kq - 0 12",
+      "prevSan": "Nxg3",
+      "prevUci": "e4g3",
+      "note": "Check the king, cause loss of castling rights, win more material before eventually losing the rook"
     }
   ]
 }
