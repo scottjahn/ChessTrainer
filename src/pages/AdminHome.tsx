@@ -340,7 +340,8 @@ function RecentGamesCard({ username, onImport }: { username: string; onImport: (
           <thead>
             <tr>
               <th>Players</th>
-              <th>Date</th>
+              <th>Started</th>
+              <th>Finished</th>
               <th>Control</th>
               <th>Result</th>
               <th className="num">Accuracy</th>
@@ -356,6 +357,7 @@ function RecentGamesCard({ username, onImport }: { username: string; onImport: (
                   {g.black} <span className="faint">({g.black_elo})</span>
                 </td>
                 <td className="tiny muted">{formatDate(g.played_at)}</td>
+                <td className="tiny muted">{formatDate(g.ended_at)}</td>
                 <td className="tiny muted">{formatTimeControl(g.time_control, g.time_class)}</td>
                 <td className="mono tiny">{g.result}</td>
                 <td className="num tiny muted">
@@ -409,7 +411,8 @@ function GamesCard({
           <thead>
             <tr>
               <th>Players</th>
-              <th>Date</th>
+              <th>Started</th>
+              <th>Finished</th>
               <th>You</th>
               <th>Analysis</th>
               <th className="num">Puzzles</th>
@@ -426,6 +429,7 @@ function GamesCard({
                   <div className="tiny faint">{g.result} · {formatTimeControl(g.time_control, g.time_class)}</div>
                 </td>
                 <td className="tiny muted">{formatDate(g.played_at)}</td>
+                <td className="tiny muted">{formatDate(g.ended_at)}</td>
                 <td className="tiny">
                   {g.hero_color ? (
                     <span className="row-tight">

@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "exportedAt": "2026-09-21T21:07:07.777Z",
+  "exportedAt": "2026-09-29T03:18:57.742Z",
   "counts": {
-    "puzzles": 8,
-    "games": 2
+    "puzzles": 20,
+    "games": 6
   },
   "games": {
     "1": {
@@ -47,6 +47,90 @@
       "heroResult": "loss",
       "whiteAccuracy": 69.84,
       "blackAccuracy": 81.91
+    },
+    "3": {
+      "id": 3,
+      "url": "https://www.chess.com/game/daily/1025221076",
+      "event": "Let's Play!",
+      "white": "timbajimba",
+      "black": "scottjahn",
+      "whiteElo": 787,
+      "blackElo": 679,
+      "result": "1-0",
+      "playedAt": "2026-09-06T18:18:39Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "D00",
+      "ecoUrl": "https://www.chess.com/openings/Queens-Pawn-Opening-Accelerated-London-System-2...Bf5-3.e3-e6",
+      "termination": "timbajimba won by resignation",
+      "hero": "scottjahn",
+      "heroColor": "b",
+      "heroResult": "loss",
+      "whiteAccuracy": 77.67,
+      "blackAccuracy": 71.69
+    },
+    "5": {
+      "id": 5,
+      "url": "https://www.chess.com/game/daily/1033376644",
+      "event": "Let's Play!",
+      "white": "oliverjahn",
+      "black": "scottjahn",
+      "whiteElo": 645,
+      "blackElo": 650,
+      "result": "1-0",
+      "playedAt": "2026-09-22T23:28:43Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "C45",
+      "ecoUrl": "https://www.chess.com/openings/Scotch-Game-Classical-Variation-5.Nxc6-bxc6",
+      "termination": "oliverjahn won by checkmate",
+      "hero": "scottjahn",
+      "heroColor": "b",
+      "heroResult": "loss",
+      "whiteAccuracy": 67.75,
+      "blackAccuracy": 60.13
+    },
+    "6": {
+      "id": 6,
+      "url": "https://www.chess.com/game/live/184180959686",
+      "event": "Live Chess",
+      "white": "oliverjahn",
+      "black": "scottjahn",
+      "whiteElo": 388,
+      "blackElo": 369,
+      "result": "1-0",
+      "playedAt": "2026-09-21T23:39:39Z",
+      "timeControl": "600",
+      "timeClass": "rapid",
+      "eco": "C44",
+      "ecoUrl": "https://www.chess.com/openings/Kings-Pawn-Opening-Tayler-Opening",
+      "termination": "oliverjahn won by checkmate",
+      "hero": "scottjahn",
+      "heroColor": "b",
+      "heroResult": "loss",
+      "whiteAccuracy": 78.09,
+      "blackAccuracy": 72.49
+    },
+    "7": {
+      "id": 7,
+      "url": "https://www.chess.com/game/live/184180632102",
+      "event": "Live Chess",
+      "white": "scottjahn",
+      "black": "oliverjahn",
+      "whiteElo": 407,
+      "blackElo": 186,
+      "result": "1-0",
+      "playedAt": "2026-09-21T23:26:19Z",
+      "timeControl": "600",
+      "timeClass": "rapid",
+      "eco": "A00",
+      "ecoUrl": "https://www.chess.com/openings/Polish-Opening-1...a5-2.b5",
+      "termination": "scottjahn won by resignation",
+      "hero": "scottjahn",
+      "heroColor": "w",
+      "heroResult": "win",
+      "whiteAccuracy": 85.46,
+      "blackAccuracy": 75.82
     }
   },
   "puzzles": [
@@ -259,6 +343,324 @@
       "prevSan": "Nxg3",
       "prevUci": "e4g3",
       "note": "Check the king, cause loss of castling rights, win more material before eventually losing the rook"
+    },
+    {
+      "id": 9,
+      "gameId": 3,
+      "ply": 9,
+      "fen": "rn1qkbnr/ppp2ppp/4p1b1/3p4/3P1BPP/4P3/PPP2P2/RN1QKBNR b KQkq - 0 5",
+      "sideToMove": "b",
+      "playedSan": "f5",
+      "playedUci": "f7f5",
+      "solutionSan": "h5",
+      "solutionUci": "h7h5",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 15.858708362850521,
+      "evalBefore": {
+        "type": "cp",
+        "value": 26
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -150
+      },
+      "fenPrev": "rn1qkbnr/ppp2ppp/4p1b1/3p4/3P1BP1/4P3/PPP2P1P/RN1QKBNR w KQkq - 1 5",
+      "prevSan": "h4",
+      "prevUci": "h2h4",
+      "note": "Prevents e6 backwards pawn"
+    },
+    {
+      "id": 10,
+      "gameId": 3,
+      "ply": 37,
+      "fen": "2krb2r/ppp4p/1b2p1pP/3pPpP1/q2P1P2/1N1Q4/PPP5/1K1R1B1R b - - 6 19",
+      "sideToMove": "b",
+      "playedSan": "Bb5",
+      "playedUci": "e8b5",
+      "solutionSan": "a6",
+      "solutionUci": "a7a6",
+      "altSolutions": [
+        "h8g8",
+        "h8f8"
+      ],
+      "classification": "blunder",
+      "wpLoss": 31.42464359832536,
+      "evalBefore": {
+        "type": "cp",
+        "value": -67
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -530
+      },
+      "fenPrev": "2krb2r/ppp4p/1b2p1pP/3pPpP1/q2P1P2/1N1Q4/PPP5/2KR1B1R w - - 5 19",
+      "prevSan": "Kb1",
+      "prevUci": "c1b1",
+      "note": null
+    },
+    {
+      "id": 11,
+      "gameId": 5,
+      "ply": 17,
+      "fen": "r1bqr3/p1pp1kpp/2p2n2/2b5/4P3/2N5/PPP2PPP/R1BQ1RK1 b - - 3 9",
+      "sideToMove": "b",
+      "playedSan": "Nxe4",
+      "playedUci": "f6e4",
+      "solutionSan": "d5",
+      "solutionUci": "d7d5",
+      "altSolutions": [
+        "e8e6",
+        "f7g8"
+      ],
+      "classification": "blunder",
+      "wpLoss": 49.81385901080111,
+      "evalBefore": {
+        "type": "cp",
+        "value": 497
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -152
+      },
+      "fenPrev": "r1bqr3/p1pp1kpp/2p2n2/2b5/4P3/2N5/PPP2PPP/R1BQK2R w KQ - 2 9",
+      "prevSan": "O-O",
+      "prevUci": "e1g1",
+      "note": "Nxe4?? leads to Nxe4, which Rxe4?! drops the bishop to a fork via Qf3+!!"
+    },
+    {
+      "id": 12,
+      "gameId": 5,
+      "ply": 21,
+      "fen": "r1bq4/p1pp1kpp/2p5/2b4Q/4r3/8/PPP2PPP/R1B2RK1 b - - 1 11",
+      "sideToMove": "b",
+      "playedSan": "g6",
+      "playedUci": "g7g6",
+      "solutionSan": "Kg8",
+      "solutionUci": "f7g8",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 13.189297565860258,
+      "evalBefore": {
+        "type": "cp",
+        "value": -15
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -163
+      },
+      "fenPrev": "r1bq4/p1pp1kpp/2p5/2b5/4r3/8/PPP2PPP/R1BQ1RK1 w - - 0 11",
+      "prevSan": "Qh5+",
+      "prevUci": "d1h5",
+      "note": null
+    },
+    {
+      "id": 13,
+      "gameId": 5,
+      "ply": 23,
+      "fen": "r1bq4/p1pp1k1p/2p3p1/2Q5/4r3/8/PPP2PPP/R1B2RK1 b - - 0 12",
+      "sideToMove": "b",
+      "playedSan": "a6",
+      "playedUci": "a7a6",
+      "solutionSan": "Qe7",
+      "solutionUci": "d8e7",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 18.108078444680746,
+      "evalBefore": {
+        "type": "cp",
+        "value": -72
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -294
+      },
+      "fenPrev": "r1bq4/p1pp1k1p/2p3p1/2b4Q/4r3/8/PPP2PPP/R1B2RK1 w - - 0 12",
+      "prevSan": "Qxc5",
+      "prevUci": "h5c5",
+      "note": "Trade off the queens / chase the queen away"
+    },
+    {
+      "id": 14,
+      "gameId": 5,
+      "ply": 27,
+      "fen": "r1bq4/2pp1k1p/p1p1r1p1/2Q3B1/8/5P2/PPP3PP/R4RK1 b - - 2 14",
+      "sideToMove": "b",
+      "playedSan": "Qe8",
+      "playedUci": "d8e8",
+      "solutionSan": "Qf8",
+      "solutionUci": "d8f8",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 11.571167292162649,
+      "evalBefore": {
+        "type": "cp",
+        "value": -206
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -371
+      },
+      "fenPrev": "r1bq4/2pp1k1p/p1p1r1p1/2Q5/8/5P2/PPP3PP/R1B2RK1 w - - 1 14",
+      "prevSan": "Bg5",
+      "prevUci": "c1g5",
+      "note": "Chase away the queen / trade down"
+    },
+    {
+      "id": 15,
+      "gameId": 5,
+      "ply": 31,
+      "fen": "r1b1q3/2p2k1p/p1ppr1p1/6B1/5P2/2Q5/PPP3PP/R4RK1 b - - 1 16",
+      "sideToMove": "b",
+      "playedSan": "Re2",
+      "playedUci": "e6e2",
+      "solutionSan": "Re3",
+      "solutionUci": "e6e3",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 15.865785868634685,
+      "evalBefore": {
+        "type": "cp",
+        "value": -277
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -578
+      },
+      "fenPrev": "r1b1q3/2p2k1p/p1ppr1p1/2Q3B1/5P2/8/PPP3PP/R4RK1 w - - 0 16",
+      "prevSan": "Qc3",
+      "prevUci": "c5c3",
+      "note": "Attack the queen"
+    },
+    {
+      "id": 16,
+      "gameId": 5,
+      "ply": 37,
+      "fen": "r1b5/2p2k1p/p1pp2pB/5P2/8/4r3/PPP3PP/R4RK1 b - - 0 19",
+      "sideToMove": "b",
+      "playedSan": "Bxf5",
+      "playedUci": "c8f5",
+      "solutionSan": "Re2",
+      "solutionUci": "e3e2",
+      "altSolutions": [],
+      "classification": "blunder",
+      "wpLoss": 42.90954125126472,
+      "evalBefore": {
+        "type": "cp",
+        "value": 33
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -593
+      },
+      "fenPrev": "r1b5/2p2k1p/p1pp2pB/8/5P2/4r3/PPP3PP/R4RK1 w - - 0 19",
+      "prevSan": "f5",
+      "prevUci": "f4f5",
+      "note": "Move rook to safety"
+    },
+    {
+      "id": 17,
+      "gameId": 6,
+      "ply": 11,
+      "fen": "r1bqk2r/ppp2ppp/2np1n2/2b1p3/4P3/P4N1P/1PPPBPP1/RNBQ1RK1 b kq - 0 6",
+      "sideToMove": "b",
+      "playedSan": "O-O",
+      "playedUci": "e8g8",
+      "solutionSan": "Nxe4",
+      "solutionUci": "f6e4",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 13.241523595285493,
+      "evalBefore": {
+        "type": "cp",
+        "value": 156
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 8
+      },
+      "fenPrev": "r1bqk2r/ppp2ppp/2np1n2/2b1p3/4P3/5N1P/PPPPBPP1/RNBQ1RK1 w kq - 1 6",
+      "prevSan": "a3",
+      "prevUci": "a2a3",
+      "note": "Missed a free knight"
+    },
+    {
+      "id": 18,
+      "gameId": 6,
+      "ply": 25,
+      "fen": "r1b2rk1/ppp2ppp/1b1q1n2/PP2p3/8/2N2N1P/2PPQPP1/R1B2RK1 b - - 0 13",
+      "sideToMove": "b",
+      "playedSan": "Bxa5",
+      "playedUci": "b6a5",
+      "solutionSan": "Bc5",
+      "solutionUci": "b6c5",
+      "altSolutions": [],
+      "classification": "blunder",
+      "wpLoss": 31.108161666130712,
+      "evalBefore": {
+        "type": "cp",
+        "value": -60
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -507
+      },
+      "fenPrev": "r1b2rk1/ppp2ppp/1b1q1n2/1P2p3/P7/2N2N1P/2PPQPP1/R1B2RK1 w - - 2 13",
+      "prevSan": "a5",
+      "prevUci": "a4a5",
+      "note": null
+    },
+    {
+      "id": 19,
+      "gameId": 6,
+      "ply": 85,
+      "fen": "8/8/4kp2/6pp/8/1N5P/2r2PPK/8 b - - 1 43",
+      "sideToMove": "b",
+      "playedSan": "h4",
+      "playedUci": "h5h4",
+      "solutionSan": "Rxf2",
+      "solutionUci": "c2f2",
+      "altSolutions": [],
+      "classification": "blunder",
+      "wpLoss": 78.82815978966727,
+      "evalBefore": {
+        "type": "cp",
+        "value": 578
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -581
+      },
+      "fenPrev": "8/8/4kp2/N5pp/8/7P/2r2PPK/8 w - - 0 43",
+      "prevSan": "Nb3",
+      "prevUci": "a5b3",
+      "note": "Knight forks...."
+    },
+    {
+      "id": 20,
+      "gameId": 7,
+      "ply": 24,
+      "fen": "rnbq1rk1/2p1pp1p/1p4p1/pP2B3/n7/2P5/P2PBPPP/RN1QK2R w KQ - 0 13",
+      "sideToMove": "w",
+      "playedSan": "O-O",
+      "playedUci": "e1g1",
+      "solutionSan": "Qxa4",
+      "solutionUci": "d1a4",
+      "altSolutions": [],
+      "classification": "miss",
+      "wpLoss": 24.519847648563328,
+      "evalBefore": {
+        "type": "cp",
+        "value": 561
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 159
+      },
+      "fenPrev": "rnbq1rk1/1pp1pp1p/6p1/pP2B3/n7/2P5/P2PBPPP/RN1QK2R b KQ - 0 12",
+      "prevSan": "b6",
+      "prevUci": "b7b6",
+      "note": "Hanging knight"
     }
   ]
 }

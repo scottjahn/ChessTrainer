@@ -2,6 +2,7 @@ import { mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
+import { isoDate } from './chesscom.mjs';
 
 // node:sqlite is loaded through require rather than a static import on purpose:
 // a missing builtin fails during module linking, before any code in this file
@@ -45,6 +46,7 @@ CREATE TABLE IF NOT EXISTS games (
   black_elo      INTEGER,
   result         TEXT,
   played_at      TEXT,
+  ended_at       TEXT,
   time_control   TEXT,
   time_class     TEXT,
   eco            TEXT,
@@ -122,6 +124,17 @@ CREATE TABLE IF NOT EXISTS settings (
 CREATE INDEX IF NOT EXISTS idx_puzzles_game ON puzzles(game_id);
 CREATE INDEX IF NOT EXISTS idx_analysis_game ON analysis(game_id);
 `);
+
+// ended_at arrived after the first release: add it to older databases and fill
+// it from the EndDate/EndTime headers chess.com writes into every PGN.
+if (!db.prepare('PRAGMA table_info(games)').all().some((c) => c.name === 'ended_at')) {
+  db.exec('ALTER TABLE games ADD COLUMN ended_at TEXT');
+  const header = (pgn, name) => pgn.match(new RegExp(`\\[${name} "([^"]*)"\\]`))?.[1];
+  const update = db.prepare('UPDATE games SET ended_at = ? WHERE id = ?');
+  for (const { id, pgn } of db.prepare('SELECT id, pgn FROM games').all()) {
+    update.run(isoDate(header(pgn, 'EndDate'), header(pgn, 'EndTime')), id);
+  }
+}
 
 export function getSetting(key, fallback = null) {
   const row = db.prepare('SELECT value FROM settings WHERE key = ?').get(key);

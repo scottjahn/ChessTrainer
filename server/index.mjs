@@ -42,7 +42,7 @@ app.put('/api/settings', (req, res) => {
 
 const GAME_COLUMNS = [
   'source', 'url', 'pgn', 'event', 'white', 'black', 'white_elo', 'black_elo', 'result',
-  'played_at', 'time_control', 'time_class', 'eco', 'eco_url', 'termination',
+  'played_at', 'ended_at', 'time_control', 'time_class', 'eco', 'eco_url', 'termination',
   'hero', 'hero_color', 'hero_result', 'white_accuracy', 'black_accuracy', 'ply_count',
 ];
 
@@ -117,7 +117,7 @@ app.get('/api/games/recent', wrap(async (req, res) => {
 }));
 
 app.get('/api/games', (_req, res) => {
-  res.json(db.prepare(`${gameListSql} ORDER BY COALESCE(g.played_at, g.created_at) DESC`).all());
+  res.json(db.prepare(`${gameListSql} ORDER BY COALESCE(g.ended_at, g.played_at, g.created_at) DESC`).all());
 });
 
 app.get('/api/games/:id', wrap((req, res) => {

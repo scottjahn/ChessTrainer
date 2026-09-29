@@ -110,6 +110,7 @@ function normalizeArchiveGame(g) {
     black_elo: num(g.black?.rating ?? meta.headers.BlackElo),
     result: meta.headers.Result ?? null,
     played_at: isoDate(meta.headers.Date, meta.headers.StartTime ?? meta.headers.UTCTime) ?? endTimeIso(g.end_time),
+    ended_at: endTimeIso(g.end_time) ?? isoDate(meta.headers.EndDate, meta.headers.EndTime),
     time_control: g.time_control ?? meta.headers.TimeControl ?? null,
     time_class: g.time_class ?? null,
     eco: meta.headers.ECO ?? g.eco ?? null,
@@ -144,6 +145,7 @@ export function gameFromPgn(pgn) {
     black_elo: num(headers.BlackElo),
     result: headers.Result ?? null,
     played_at: isoDate(headers.Date, headers.StartTime ?? headers.UTCTime),
+    ended_at: isoDate(headers.EndDate, headers.EndTime),
     time_control: headers.TimeControl ?? null,
     time_class: null,
     eco: headers.ECO ?? null,
@@ -158,7 +160,7 @@ export function gameFromPgn(pgn) {
 
 const num = (v) => (v == null || v === '' || Number.isNaN(Number(v)) ? null : Number(v));
 
-function isoDate(date, time) {
+export function isoDate(date, time) {
   if (!date || !/^\d{4}[.\-]\d{2}[.\-]\d{2}$/.test(date)) return null;
   const d = date.replace(/\./g, '-');
   return time && /^\d{2}:\d{2}:\d{2}$/.test(time) ? `${d}T${time}Z` : `${d}T00:00:00Z`;

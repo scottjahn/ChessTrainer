@@ -59,6 +59,7 @@ export interface Game {
   black_elo: number | null;
   result: string | null;
   played_at: string | null;
+  ended_at: string | null;
   time_control: string | null;
   time_class: string | null;
   eco: string | null;
@@ -87,6 +88,7 @@ export interface RemoteGame {
   black_elo: number | null;
   result: string | null;
   played_at: string | null;
+  ended_at: string | null;
   time_class: string | null;
   time_control: string | null;
   eco: string | null;

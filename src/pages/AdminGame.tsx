@@ -157,6 +157,15 @@ export function AdminGame() {
     }
   }, [detail, settings, gameId]);
 
+  // A game nobody has analysed yet has nothing to review, so start the engine
+  // on first view. Only once per game: stopping it shouldn't restart it.
+  const autoAnalysedRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!detail || !settings || autoAnalysedRef.current === gameId) return;
+    autoAnalysedRef.current = gameId;
+    if (!detail.game.analyzed_at && !detail.analysis.length) analyse();
+  }, [detail, settings, gameId, analyse]);
+
   const stopAnalysis = () => {
     cancelRef.current = true;
     engineRef.current?.stop();
