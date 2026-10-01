@@ -130,6 +130,8 @@ export function Trainer() {
 
   const stat: PuzzleStat | null = puzzle ? statFor(stats, puzzle) : null;
   const game = puzzle && pack ? pack.games[String(puzzle.gameId)] : undefined;
+  // Whoever was on move made the mistake — not necessarily the hero.
+  const mover = puzzle ? (puzzle.sideToMove === 'w' ? game?.white : game?.black) : undefined;
   const done = phase === 'solved' || phase === 'revealed';
 
   // The board is a small timeline: the position before the opponent's move,
@@ -319,7 +321,7 @@ export function Trainer() {
         <div className="stack">
           <div className="puzzle-prompt">
             <ClassPill value={puzzle.classification} />
-            <span>{puzzle.sideToMove === 'w' ? 'White' : 'Black'} to play — find the move you missed.</span>
+            <span>{puzzle.sideToMove === 'w' ? 'White' : 'Black'} to play — find the missed move.</span>
           </div>
 
           <Board
@@ -421,7 +423,9 @@ export function Trainer() {
                 settled, and must not push the buttons off a short screen. */}
             {done && (
               <dl className="meta-grid" style={{ marginTop: 14 }}>
-                <dt>You played</dt>
+                <dt>
+                  {mover ? <span style={{ textTransform: 'none' }}>{mover}</span> : 'You'} played
+                </dt>
                 <dd className="mono">{puzzle.playedSan ?? '—'}</dd>
                 <dt>Best</dt>
                 <dd className="mono">{puzzle.solutionSan}</dd>
