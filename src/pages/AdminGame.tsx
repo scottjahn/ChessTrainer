@@ -296,15 +296,19 @@ export function AdminGame() {
   const draftSan = editing && draft?.uci ? uciToSan(plies[editPly].fenBefore, draft.uci) : null;
   const editRow = editing ? rows.get(editPly) : undefined;
 
-  const arrows = editing && draft?.uci
+  const arrow = (uci: string, color: string) => (
+    { startSquare: uci.slice(0, 2), endSquare: uci.slice(2, 4), color }
+  );
+  // Red for the move actually played, green for the solution, faint green for
+  // accepted alternatives. One arrow per pair of squares, solution winning.
+  const arrows = editing
     ? [
-      { startSquare: draft.uci.slice(0, 2), endSquare: draft.uci.slice(2, 4), color: 'rgba(127,166,80,.9)' },
-      ...draft.alts.map((uci) => ({
-        startSquare: uci.slice(0, 2),
-        endSquare: uci.slice(2, 4),
-        color: 'rgba(127,166,80,.4)',
-      })),
-    ]
+      ...(draft?.uci ? [arrow(draft.uci, 'rgba(127,166,80,.9)')] : []),
+      ...(draft?.alts ?? []).map((uci) => arrow(uci, 'rgba(127,166,80,.4)')),
+      arrow(plies[editPly].uci, 'rgba(208,87,74,.9)'),
+    ].filter((a, i, all) =>
+      all.findIndex((b) => b.startSquare === a.startSquare && b.endSquare === a.endSquare) === i
+    )
     : [];
 
   return (
