@@ -148,8 +148,14 @@ export function AdminGame() {
       const fresh = await api.game(gameId);
       setDetail(fresh);
       setRows(new Map(fresh.analysis.map((r) => [r.ply, r])));
-      const flagged = computed.filter((c) => FLAGGED.includes(c.classification)).length;
-      setStatus(`Analysed ${plies.length} moves at depth ${depth} — ${flagged} worth a look.`);
+      // Count what the flagged list will show, so the two numbers agree.
+      const heroOnly = settings.onlyHeroMoves && fresh.game.hero_color;
+      const flagged = computed.filter((c) =>
+        FLAGGED.includes(c.classification) && (!heroOnly || c.color === fresh.game.hero_color)
+      ).length;
+      setStatus(
+        `Analysed ${plies.length} moves at depth ${depth} — ${flagged} ${heroOnly ? 'of yours ' : ''}worth a look.`
+      );
     } catch (e) {
       setError((e as Error).message);
     } finally {
