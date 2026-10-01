@@ -29,8 +29,10 @@ export function AdminHome() {
       const message = await fn();
       if (message) setStatus(message);
       await refresh();
+      return true;
     } catch (e) {
       setError((e as Error).message);
+      return false;
     } finally {
       setBusy(null);
     }
@@ -40,7 +42,7 @@ export function AdminHome() {
 
   return (
     <div className="stack">
-      {error && <div className="banner err">{error}</div>}
+      {error && <ErrorDialog message={error} onClose={() => setError(null)} />}
       {status && <div className="banner ok">{status}</div>}
 
       <SettingsCard settings={settings} onSave={setSettings} />
@@ -93,6 +95,27 @@ export function AdminHome() {
           })
         }
       />
+    </div>
+  );
+}
+
+/** Errors pop up over the page so they are seen wherever it is scrolled to. */
+function ErrorDialog({ message, onClose }: { message: string; onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => (e.key === 'Escape' || e.key === 'Enter') && onClose();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal" role="alertdialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+        <h2>Something went wrong</h2>
+        <p>{message}</p>
+        <div className="row" style={{ justifyContent: 'flex-end' }}>
+          <button className="primary" autoFocus onClick={onClose}>OK</button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -294,13 +317,21 @@ function ImportPgnCard({ busy, onImport }: { busy: boolean; onImport: (pgn: stri
   );
 }
 
-function RecentGamesCard({ username, onImport }: { username: string; onImport: (url: string) => void }) {
+function RecentGamesCard({ username, onImport }: { username: string; onImport: (url: string) => Promise<boolean> }) {
+  const [importing, setImporting] = useState<string | null>(null);
   const [name, setName] = useState(username);
   const [remote, setRemote] = useState<RemoteGame[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => setName(username), [username]);
+
+  const importGame = async (url: string) => {
+    setImporting(url);
+    const ok = await onImport(url);
+    setImporting(null);
+    if (ok) setRemote((rows) => rows && rows.map((g) => (g.url === url ? { ...g, imported: true } : g)));
+  };
 
   const load = async () => {
     setLoading(true);
@@ -365,12 +396,17 @@ function RecentGamesCard({ username, onImport }: { username: string; onImport: (
                     ? `${g.white_accuracy.toFixed(0)} / ${g.black_accuracy?.toFixed(0)}`
                     : '—'}
                 </td>
-                <td className="num">
-                  {g.imported ? (
-                    <span className="tiny faint">imported</span>
-                  ) : (
-                    <button className="small" onClick={() => g.url && onImport(g.url)}>Import</button>
-                  )}
+                <td className="num" style={{ whiteSpace: 'nowrap' }}>
+                  {g.url && (
+                    <a className="btn small" href={g.url} target="_blank" rel="noreferrer">chess.com ↗</a>
+                  )}{' '}
+                  <button
+                    className="small"
+                    disabled={g.imported || !g.url || importing !== null}
+                    onClick={() => g.url && importGame(g.url)}
+                  >
+                    {g.imported ? 'Imported' : importing === g.url ? 'Importing…' : 'Import'}
+                  </button>
                 </td>
               </tr>
             ))}

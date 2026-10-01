@@ -51,17 +51,24 @@ export async function fetchGameByUrl(input) {
     );
   }
 
-  const [y, m] = String(headers.Date ?? '').split('.');
-  if (!y || !m) throw new Error('Game headers had no usable date');
+  // Archives are filed under the month a game *finished*, so a daily game that
+  // ran over a month boundary is not in the month of its Date header.
+  const months = [...new Set([headers.EndDate, headers.Date]
+    .map((d) => String(d ?? '').split('.').slice(0, 2))
+    .filter(([y, m]) => /^\d{4}$/.test(y) && /^\d{2}$/.test(m))
+    .map(([y, m]) => `${y}/${m}`))];
+  if (!months.length) throw new Error('Game headers had no usable date');
 
-  for (const who of [headers.White, headers.Black]) {
-    try {
-      const arch = await getJson(
-        `https://api.chess.com/pub/player/${encodeURIComponent(String(who).toLowerCase())}/games/${y}/${m}`
-      );
-      const hit = arch.games?.find((g) => g.url === parsed.url || g.url?.endsWith(`/${parsed.id}`));
-      if (hit) return normalizeArchiveGame(hit);
-    } catch { /* fall through to the other player */ }
+  for (const month of months) {
+    for (const who of [headers.White, headers.Black]) {
+      try {
+        const arch = await getJson(
+          `https://api.chess.com/pub/player/${encodeURIComponent(String(who).toLowerCase())}/games/${month}`
+        );
+        const hit = arch.games?.find((g) => g.url === parsed.url || g.url?.endsWith(`/${parsed.id}`));
+        if (hit) return normalizeArchiveGame(hit);
+      } catch { /* fall through to the other player */ }
+    }
   }
   throw Object.assign(
     new Error('Found the game but not its PGN in the monthly archive. Paste the PGN instead.'),
