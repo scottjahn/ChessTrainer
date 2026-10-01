@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "exportedAt": "2026-09-29T03:18:57.742Z",
+  "exportedAt": "2026-10-01T01:56:55.932Z",
   "counts": {
-    "puzzles": 20,
-    "games": 6
+    "puzzles": 44,
+    "games": 13
   },
   "games": {
     "1": {
@@ -131,6 +131,153 @@
       "heroResult": "win",
       "whiteAccuracy": 85.46,
       "blackAccuracy": 75.82
+    },
+    "8": {
+      "id": 8,
+      "url": "https://www.chess.com/game/daily/1024824260",
+      "event": "Let's Play!",
+      "white": "scottjahn",
+      "black": "Hauskala",
+      "whiteElo": 712,
+      "blackElo": 937,
+      "result": "0-1",
+      "playedAt": "2026-09-05T22:03:22Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "A00",
+      "ecoUrl": "https://www.chess.com/openings/Polish-Opening-Czech-Defense-3.c4",
+      "termination": "Hauskala won by resignation",
+      "hero": "scottjahn",
+      "heroColor": "w",
+      "heroResult": "loss",
+      "whiteAccuracy": 56.29,
+      "blackAccuracy": 72.04
+    },
+    "9": {
+      "id": 9,
+      "url": "https://www.chess.com/game/daily/1024824188",
+      "event": "Let's Play!",
+      "white": "scottjahn",
+      "black": "amiiin-02",
+      "whiteElo": 725,
+      "blackElo": 500,
+      "result": "1-0",
+      "playedAt": "2026-09-05T22:03:07Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "A00",
+      "ecoUrl": "https://www.chess.com/openings/Polish-Opening-1...e5-2.Bb2",
+      "termination": "scottjahn won by checkmate",
+      "hero": "scottjahn",
+      "heroColor": "w",
+      "heroResult": "win",
+      "whiteAccuracy": 82.11,
+      "blackAccuracy": 59.25
+    },
+    "10": {
+      "id": 10,
+      "url": "https://www.chess.com/game/daily/1019327104",
+      "event": "Let's Play!",
+      "white": "JimMackessy",
+      "black": "scottjahn",
+      "whiteElo": 343,
+      "blackElo": 725,
+      "result": "0-1",
+      "playedAt": "2026-08-25T19:13:07Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "C46",
+      "ecoUrl": "https://www.chess.com/openings/Three-Knights-Opening-3...Bc5",
+      "termination": "scottjahn won by checkmate",
+      "hero": "scottjahn",
+      "heroColor": "b",
+      "heroResult": "win",
+      "whiteAccuracy": 70.6,
+      "blackAccuracy": 84.84
+    },
+    "11": {
+      "id": 11,
+      "url": "https://www.chess.com/game/daily/1020936568",
+      "event": "Let's Play!",
+      "white": "testaccount1999",
+      "black": "scottjahn",
+      "whiteElo": 1367,
+      "blackElo": 718,
+      "result": "1-0",
+      "playedAt": "2026-08-29T06:15:56Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "C20",
+      "ecoUrl": "https://www.chess.com/openings/Bishops-Opening-Boi-Variation",
+      "termination": "testaccount1999 won by checkmate",
+      "hero": "scottjahn",
+      "heroColor": "b",
+      "heroResult": "loss",
+      "whiteAccuracy": 85.96,
+      "blackAccuracy": 75.96
+    },
+    "12": {
+      "id": 12,
+      "url": "https://www.chess.com/game/daily/1020886008",
+      "event": "Let's Play!",
+      "white": "scottjahn",
+      "black": "timbajimba",
+      "whiteElo": 721,
+      "blackElo": 761,
+      "result": "0-1",
+      "playedAt": "2026-08-29T02:54:19Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "B07",
+      "ecoUrl": "https://www.chess.com/openings/Pirc-Defense...4.dxe5-dxe5-5.Qxd8-Kxd8-6.Bg5",
+      "termination": "timbajimba won by resignation",
+      "hero": "scottjahn",
+      "heroColor": "w",
+      "heroResult": "loss",
+      "whiteAccuracy": 80.15,
+      "blackAccuracy": 86.8
+    },
+    "13": {
+      "id": 13,
+      "url": "https://www.chess.com/game/daily/1013300038",
+      "event": "Let's Play!",
+      "white": "scottjahn",
+      "black": "imapotato921",
+      "whiteElo": 752,
+      "blackElo": 565,
+      "result": "0-1",
+      "playedAt": "2026-08-13T17:54:27Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "B12",
+      "ecoUrl": "https://www.chess.com/openings/Caro-Kann-Defense-Advance-Botvinnik-Carls-Defense-4.c3-Nc6-5.Nf3-Bg4",
+      "termination": "imapotato921 won by checkmate",
+      "hero": "scottjahn",
+      "heroColor": "w",
+      "heroResult": "loss",
+      "whiteAccuracy": 73.9,
+      "blackAccuracy": 82.31
+    },
+    "14": {
+      "id": 14,
+      "url": "https://www.chess.com/game/daily/1013011224",
+      "event": "Let's Play!",
+      "white": "timbajimba",
+      "black": "scottjahn",
+      "whiteElo": 726,
+      "blackElo": 799,
+      "result": "0-1",
+      "playedAt": "2026-08-13T02:19:05Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "D02",
+      "ecoUrl": "https://www.chess.com/openings/London-System-3...Bf5-4.e3-e6",
+      "termination": "scottjahn won by resignation",
+      "hero": "scottjahn",
+      "heroColor": "b",
+      "heroResult": "win",
+      "whiteAccuracy": 67.81,
+      "blackAccuracy": 70.93
     }
   },
   "puzzles": [
@@ -661,6 +808,630 @@
       "prevSan": "b6",
       "prevUci": "b7b6",
       "note": "Hanging knight"
+    },
+    {
+      "id": 22,
+      "gameId": 8,
+      "ply": 10,
+      "fen": "r1bqkb1r/ppp2ppp/3p1n2/1P2p3/1nP5/4P3/PB1P1PPP/RN1QKBNR w KQkq - 1 6",
+      "sideToMove": "w",
+      "playedSan": "Qb3",
+      "playedUci": "d1b3",
+      "solutionSan": "a3",
+      "solutionUci": "a2a3",
+      "altSolutions": [],
+      "classification": "miss",
+      "wpLoss": 12.851890781254042,
+      "evalBefore": {
+        "type": "cp",
+        "value": 496
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 274
+      },
+      "fenPrev": "r1bqkb1r/ppp2ppp/2np1n2/1P2p3/2P5/4P3/PB1P1PPP/RN1QKBNR b KQkq - 0 5",
+      "prevSan": "Nb4",
+      "prevUci": "c6b4",
+      "note": "a3 traps the knight - no safe square to move"
+    },
+    {
+      "id": 23,
+      "gameId": 8,
+      "ply": 12,
+      "fen": "r1bqkb1r/ppp2ppp/5n2/1P1pp3/1nP5/1Q2P3/PB1P1PPP/RN2KBNR w KQkq - 0 7",
+      "sideToMove": "w",
+      "playedSan": "Nf3",
+      "playedUci": "g1f3",
+      "solutionSan": "a3",
+      "solutionUci": "a2a3",
+      "altSolutions": [],
+      "classification": "blunder",
+      "wpLoss": 23.33959411339147,
+      "evalBefore": {
+        "type": "cp",
+        "value": 271
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -3
+      },
+      "fenPrev": "r1bqkb1r/ppp2ppp/3p1n2/1P2p3/1nP5/1Q2P3/PB1P1PPP/RN2KBNR b KQkq - 2 6",
+      "prevSan": "d5",
+      "prevUci": "d6d5",
+      "note": "a3 traps the knight - no safe place to move"
+    },
+    {
+      "id": 24,
+      "gameId": 8,
+      "ply": 14,
+      "fen": "r2qkb1r/ppp2ppp/5n2/1P1ppb2/1nP5/1Q2PN2/PB1P1PPP/RN2KB1R w KQkq - 2 8",
+      "sideToMove": "w",
+      "playedSan": "Be2",
+      "playedUci": "f1e2",
+      "solutionSan": "Na3",
+      "solutionUci": "b1a3",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 16.318110267126954,
+      "evalBefore": {
+        "type": "cp",
+        "value": 0
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -184
+      },
+      "fenPrev": "r1bqkb1r/ppp2ppp/5n2/1P1pp3/1nP5/1Q2PN2/PB1P1PPP/RN2KB1R b KQkq - 1 7",
+      "prevSan": "Bf5",
+      "prevUci": "c8f5",
+      "note": "Need to defend c2 square from King-Rook fork"
+    },
+    {
+      "id": 25,
+      "gameId": 8,
+      "ply": 20,
+      "fen": "r2qkb1r/ppp2ppp/5n2/1P2pb2/2p5/1Q2PN2/P2PBPPP/BN3K1R w kq - 0 11",
+      "sideToMove": "w",
+      "playedSan": "Qb4",
+      "playedUci": "b3b4",
+      "solutionSan": "Bxc4",
+      "solutionUci": "e2c4",
+      "altSolutions": [],
+      "classification": "blunder",
+      "wpLoss": 44.572090154939445,
+      "evalBefore": {
+        "type": "cp",
+        "value": -49
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -1268
+      },
+      "fenPrev": "r2qkb1r/ppp2ppp/5n2/1P1ppb2/2P5/1Q2PN2/P2PBPPP/BN3K1R b kq - 0 10",
+      "prevSan": "dxc4",
+      "prevUci": "d5c4",
+      "note": null
+    },
+    {
+      "id": 21,
+      "gameId": 9,
+      "ply": 6,
+      "fen": "rnbqkbnr/pppp2p1/5p2/4B2p/1P6/8/P1PPPPPP/RN1QKBNR w KQkq - 0 4",
+      "sideToMove": "w",
+      "playedSan": "Bf4",
+      "playedUci": "e5f4",
+      "solutionSan": "Bc3",
+      "solutionUci": "e5c3",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 11.275388158734813,
+      "evalBefore": {
+        "type": "cp",
+        "value": 161
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 34
+      },
+      "fenPrev": "rnbqkbnr/pppp1pp1/8/4B2p/1P6/8/P1PPPPPP/RN1QKBNR b KQkq - 0 3",
+      "prevSan": "f6",
+      "prevUci": "f7f6",
+      "note": "Protect the hanging b pawn"
+    },
+    {
+      "id": 26,
+      "gameId": 10,
+      "ply": 13,
+      "fen": "r1bqk2r/ppp2pp1/2np1n1p/2b1p2P/4P2R/P1N2N2/1PPP1PP1/R1BQKB2 b Qkq - 0 7",
+      "sideToMove": "b",
+      "playedSan": "Bg4",
+      "playedUci": "c8g4",
+      "solutionSan": "Ng4",
+      "solutionUci": "f6g4",
+      "altSolutions": [],
+      "classification": "miss",
+      "wpLoss": 22.2801394770689,
+      "evalBefore": {
+        "type": "cp",
+        "value": 495
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 154
+      },
+      "fenPrev": "r1bqk2r/ppp2pp1/2np1n1p/2b1p2P/4P2R/2N2N2/PPPP1PP1/R1BQKB2 w Qkq - 0 7",
+      "prevSan": "a3",
+      "prevUci": "a2a3",
+      "note": "Ng4 allows for ..Bxg2+, forking the rook"
+    },
+    {
+      "id": 27,
+      "gameId": 11,
+      "ply": 19,
+      "fen": "rnbqk2r/pppp1ppp/8/4P3/2BPnQ2/8/P4PPP/RN2K1NR b KQkq - 2 10",
+      "sideToMove": "b",
+      "playedSan": "Ng5",
+      "playedUci": "e4g5",
+      "solutionSan": "d5",
+      "solutionUci": "d7d5",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 12.272131457874437,
+      "evalBefore": {
+        "type": "cp",
+        "value": 71
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -63
+      },
+      "fenPrev": "rnbqk2r/pppp1ppp/8/4P3/2BPn3/8/P2Q1PPP/RN2K1NR w KQkq - 1 10",
+      "prevSan": "Qf4",
+      "prevUci": "d2f4",
+      "note": "Protects knight and blocks double attack on f pawn"
+    },
+    {
+      "id": 28,
+      "gameId": 11,
+      "ply": 35,
+      "fen": "r2q1rk1/pbp2pp1/2n1pN1p/1p2P2P/3P1Q2/5N1R/P4PP1/R3K3 b Q - 3 18",
+      "sideToMove": "b",
+      "playedSan": "gxf6",
+      "playedUci": "g7f6",
+      "solutionSan": "Kh8",
+      "solutionUci": "g8h8",
+      "altSolutions": [],
+      "classification": "blunder",
+      "wpLoss": 45.684321478024955,
+      "evalBefore": {
+        "type": "cp",
+        "value": -47
+      },
+      "evalAfter": {
+        "type": "mate",
+        "value": -5
+      },
+      "fenPrev": "r2q1rk1/pbp2pp1/2n1p2p/1p2P2P/3PNQ2/5N1R/P4PP1/R3K3 w Q - 2 18",
+      "prevSan": "Nf6+",
+      "prevUci": "e4f6",
+      "note": "Can't capture - leads to forced mate"
+    },
+    {
+      "id": 29,
+      "gameId": 12,
+      "ply": 32,
+      "fen": "r7/ppk1br1p/n1p1pp2/4p3/4P2B/3R1P2/PPP1N1PP/2KR4 w - - 1 17",
+      "sideToMove": "w",
+      "playedSan": "a3",
+      "playedUci": "a2a3",
+      "solutionSan": "Rd7+",
+      "solutionUci": "d3d7",
+      "altSolutions": [],
+      "classification": "miss",
+      "wpLoss": 29.60993710696392,
+      "evalBefore": {
+        "type": "cp",
+        "value": 384
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 9
+      },
+      "fenPrev": "rn6/ppk1br1p/2p1pp2/4p3/4P2B/3R1P2/PPP1N1PP/2KR4 b - - 0 16",
+      "prevSan": "Na6",
+      "prevUci": "b8a6",
+      "note": "pin bishop"
+    },
+    {
+      "id": 30,
+      "gameId": 12,
+      "ply": 70,
+      "fen": "7k/pp5P/2p1p1p1/4pr2/8/P3K3/1PP5/7R w - - 3 36",
+      "sideToMove": "w",
+      "playedSan": "Ke4",
+      "playedUci": "e3e4",
+      "solutionSan": "Rh6",
+      "solutionUci": "h1h6",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 17.317018027768874,
+      "evalBefore": {
+        "type": "cp",
+        "value": -113
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -337
+      },
+      "fenPrev": "7k/pp5P/2p1p1p1/4p3/5r2/P3K3/1PP5/7R b - - 2 35",
+      "prevSan": "Rf5",
+      "prevUci": "f4f5",
+      "note": "Attack e and g pawns"
+    },
+    {
+      "id": 31,
+      "gameId": 12,
+      "ply": 72,
+      "fen": "7k/pp5P/2p1p1p1/4p2r/4K3/P7/1PP5/7R w - - 5 37",
+      "sideToMove": "w",
+      "playedSan": "Rxh5",
+      "playedUci": "h1h5",
+      "solutionSan": "Rd1",
+      "solutionUci": "h1d1",
+      "altSolutions": [],
+      "classification": "blunder",
+      "wpLoss": 30.171338494009746,
+      "evalBefore": {
+        "type": "cp",
+        "value": -97
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -568
+      },
+      "fenPrev": "7k/pp5P/2p1p1p1/4pr2/4K3/P7/1PP5/7R b - - 4 36",
+      "prevSan": "Rh5",
+      "prevUci": "f5h5",
+      "note": "Cannot trade off rooks here - need to move the attack to the queenside"
+    },
+    {
+      "id": 32,
+      "gameId": 13,
+      "ply": 16,
+      "fen": "r2qkb1r/pp2npp1/2n1p2p/2ppP1B1/3P2b1/2P2N2/PP2BPPP/RN1Q1RK1 w kq - 0 9",
+      "sideToMove": "w",
+      "playedSan": "Bh4",
+      "playedUci": "g5h4",
+      "solutionSan": "Be3",
+      "solutionUci": "g5e3",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 10.959529664150395,
+      "evalBefore": {
+        "type": "cp",
+        "value": -53
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -178
+      },
+      "fenPrev": "r2qkb1r/pp2nppp/2n1p3/2ppP1B1/3P2b1/2P2N2/PP2BPPP/RN1Q1RK1 b kq - 3 8",
+      "prevSan": "h6",
+      "prevUci": "h7h6",
+      "note": "Need to add another defender to the d4 pawn"
+    },
+    {
+      "id": 33,
+      "gameId": 13,
+      "ply": 18,
+      "fen": "r3kb1r/pp2npp1/1qn1p2p/2ppP3/3P2bB/2P2N2/PP2BPPP/RN1Q1RK1 w kq - 2 10",
+      "sideToMove": "w",
+      "playedSan": "b3",
+      "playedUci": "b2b3",
+      "solutionSan": "Nbd2",
+      "solutionUci": "b1d2",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 16.673145820808713,
+      "evalBefore": {
+        "type": "cp",
+        "value": -107
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -319
+      },
+      "fenPrev": "r2qkb1r/pp2npp1/2n1p2p/2ppP3/3P2bB/2P2N2/PP2BPPP/RN1Q1RK1 b kq - 1 9",
+      "prevSan": "Qb6",
+      "prevUci": "d8b6",
+      "note": "Allows for fork of knight and queen by pawn by black"
+    },
+    {
+      "id": 34,
+      "gameId": 13,
+      "ply": 32,
+      "fen": "r3r1k1/pp2bpp1/1qn4p/3pPp2/3p4/1PP3B1/P4PPP/RN1Q1RK1 w - - 2 17",
+      "sideToMove": "w",
+      "playedSan": "f4",
+      "playedUci": "f2f4",
+      "solutionSan": "Qh5",
+      "solutionUci": "d1h5",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 19.145955966058196,
+      "evalBefore": {
+        "type": "cp",
+        "value": -232
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -576
+      },
+      "fenPrev": "r4rk1/pp2bpp1/1qn4p/3pPp2/3p4/1PP3B1/P4PPP/RN1Q1RK1 b - - 1 16",
+      "prevSan": "Rfe8",
+      "prevUci": "f8e8",
+      "note": "Need to move the queen to prevent queen and knight being forked by the d pawn after dxc3"
+    },
+    {
+      "id": 35,
+      "gameId": 13,
+      "ply": 46,
+      "fen": "r2r2k1/pp3pp1/7p/n3Pp2/Nq1p1P2/1P6/P1R3PP/2RQ2K1 w - - 6 24",
+      "sideToMove": "w",
+      "playedSan": "Rc7",
+      "playedUci": "c2c7",
+      "solutionSan": "Qd3",
+      "solutionUci": "d1d3",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 18.383262210375115,
+      "evalBefore": {
+        "type": "cp",
+        "value": -62
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -285
+      },
+      "fenPrev": "r3r1k1/pp3pp1/7p/n3Pp2/Nq1p1P2/1P6/P1R3PP/2RQ2K1 b - - 5 23",
+      "prevSan": "Red8",
+      "prevUci": "e8d8",
+      "note": "Blockade the pawn"
+    },
+    {
+      "id": 36,
+      "gameId": 13,
+      "ply": 50,
+      "fen": "r2r2k1/ppR2p2/6pp/n3Pp1Q/Nq3P2/1P1p4/P5PP/2R3K1 w - - 0 26",
+      "sideToMove": "w",
+      "playedSan": "Qd1",
+      "playedUci": "h5d1",
+      "solutionSan": "Qf3",
+      "solutionUci": "h5f3",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 11.117062154788183,
+      "evalBefore": {
+        "type": "cp",
+        "value": -365
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -610
+      },
+      "fenPrev": "r2r2k1/ppR2pp1/7p/n3Pp1Q/Nq3P2/1P1p4/P5PP/2R3K1 b - - 1 25",
+      "prevSan": "g6",
+      "prevUci": "g7g6",
+      "note": "Bring the queen to safety while defending the f pawn"
+    },
+    {
+      "id": 37,
+      "gameId": 14,
+      "ply": 13,
+      "fen": "rn1qkb1r/ppp2ppp/4pn2/3p3b/3P1BPN/4PP2/PPP4P/RN1QKB1R b KQkq - 0 7",
+      "sideToMove": "b",
+      "playedSan": "Bg6",
+      "playedUci": "h5g6",
+      "solutionSan": "Nxg4",
+      "solutionUci": "f6g4",
+      "altSolutions": [],
+      "classification": "blunder",
+      "wpLoss": 20.54520333813828,
+      "evalBefore": {
+        "type": "cp",
+        "value": 236
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -1
+      },
+      "fenPrev": "rn1qkb1r/ppp2ppp/4pn2/3p3b/3P1B1N/4PP2/PPP3PP/RN1QKB1R w KQkq - 1 7",
+      "prevSan": "g4",
+      "prevUci": "g2g4",
+      "note": "Allows black to win two pawns after trading the knights and queens off"
+    },
+    {
+      "id": 38,
+      "gameId": 14,
+      "ply": 35,
+      "fen": "rq2k2r/1pp2pp1/p1n3p1/3Q4/1b4P1/1PN1PP2/P1PK3P/R4B1R b kq - 0 18",
+      "sideToMove": "b",
+      "playedSan": "Qd8",
+      "playedUci": "b8d8",
+      "solutionSan": "Qa7",
+      "solutionUci": "b8a7",
+      "altSolutions": [],
+      "classification": "miss",
+      "wpLoss": 12.299844104057641,
+      "evalBefore": {
+        "type": "cp",
+        "value": 347
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 179
+      },
+      "fenPrev": "rq2k2r/1pp2pp1/p1n3p1/1Q1p4/1b4P1/1PN1PP2/P1PK3P/R4B1R w kq - 0 18",
+      "prevSan": "Qxd5",
+      "prevUci": "b5d5",
+      "note": "Eventually traps the queen in the center"
+    },
+    {
+      "id": 39,
+      "gameId": 14,
+      "ply": 43,
+      "fen": "3rk3/1pp2pp1/p5p1/4n3/1b4P1/1PNBPP1r/P1PK1R1P/7R b - - 5 22",
+      "sideToMove": "b",
+      "playedSan": "Nxf3+",
+      "playedUci": "e5f3",
+      "solutionSan": "c5",
+      "solutionUci": "c7c5",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 16.309202276781278,
+      "evalBefore": {
+        "type": "cp",
+        "value": 280
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 81
+      },
+      "fenPrev": "3rk3/1pp2pp1/p5p1/4n3/1b4P1/1PNBPP1r/P1PK3P/5R1R w - - 4 22",
+      "prevSan": "Rf2",
+      "prevUci": "f1f2",
+      "note": "Eventually wins material from the pressure and pins on the queen side"
+    },
+    {
+      "id": 40,
+      "gameId": 14,
+      "ply": 67,
+      "fen": "3r4/4n1p1/p4k2/1pp2p2/1b2P2R/1P1B4/P1P1KN2/8 b - - 0 34",
+      "sideToMove": "b",
+      "playedSan": "c4",
+      "playedUci": "c5c4",
+      "solutionSan": "Rd4",
+      "solutionUci": "d8d4",
+      "altSolutions": [],
+      "classification": "mistake",
+      "wpLoss": 14.381306733903457,
+      "evalBefore": {
+        "type": "cp",
+        "value": 256
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 83
+      },
+      "fenPrev": "3r4/4n1p1/p4k2/1pp2p2/1b5R/1P1BP3/P1P1KN2/8 w - - 0 34",
+      "prevSan": "e4",
+      "prevUci": "e3e4",
+      "note": "c4 loses material after trades"
+    },
+    {
+      "id": 41,
+      "gameId": 14,
+      "ply": 73,
+      "fen": "8/4n1p1/p4k2/5p2/1bB1P2R/5K2/P1Pr1N2/8 b - - 2 37",
+      "sideToMove": "b",
+      "playedSan": "Rxc2",
+      "playedUci": "d2c2",
+      "solutionSan": "Ng6",
+      "solutionUci": "e7g6",
+      "altSolutions": [],
+      "classification": "miss",
+      "wpLoss": 38.493513612115905,
+      "evalBefore": {
+        "type": "cp",
+        "value": 564
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 4
+      },
+      "fenPrev": "8/4n1p1/p4k2/5p2/1bB1P2R/8/P1PrKN2/8 w - - 1 37",
+      "prevSan": "Kf3",
+      "prevUci": "e2f3",
+      "note": "Gets knight towards e5 forking king and bishop"
+    },
+    {
+      "id": 42,
+      "gameId": 14,
+      "ply": 75,
+      "fen": "8/4n1p1/B4k2/5p2/1b2P2R/5K2/P1r2N2/8 b - - 0 38",
+      "sideToMove": "b",
+      "playedSan": "Bc5",
+      "playedUci": "b4c5",
+      "solutionSan": "Ng6",
+      "solutionUci": "e7g6",
+      "altSolutions": [],
+      "classification": "miss",
+      "wpLoss": 33.29426919496148,
+      "evalBefore": {
+        "type": "cp",
+        "value": 472
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 19
+      },
+      "fenPrev": "8/4n1p1/p4k2/5p2/1bB1P2R/5K2/P1r2N2/8 w - - 0 38",
+      "prevSan": "Bxa6",
+      "prevUci": "c4a6",
+      "note": "Can kick the rook and chase the king away from the defense of the knight"
+    },
+    {
+      "id": 43,
+      "gameId": 14,
+      "ply": 83,
+      "fen": "8/6p1/B4k2/4bn2/P3R3/3N1K2/2r5/8 b - - 1 42",
+      "sideToMove": "b",
+      "playedSan": "Bd4",
+      "playedUci": "e5d4",
+      "solutionSan": "Nd4+",
+      "solutionUci": "f5d4",
+      "altSolutions": [],
+      "classification": "miss",
+      "wpLoss": 28.94921124308226,
+      "evalBefore": {
+        "type": "cp",
+        "value": 359
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 0
+      },
+      "fenPrev": "8/6p1/B4k2/4bn2/P6R/3N1K2/2r5/8 w - - 0 42",
+      "prevSan": "Re4",
+      "prevUci": "h4e4",
+      "note": "Rook has to capture (otherwise there's a forced checkmate) and bishop wins a rook for a knight"
+    },
+    {
+      "id": 44,
+      "gameId": 14,
+      "ply": 95,
+      "fen": "8/6p1/1b3k2/1B3n2/P3RN2/5K2/8/6r1 b - - 13 48",
+      "sideToMove": "b",
+      "playedSan": "Ba7",
+      "playedUci": "b6a7",
+      "solutionSan": "Nd4+",
+      "solutionUci": "f5d4",
+      "altSolutions": [],
+      "classification": "miss",
+      "wpLoss": 29.50150077991568,
+      "evalBefore": {
+        "type": "cp",
+        "value": 359
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -6
+      },
+      "fenPrev": "8/6p1/1b3k2/1B3n2/P3RNK1/8/8/6r1 w - - 12 48",
+      "prevSan": "Kf3",
+      "prevUci": "g4f3",
+      "note": "Fork king and bishop"
     }
   ]
 }

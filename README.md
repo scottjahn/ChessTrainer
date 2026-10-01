@@ -28,6 +28,28 @@ npm run dev
 Then open <http://localhost:5173>. The API runs on port 8787; the app detects it
 and shows the **Admin** tab. Without it, the same app runs as the public trainer.
 
+## Forking this repo
+
+A fork comes with my puzzle set, because `public/data/puzzles.json` is committed.
+It does not come with my games or analysis: the database is git-ignored, and a
+fresh empty one is created the first time the API starts.
+
+To start from a clean slate, export before you import anything:
+
+```bash
+npm install
+npm run export
+git add public/data/puzzles.json
+git commit -m "Start with an empty puzzle set"
+```
+
+Export always overwrites `puzzles.json` with what is in your own database; it
+never merges with what was there. Until you run it, the trainer — locally and on
+your GitHub Pages site — keeps serving my puzzles.
+
+To publish your fork, enable workflows under the **Actions** tab (GitHub turns
+them off on forks), then follow [Publishing](#publishing).
+
 ## Loading a game
 
 1. **Admin → Settings**: enter your chess.com username and save. This is what
