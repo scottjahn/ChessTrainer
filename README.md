@@ -65,6 +65,25 @@ them off on forks), then follow [Publishing](#publishing).
    override it, add a note if you want one, and save.
 5. Back in the library, press **Export puzzles.json**.
 
+### Alternative answers
+
+Opening a puzzle searches its position again for the engine's top three moves.
+On a new puzzle, any of them within 3% win probability of the best is added
+under *Also accept* (the margin is in Settings; 0 turns it off). The three are
+listed with their scores under *Top moves* — click one to accept or drop it.
+The move you actually played is never added for you.
+
+### Multi-move puzzles
+
+Press **+ Reply & next move** and Stockfish plays the opponent's best reply and
+your best follow-up; press it again to go deeper. To override a move, select it
+in the line and play a different one on the board — everything after it is
+dropped, and an overridden reply gets a fresh engine answer. In the trainer the
+replies are played for you and each of your moves is asked for in turn. The
+attempt is still scored on your first try across the whole line. Alternative
+answers apply to the first move only and end the puzzle there; later in a line,
+any checkmate is accepted.
+
 ## Publishing
 
 `npm run export` (or the Export button) writes `public/data/puzzles.json`.

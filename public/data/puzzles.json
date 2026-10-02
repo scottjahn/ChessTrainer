@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "exportedAt": "2026-10-01T01:56:55.932Z",
+  "exportedAt": "2026-10-02T02:52:40.301Z",
   "counts": {
-    "puzzles": 44,
-    "games": 13
+    "puzzles": 47,
+    "games": 14
   },
   "games": {
     "1": {
@@ -278,6 +278,27 @@
       "heroResult": "win",
       "whiteAccuracy": 67.81,
       "blackAccuracy": 70.93
+    },
+    "15": {
+      "id": 15,
+      "url": "https://www.chess.com/game/daily/1009103112",
+      "event": "Let's Play!",
+      "white": "scottjahn",
+      "black": "testaccount1999",
+      "whiteElo": 768,
+      "blackElo": 1356,
+      "result": "0-1",
+      "playedAt": "2026-08-04T17:20:17Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "C45",
+      "ecoUrl": "https://www.chess.com/openings/Scotch-Game-3...exd4-4.Nxd4-g6",
+      "termination": "testaccount1999 won by checkmate",
+      "hero": "scottjahn",
+      "heroColor": "w",
+      "heroResult": "loss",
+      "whiteAccuracy": 76.32,
+      "blackAccuracy": 77.82
     }
   },
   "puzzles": [
@@ -292,6 +313,7 @@
       "solutionSan": "Kf7",
       "solutionUci": "e8f7",
       "altSolutions": [],
+      "continuation": [],
       "classification": "inaccuracy",
       "wpLoss": 9.176711281233647,
       "evalBefore": {
@@ -320,6 +342,7 @@
       "altSolutions": [
         "g4f5"
       ],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 10.032066944862734,
       "evalBefore": {
@@ -346,6 +369,7 @@
       "solutionSan": "Nd5",
       "solutionUci": "f6d5",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 19.84937880931563,
       "evalBefore": {
@@ -372,6 +396,7 @@
       "solutionSan": "Nxe5",
       "solutionUci": "g4e5",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 13.735503422741576,
       "evalBefore": {
@@ -398,6 +423,7 @@
       "solutionSan": "b5",
       "solutionUci": "b7b5",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 10.146988585357231,
       "evalBefore": {
@@ -424,6 +450,12 @@
       "solutionSan": "c3",
       "solutionUci": "c2c3",
       "altSolutions": [],
+      "continuation": [
+        "d6d5",
+        "c4e5",
+        "a7a6",
+        "d2d4"
+      ],
       "classification": "blunder",
       "wpLoss": 38.15208434977813,
       "evalBefore": {
@@ -437,7 +469,7 @@
       "fenPrev": "r1bqk2r/p1p2ppp/3p1n2/1Nb5/2NnP3/8/PPPPBPPP/R1BQ1RK1 b kq - 0 8",
       "prevSan": "Nxb5",
       "prevUci": "d4b5",
-      "note": null
+      "note": "Start building pawn chain (d4 next)"
     },
     {
       "id": 7,
@@ -450,6 +482,16 @@
       "solutionSan": "d4",
       "solutionUci": "d2d4",
       "altSolutions": [],
+      "continuation": [
+        "c5d6",
+        "g2g3",
+        "e4g3",
+        "e2b5",
+        "e8d8",
+        "f2g3",
+        "d6g3",
+        "h2g3"
+      ],
       "classification": "blunder",
       "wpLoss": 38.86171495618236,
       "evalBefore": {
@@ -476,6 +518,14 @@
       "solutionSan": "Bb5+",
       "solutionUci": "e2b5",
       "altSolutions": [],
+      "continuation": [
+        "e8f8",
+        "d6d7",
+        "c8b7",
+        "d2d4",
+        "c5d4",
+        "d1e1"
+      ],
       "classification": "mistake",
       "wpLoss": 11.358833698592179,
       "evalBefore": {
@@ -489,7 +539,7 @@
       "fenPrev": "r1b1k2r/p1p2ppp/3P4/2b5/4n2q/6P1/PPPPBP1P/R1BQ1RK1 b kq - 0 12",
       "prevSan": "Nxg3",
       "prevUci": "e4g3",
-      "note": "Check the king, cause loss of castling rights, win more material before eventually losing the rook"
+      "note": "Check the king, cause loss of castling rights, threaten checkmate which causes the knight to retreat."
     },
     {
       "id": 9,
@@ -502,6 +552,7 @@
       "solutionSan": "h5",
       "solutionUci": "h7h5",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 15.858708362850521,
       "evalBefore": {
@@ -529,8 +580,11 @@
       "solutionUci": "a7a6",
       "altSolutions": [
         "h8g8",
-        "h8f8"
+        "h8f8",
+        "c8b8",
+        "a4b4"
       ],
+      "continuation": [],
       "classification": "blunder",
       "wpLoss": 31.42464359832536,
       "evalBefore": {
@@ -560,6 +614,7 @@
         "e8e6",
         "f7g8"
       ],
+      "continuation": [],
       "classification": "blunder",
       "wpLoss": 49.81385901080111,
       "evalBefore": {
@@ -586,6 +641,7 @@
       "solutionSan": "Kg8",
       "solutionUci": "f7g8",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 13.189297565860258,
       "evalBefore": {
@@ -612,6 +668,7 @@
       "solutionSan": "Qe7",
       "solutionUci": "d8e7",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 18.108078444680746,
       "evalBefore": {
@@ -638,6 +695,7 @@
       "solutionSan": "Qf8",
       "solutionUci": "d8f8",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 11.571167292162649,
       "evalBefore": {
@@ -664,6 +722,7 @@
       "solutionSan": "Re3",
       "solutionUci": "e6e3",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 15.865785868634685,
       "evalBefore": {
@@ -690,6 +749,7 @@
       "solutionSan": "Re2",
       "solutionUci": "e3e2",
       "altSolutions": [],
+      "continuation": [],
       "classification": "blunder",
       "wpLoss": 42.90954125126472,
       "evalBefore": {
@@ -716,6 +776,7 @@
       "solutionSan": "Nxe4",
       "solutionUci": "f6e4",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 13.241523595285493,
       "evalBefore": {
@@ -742,6 +803,7 @@
       "solutionSan": "Bc5",
       "solutionUci": "b6c5",
       "altSolutions": [],
+      "continuation": [],
       "classification": "blunder",
       "wpLoss": 31.108161666130712,
       "evalBefore": {
@@ -768,6 +830,7 @@
       "solutionSan": "Rxf2",
       "solutionUci": "c2f2",
       "altSolutions": [],
+      "continuation": [],
       "classification": "blunder",
       "wpLoss": 78.82815978966727,
       "evalBefore": {
@@ -781,7 +844,7 @@
       "fenPrev": "8/8/4kp2/N5pp/8/7P/2r2PPK/8 w - - 0 43",
       "prevSan": "Nb3",
       "prevUci": "a5b3",
-      "note": "Knight forks...."
+      "note": "Need to avoid the Knight fork."
     },
     {
       "id": 20,
@@ -794,6 +857,7 @@
       "solutionSan": "Qxa4",
       "solutionUci": "d1a4",
       "altSolutions": [],
+      "continuation": [],
       "classification": "miss",
       "wpLoss": 24.519847648563328,
       "evalBefore": {
@@ -820,6 +884,7 @@
       "solutionSan": "a3",
       "solutionUci": "a2a3",
       "altSolutions": [],
+      "continuation": [],
       "classification": "miss",
       "wpLoss": 12.851890781254042,
       "evalBefore": {
@@ -846,6 +911,7 @@
       "solutionSan": "a3",
       "solutionUci": "a2a3",
       "altSolutions": [],
+      "continuation": [],
       "classification": "blunder",
       "wpLoss": 23.33959411339147,
       "evalBefore": {
@@ -872,6 +938,7 @@
       "solutionSan": "Na3",
       "solutionUci": "b1a3",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 16.318110267126954,
       "evalBefore": {
@@ -898,6 +965,7 @@
       "solutionSan": "Bxc4",
       "solutionUci": "e2c4",
       "altSolutions": [],
+      "continuation": [],
       "classification": "blunder",
       "wpLoss": 44.572090154939445,
       "evalBefore": {
@@ -924,6 +992,7 @@
       "solutionSan": "Bc3",
       "solutionUci": "e5c3",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 11.275388158734813,
       "evalBefore": {
@@ -950,6 +1019,10 @@
       "solutionSan": "Ng4",
       "solutionUci": "f6g4",
       "altSolutions": [],
+      "continuation": [
+        "h4g4",
+        "c8g4"
+      ],
       "classification": "miss",
       "wpLoss": 22.2801394770689,
       "evalBefore": {
@@ -963,7 +1036,7 @@
       "fenPrev": "r1bqk2r/ppp2pp1/2np1n1p/2b1p2P/4P2R/2N2N2/PPPP1PP1/R1BQKB2 w Qkq - 0 7",
       "prevSan": "a3",
       "prevUci": "a2a3",
-      "note": "Ng4 allows for ..Bxg2+, forking the rook"
+      "note": "Forces the rook to capture otherwise it will be forked by Bxf4+"
     },
     {
       "id": 27,
@@ -976,6 +1049,7 @@
       "solutionSan": "d5",
       "solutionUci": "d7d5",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 12.272131457874437,
       "evalBefore": {
@@ -1002,6 +1076,7 @@
       "solutionSan": "Kh8",
       "solutionUci": "g8h8",
       "altSolutions": [],
+      "continuation": [],
       "classification": "blunder",
       "wpLoss": 45.684321478024955,
       "evalBefore": {
@@ -1028,6 +1103,7 @@
       "solutionSan": "Rd7+",
       "solutionUci": "d3d7",
       "altSolutions": [],
+      "continuation": [],
       "classification": "miss",
       "wpLoss": 29.60993710696392,
       "evalBefore": {
@@ -1054,6 +1130,7 @@
       "solutionSan": "Rh6",
       "solutionUci": "h1h6",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 17.317018027768874,
       "evalBefore": {
@@ -1080,6 +1157,7 @@
       "solutionSan": "Rd1",
       "solutionUci": "h1d1",
       "altSolutions": [],
+      "continuation": [],
       "classification": "blunder",
       "wpLoss": 30.171338494009746,
       "evalBefore": {
@@ -1106,6 +1184,7 @@
       "solutionSan": "Be3",
       "solutionUci": "g5e3",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 10.959529664150395,
       "evalBefore": {
@@ -1132,6 +1211,7 @@
       "solutionSan": "Nbd2",
       "solutionUci": "b1d2",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 16.673145820808713,
       "evalBefore": {
@@ -1158,6 +1238,7 @@
       "solutionSan": "Qh5",
       "solutionUci": "d1h5",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 19.145955966058196,
       "evalBefore": {
@@ -1184,6 +1265,7 @@
       "solutionSan": "Qd3",
       "solutionUci": "d1d3",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 18.383262210375115,
       "evalBefore": {
@@ -1210,6 +1292,7 @@
       "solutionSan": "Qf3",
       "solutionUci": "h5f3",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 11.117062154788183,
       "evalBefore": {
@@ -1236,6 +1319,14 @@
       "solutionSan": "Nxg4",
       "solutionUci": "f6g4",
       "altSolutions": [],
+      "continuation": [
+        "f3g4",
+        "d8h4",
+        "f4g3",
+        "h4g4",
+        "d1g4",
+        "h5g4"
+      ],
       "classification": "blunder",
       "wpLoss": 20.54520333813828,
       "evalBefore": {
@@ -1262,6 +1353,14 @@
       "solutionSan": "Qa7",
       "solutionUci": "b8a7",
       "altSolutions": [],
+      "continuation": [
+        "d5e4",
+        "e8f8",
+        "a2a3",
+        "a8e8",
+        "a3b4",
+        "e8e4"
+      ],
       "classification": "miss",
       "wpLoss": 12.299844104057641,
       "evalBefore": {
@@ -1275,7 +1374,7 @@
       "fenPrev": "rq2k2r/1pp2pp1/p1n3p1/1Q1p4/1b4P1/1PN1PP2/P1PK3P/R4B1R w kq - 0 18",
       "prevSan": "Qxd5",
       "prevUci": "b5d5",
-      "note": "Eventually traps the queen in the center"
+      "note": "Traps the queen in the center"
     },
     {
       "id": 39,
@@ -1288,6 +1387,16 @@
       "solutionSan": "c5",
       "solutionUci": "c7c5",
       "altSolutions": [],
+      "continuation": [
+        "a2a3",
+        "b4a5",
+        "g4g5",
+        "b7b5",
+        "f3f4",
+        "e5c6",
+        "f2g2",
+        "c5c4"
+      ],
       "classification": "mistake",
       "wpLoss": 16.309202276781278,
       "evalBefore": {
@@ -1314,6 +1423,7 @@
       "solutionSan": "Rd4",
       "solutionUci": "d8d4",
       "altSolutions": [],
+      "continuation": [],
       "classification": "mistake",
       "wpLoss": 14.381306733903457,
       "evalBefore": {
@@ -1340,6 +1450,16 @@
       "solutionSan": "Ng6",
       "solutionUci": "e7g6",
       "altSolutions": [],
+      "continuation": [
+        "h4h5",
+        "g6e5",
+        "f3g3",
+        "f5f4",
+        "g3h2",
+        "g7g6",
+        "h5e5",
+        "f6e5"
+      ],
       "classification": "miss",
       "wpLoss": 38.493513612115905,
       "evalBefore": {
@@ -1353,7 +1473,7 @@
       "fenPrev": "8/4n1p1/p4k2/5p2/1bB1P2R/8/P1PrKN2/8 w - - 1 37",
       "prevSan": "Kf3",
       "prevUci": "e2f3",
-      "note": "Gets knight towards e5 forking king and bishop"
+      "note": null
     },
     {
       "id": 42,
@@ -1366,6 +1486,10 @@
       "solutionSan": "Ng6",
       "solutionUci": "e7g6",
       "altSolutions": [],
+      "continuation": [
+        "h4h5",
+        "g6e5"
+      ],
       "classification": "miss",
       "wpLoss": 33.29426919496148,
       "evalBefore": {
@@ -1392,6 +1516,10 @@
       "solutionSan": "Nd4+",
       "solutionUci": "f5d4",
       "altSolutions": [],
+      "continuation": [
+        "e4d4",
+        "e5d4"
+      ],
       "classification": "miss",
       "wpLoss": 28.94921124308226,
       "evalBefore": {
@@ -1418,6 +1546,7 @@
       "solutionSan": "Nd4+",
       "solutionUci": "f5d4",
       "altSolutions": [],
+      "continuation": [],
       "classification": "miss",
       "wpLoss": 29.50150077991568,
       "evalBefore": {
@@ -1432,6 +1561,87 @@
       "prevSan": "Kf3",
       "prevUci": "g4f3",
       "note": "Fork king and bishop"
+    },
+    {
+      "id": 59,
+      "gameId": 15,
+      "ply": 18,
+      "fen": "r1b1k1nr/p1p1qp1p/2p3p1/3P4/2B5/4b3/PPP2PPP/RN1Q1RK1 w kq - 0 10",
+      "sideToMove": "w",
+      "playedSan": "fxe3",
+      "playedUci": "f2e3",
+      "solutionSan": "Re1",
+      "solutionUci": "f1e1",
+      "altSolutions": [],
+      "continuation": [],
+      "classification": "miss",
+      "wpLoss": 13.647267021935434,
+      "evalBefore": {
+        "type": "cp",
+        "value": 358
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 171
+      },
+      "fenPrev": "r1b1k1nr/p1p1qp1p/2p3pb/3P4/2B5/4B3/PPP2PPP/RN1Q1RK1 b kq - 4 9",
+      "prevSan": "Bxe3",
+      "prevUci": "h6e3",
+      "note": "Better to pin the bishop - you win it on the next turn anyway, and it forces the king to move"
+    },
+    {
+      "id": 60,
+      "gameId": 15,
+      "ply": 22,
+      "fen": "r1b1k1nr/p1p2p1p/2p3p1/2qP4/2B5/8/PPP3PP/RN1Q1R1K w kq - 2 12",
+      "sideToMove": "w",
+      "playedSan": "b3",
+      "playedUci": "b2b3",
+      "solutionSan": "Qe2+",
+      "solutionUci": "d1e2",
+      "altSolutions": [],
+      "continuation": [],
+      "classification": "miss",
+      "wpLoss": 13.277806908058963,
+      "evalBefore": {
+        "type": "cp",
+        "value": 305
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 135
+      },
+      "fenPrev": "r1b1k1nr/p1p2p1p/2p3p1/3P4/2B5/4q3/PPP3PP/RN1Q1R1K b kq - 1 11",
+      "prevSan": "Qc5",
+      "prevUci": "e3c5",
+      "note": "Force loss of castling rights"
+    },
+    {
+      "id": 61,
+      "gameId": 15,
+      "ply": 66,
+      "fen": "4r3/R4pkp/8/1B1P2p1/2P3P1/1P1b3P/P5r1/4RK2 w - - 9 34",
+      "sideToMove": "w",
+      "playedSan": "Re2",
+      "playedUci": "e1e2",
+      "solutionSan": "Kxg2",
+      "solutionUci": "f1g2",
+      "altSolutions": [],
+      "continuation": [],
+      "classification": "blunder",
+      "wpLoss": 92.4665682975043,
+      "evalBefore": {
+        "type": "cp",
+        "value": 681
+      },
+      "evalAfter": {
+        "type": "mate",
+        "value": -5
+      },
+      "fenPrev": "4r3/R4pkp/8/1B1P2p1/2P1b1P1/1P5P/P5r1/4RK2 b - - 8 33",
+      "prevSan": "Bd3+",
+      "prevUci": "e4d3",
+      "note": "..."
     }
   ]
 }

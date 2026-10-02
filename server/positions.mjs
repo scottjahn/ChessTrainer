@@ -48,3 +48,22 @@ export function uciToSan(fen, uci) {
     return null;
   }
 }
+
+/** Whether a run of UCI moves can be played, in order, from a position. */
+export function lineIsLegal(fen, ucis) {
+  let at = fen;
+  for (const uci of ucis) {
+    try {
+      const chess = new Chess(at);
+      chess.move({
+        from: uci.slice(0, 2),
+        to: uci.slice(2, 4),
+        promotion: uci.length > 4 ? uci[4] : undefined,
+      });
+      at = chess.fen();
+    } catch {
+      return false;
+    }
+  }
+  return true;
+}

@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS puzzles (
   solution_san   TEXT NOT NULL,
   solution_uci   TEXT NOT NULL,
   alt_solutions  TEXT NOT NULL DEFAULT '[]',
+  continuation   TEXT NOT NULL DEFAULT '[]',
   classification TEXT NOT NULL,
   wp_loss        REAL,
   eval_before    TEXT,
@@ -136,6 +137,11 @@ if (!db.prepare('PRAGMA table_info(games)').all().some((c) => c.name === 'ended_
   }
 }
 
+// Multi-move puzzles arrived later too: the moves that follow the solution.
+if (!db.prepare('PRAGMA table_info(puzzles)').all().some((c) => c.name === 'continuation')) {
+  db.exec("ALTER TABLE puzzles ADD COLUMN continuation TEXT NOT NULL DEFAULT '[]'");
+}
+
 export function getSetting(key, fallback = null) {
   const row = db.prepare('SELECT value FROM settings WHERE key = ?').get(key);
   if (!row) return fallback;
@@ -153,6 +159,7 @@ export const DEFAULT_SETTINGS = {
   heroUsername: '',
   depth: 16,
   multipv: 1,
+  altMargin: 3,
   skipOpeningPlies: 6,
   thresholds: { inaccuracy: 5, mistake: 10, blunder: 20 },
   onlyHeroMoves: true,

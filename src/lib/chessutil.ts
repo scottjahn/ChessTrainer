@@ -36,5 +36,34 @@ export function pvToSan(fen: string, pv: string[], limit = 6): string[] {
   return out;
 }
 
+export interface LineStep {
+  uci: string;
+  san: string;
+  from: string;
+  to: string;
+  /** The position once this move has been played. */
+  fen: string;
+}
+
+/** Play a run of UCI moves from a position, stopping at the first illegal one. */
+export function playLine(fen: string, ucis: string[]): LineStep[] {
+  const out: LineStep[] = [];
+  try {
+    const chess = new Chess(fen);
+    for (const uci of ucis) {
+      const move = chess.move({
+        from: uci.slice(0, 2),
+        to: uci.slice(2, 4),
+        promotion: uci.length > 4 ? uci[4] : undefined,
+      });
+      if (!move) break;
+      out.push({ uci, san: move.san, from: move.from, to: move.to, fen: chess.fen() });
+    }
+  } catch {
+    /* partial line is fine */
+  }
+  return out;
+}
+
 export const moveLabel = (ply: number): string =>
   `${Math.floor(ply / 2) + 1}${ply % 2 === 0 ? '.' : '…'}`;

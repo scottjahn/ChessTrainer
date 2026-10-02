@@ -4,18 +4,25 @@ import { Chess } from 'chess.js';
 import { Board } from '../components/Board';
 import { ClassPill, formatDate, formatTimeControl } from '../components/bits';
 import { api, type GameDetail } from '../lib/api';
-import { CLASSIFICATION_META, classifyMove, formatScore, negate } from '../lib/classify';
-import { Engine } from '../lib/engine';
-import { moveLabel, pvToSan, uciToSan } from '../lib/chessutil';
-import type { AnalysisRow, Classification, Puzzle, Score, Settings } from '../lib/types';
+import { CLASSIFICATION_META, classifyMove, formatScore, negate, winPercent } from '../lib/classify';
+import { Engine, type EngineLine } from '../lib/engine';
+import { moveLabel, playLine, pvToSan, uciToSan, type LineStep } from '../lib/chessutil';
+import type { AnalysisRow, Classification, Game, Puzzle, Score, Settings } from '../lib/types';
 
 const FLAGGED: Classification[] = ['blunder', 'miss', 'mistake'];
+
+/** How many of the engine's best moves to weigh up as answers to a puzzle. */
+const CANDIDATES = 3;
 
 interface Draft {
   uci: string;
   note: string;
   alts: string[];
+  /** What follows the answer in a multi-move puzzle: reply, your move, reply, … */
+  line: string[];
 }
+
+const EMPTY_DRAFT: Draft = { uci: '', note: '', alts: [], line: [] };
 
 interface Progress {
   done: number;
@@ -23,10 +30,17 @@ interface Progress {
   label: string;
 }
 
+/** Keyed by game, so stepping to the next one starts from a clean slate. */
 export function AdminGame() {
   const gameId = Number(useParams().id);
+  return <GameReview key={gameId} gameId={gameId} />;
+}
+
+function GameReview({ gameId }: { gameId: number }) {
   const [search, setSearch] = useSearchParams();
   const [detail, setDetail] = useState<GameDetail | null>(null);
+  // The games either side of this one, in the library's order.
+  const [neighbours, setNeighbours] = useState<{ prev: Game | null; next: Game | null }>({ prev: null, next: null });
   const [settings, setSettings] = useState<Settings | null>(null);
   const [rows, setRows] = useState<Map<number, AnalysisRow>>(new Map());
   const [puzzles, setPuzzles] = useState<Puzzle[]>([]);
@@ -36,12 +50,23 @@ export function AdminGame() {
   // When true, the next move played on the board is added as an extra accepted
   // answer rather than replacing the main one.
   const [addingAlt, setAddingAlt] = useState(false);
+  // Which move of the answer line the board is on: 0 is the answer itself.
+  const [cursor, setCursor] = useState(0);
+  const [candidates, setCandidates] = useState<EngineLine[] | null>(null);
+  const [lineBusy, setLineBusy] = useState(false);
   const [progress, setProgress] = useState<Progress | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
 
   const engineRef = useRef<Engine | null>(null);
   const cancelRef = useRef(false);
+  // Only a brand-new puzzle gets the engine's near-equal moves added for it;
+  // a saved one keeps exactly the answers it was saved with.
+  const autoAltRef = useRef(false);
+  // Bumped whenever the line changes by hand, to drop an engine reply in flight.
+  const lineToken = useRef(0);
+
+  const getEngine = () => (engineRef.current ??= new Engine());
 
   useEffect(() => {
     let alive = true;
@@ -54,8 +79,17 @@ export function AdminGame() {
         setRows(new Map(d.analysis.map((r) => [r.ply, r])));
       })
       .catch((e) => alive && setError(e.message));
+    api.games()
+      .then((games) => {
+        if (!alive) return;
+        const i = games.findIndex((g) => g.id === gameId);
+        if (i >= 0) setNeighbours({ prev: games[i - 1] ?? null, next: games[i + 1] ?? null });
+      })
+      .catch(() => { /* without the list there is just nothing to step to */ });
     return () => {
       alive = false;
+      // Leaving mid-analysis must not save the half-finished scan.
+      cancelRef.current = true;
       engineRef.current?.dispose();
       engineRef.current = null;
     };
@@ -74,8 +108,7 @@ export function AdminGame() {
     const depth = settings.depth;
 
     setProgress({ done: 0, total: positions.length, label: 'Starting engine…' });
-    const engine = engineRef.current ?? new Engine();
-    engineRef.current = engine;
+    const engine = getEngine();
 
     try {
       await engine.init();
@@ -186,13 +219,86 @@ export function AdminGame() {
       setEditPly(ply);
       setViewPly(ply - 1);
       setAddingAlt(false);
+      setCursor(0);
+      autoAltRef.current = !existing;
       setDraft({
         uci: existing?.solution_uci ?? row?.best_uci ?? '',
         note: existing?.note ?? '',
         alts: existing?.alt_solutions ?? [],
+        line: existing?.continuation ?? [],
       });
     },
     [puzzles, rows]
+  );
+
+  const stopEdit = useCallback(() => {
+    setEditPly(null);
+    setDraft(null);
+    setAddingAlt(false);
+    setCursor(0);
+  }, []);
+
+  // The game scan keeps one best move per position. A puzzle wants to know
+  // whether that move stands alone, so search its position again for the top few.
+  const editFen = editPly != null && detail ? detail.plies[editPly].fenBefore : null;
+  const playedUci = editPly != null && detail ? detail.plies[editPly].uci : null;
+  useEffect(() => {
+    lineToken.current++;
+    setLineBusy(false);
+    setCandidates(null);
+    if (!editFen || !settings) return;
+    let alive = true;
+    getEngine()
+      .analyse(editFen, settings.depth, CANDIDATES)
+      .then(({ lines }) => {
+        if (!alive) return;
+        setCandidates(lines);
+        if (!autoAltRef.current || !lines.length) return;
+        autoAltRef.current = false;
+        const best = winPercent(lines[0].score);
+        const close = lines
+          .filter((l) => best - winPercent(l.score) <= settings.altMargin)
+          .map((l) => l.uci);
+        setDraft((d) => {
+          if (!d) return d;
+          const uci = d.uci || close[0];
+          const extra = close.filter((c) => c !== uci && c !== playedUci && !d.alts.includes(c));
+          return { ...d, uci, alts: [...d.alts, ...extra] };
+        });
+      })
+      .catch(() => { /* the candidates are a convenience; the editor works without them */ });
+    return () => { alive = false; };
+  }, [editFen, playedUci, settings]);
+
+  /**
+   * Let the engine play on from the end of `base`. A line has to end on the
+   * solver's move, so a reply the engine could not answer is dropped again.
+   */
+  const growLine = useCallback(
+    async (base: string[], count: number) => {
+      if (!editFen || !settings) return;
+      const token = ++lineToken.current;
+      setLineBusy(true);
+      let moves = base;
+      try {
+        for (let i = 0; i < count; i++) {
+          const steps = playLine(editFen, moves);
+          if (steps.length !== moves.length) break;
+          const result = await getEngine().analyse(steps[steps.length - 1].fen, settings.depth);
+          if (token !== lineToken.current) return;
+          if (!result.bestUci) break;
+          moves = [...moves, result.bestUci];
+        }
+        if (moves.length % 2 === 0) moves = moves.slice(0, -1);
+        setDraft((d) => (d && d.uci === moves[0] ? { ...d, line: moves.slice(1) } : d));
+        setCursor(moves.length - 1);
+      } catch (e) {
+        if (token === lineToken.current) setError((e as Error).message);
+      } finally {
+        if (token === lineToken.current) setLineBusy(false);
+      }
+    },
+    [editFen, settings]
   );
 
   // ?puzzle=<id> arrives from the admin's finder: open that one for editing.
@@ -223,6 +329,8 @@ export function AdminGame() {
         played_uci: ply.uci,
         solution_uci: draft.uci,
         alt_solutions: draft.alts,
+        // Whole reply/answer pairs only, so the puzzle ends on the solver's move.
+        continuation: draft.line.slice(0, draft.line.length - (draft.line.length % 2)),
         classification: row?.classification ?? 'mistake',
         wp_loss: row?.wp_loss ?? null,
         eval_before: row?.eval_before ?? null,
@@ -233,15 +341,13 @@ export function AdminGame() {
         note: draft.note.trim() || null,
       });
       setPuzzles((list) => [...list.filter((p) => p.ply !== editPly), saved].sort((a, b) => a.ply - b.ply));
-      setEditPly(null);
-      setDraft(null);
-      setAddingAlt(false);
+      stopEdit();
       setStatus(`Saved puzzle: ${moveLabel(editPly)} ${saved.solution_san}`);
       setError(null);
     } catch (e) {
       setError((e as Error).message);
     }
-  }, [editPly, draft, detail, rows, gameId]);
+  }, [editPly, draft, detail, rows, gameId, stopEdit]);
 
   const removePuzzle = useCallback(async (id: number) => {
     await api.deletePuzzle(id);
@@ -258,11 +364,11 @@ export function AdminGame() {
       if (e.key === 'ArrowRight') setViewPly((p) => Math.min(detail.plies.length - 1, p + 1));
       if (e.key === 'Home') setViewPly(-1);
       if (e.key === 'End') setViewPly(detail.plies.length - 1);
-      if (e.key === 'Escape') { setEditPly(null); setDraft(null); setAddingAlt(false); }
+      if (e.key === 'Escape') stopEdit();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [detail]);
+  }, [detail, stopEdit]);
 
   /* ---------------------------------------------------------------- view */
 
@@ -284,8 +390,14 @@ export function AdminGame() {
 
   const { game, plies } = detail;
   const editing = editPly != null;
+  // The answer and everything after it, replayed from the puzzle position.
+  const fullLine = editing && draft?.uci ? [draft.uci, ...draft.line] : [];
+  const lineSteps = editing ? playLine(plies[editPly].fenBefore, fullLine) : [];
+  const at = Math.min(cursor, Math.max(lineSteps.length - 1, 0));
+  const editBoardFen = editing ? (at > 0 ? lineSteps[at - 1].fen : plies[editPly].fenBefore) : '';
+
   const boardFen = editing
-    ? plies[editPly].fenBefore
+    ? editBoardFen
     : viewPly < 0
       ? plies[0]?.fenBefore ?? detail.finalFen
       : plies[viewPly].fenAfter;
@@ -301,15 +413,18 @@ export function AdminGame() {
   );
   // Red for the move actually played, green for the solution, faint green for
   // accepted alternatives. One arrow per pair of squares, solution winning.
-  const arrows = editing
-    ? [
+  // Further down the line there is only the one move to show.
+  const arrows = !editing
+    ? []
+    : at > 0
+      ? [arrow(lineSteps[at].uci, 'rgba(127,166,80,.9)')]
+      : [
       ...(draft?.uci ? [arrow(draft.uci, 'rgba(127,166,80,.9)')] : []),
       ...(draft?.alts ?? []).map((uci) => arrow(uci, 'rgba(127,166,80,.4)')),
       arrow(plies[editPly].uci, 'rgba(208,87,74,.9)'),
     ].filter((a, i, all) =>
       all.findIndex((b) => b.startSquare === a.startSquare && b.endSquare === a.endSquare) === i
-    )
-    : [];
+    );
 
   return (
     <div className="stack">
@@ -323,6 +438,8 @@ export function AdminGame() {
           {formatDate(game.played_at)} · {formatTimeControl(game.time_control, game.time_class)}
         </span>
         <div className="spacer" />
+        <GameStep game={neighbours.prev} label="← Previous" />
+        <GameStep game={neighbours.next} label="Next →" />
         {game.url && <a className="btn small" href={game.url} target="_blank" rel="noreferrer">chess.com ↗</a>}
       </div>
 
@@ -374,13 +491,32 @@ export function AdminGame() {
             onMove={
               editing
                 ? (from, to, promotion) => {
-                  const chess = new Chess(plies[editPly].fenBefore);
+                  const chess = new Chess(editBoardFen);
                   const move = chess.move({ from, to, promotion: promotion ?? 'q' });
                   if (!move) return false;
                   const uci = `${move.from}${move.to}${move.promotion ?? ''}`;
+                  if (at > 0) {
+                    // Overriding a move further down: what came after it no
+                    // longer follows, and a new reply needs a new answer.
+                    if (uci === fullLine[at]) return true;
+                    const moves = [...fullLine.slice(0, at), uci];
+                    lineToken.current++;
+                    setLineBusy(false);
+                    setDraft((d) => (d ? { ...d, line: moves.slice(1) } : d));
+                    if (at % 2 === 1) growLine(moves, 1);
+                    return true;
+                  }
+                  if (!addingAlt && uci !== draft?.uci) {
+                    lineToken.current++;
+                    setLineBusy(false);
+                  }
                   setDraft((d) => {
-                    const base = d ?? { uci: '', note: '', alts: [] };
-                    if (!addingAlt) return { ...base, uci, alts: base.alts.filter((a) => a !== uci) };
+                    const base = d ?? EMPTY_DRAFT;
+                    if (!addingAlt) {
+                      // A different answer leaves the old follow-up dangling.
+                      const line = uci === base.uci ? base.line : [];
+                      return { ...base, uci, line, alts: base.alts.filter((a) => a !== uci) };
+                    }
                     if (uci === base.uci || base.alts.includes(uci)) return base;
                     return { ...base, alts: [...base.alts, uci] };
                   });
@@ -390,7 +526,11 @@ export function AdminGame() {
                 : undefined
             }
             arrows={arrows}
-            lastMove={shownMove ? { from: shownMove.from, to: shownMove.to } : null}
+            lastMove={
+              editing && at > 0
+                ? { from: lineSteps[at - 1].from, to: lineSteps[at - 1].to }
+                : shownMove ? { from: shownMove.from, to: shownMove.to } : null
+            }
           />
 
           {editing ? (
@@ -400,16 +540,50 @@ export function AdminGame() {
               played={plies[editPly]}
               draftSan={draftSan}
               note={draft?.note ?? ''}
-              onNote={(note) => setDraft((d) => ({ ...(d ?? { uci: '', alts: [] }), note }))}
-              onUseBest={() =>
-                setDraft((d) => ({ ...(d ?? { note: '', alts: [] }), uci: editRow?.best_uci ?? '' }))}
+              onNote={(note) => setDraft((d) => ({ ...(d ?? EMPTY_DRAFT), note }))}
+              onUseBest={() => {
+                const uci = editRow?.best_uci ?? '';
+                lineToken.current++;
+                setLineBusy(false);
+                setCursor(0);
+                setDraft((d) => {
+                  const base = d ?? EMPTY_DRAFT;
+                  return {
+                    ...base,
+                    uci,
+                    line: uci === base.uci ? base.line : [],
+                    alts: base.alts.filter((a) => a !== uci),
+                  };
+                });
+              }}
+              candidates={candidates}
+              mainUci={draft?.uci ?? ''}
+              onToggleCandidate={(uci) =>
+                setDraft((d) => {
+                  if (!d || uci === d.uci) return d;
+                  return {
+                    ...d,
+                    alts: d.alts.includes(uci) ? d.alts.filter((a) => a !== uci) : [...d.alts, uci],
+                  };
+                })}
+              steps={lineSteps}
+              cursor={at}
+              lineBusy={lineBusy}
+              onCursor={(i) => { setCursor(i); setAddingAlt(false); }}
+              onExtend={() => growLine(fullLine, 2)}
+              onTrim={() => {
+                lineToken.current++;
+                setLineBusy(false);
+                setCursor(0);
+                setDraft((d) => (d ? { ...d, line: d.line.slice(0, Math.max(0, d.line.length - 2)) } : d));
+              }}
               alts={draft?.alts ?? []}
               altSans={(draft?.alts ?? []).map((a) => ({ uci: a, san: uciToSan(plies[editPly].fenBefore, a) }))}
               addingAlt={addingAlt}
               onToggleAlt={() => setAddingAlt((v) => !v)}
               onRemoveAlt={(uci) =>
                 setDraft((d) => (d ? { ...d, alts: d.alts.filter((a) => a !== uci) } : d))}
-              onCancel={() => { setEditPly(null); setDraft(null); setAddingAlt(false); }}
+              onCancel={stopEdit}
               onSave={savePuzzle}
               existing={puzzles.find((p) => p.ply === editPly)}
             />
@@ -455,7 +629,7 @@ export function AdminGame() {
               plies={plies}
               rows={rows}
               current={editing ? editPly : viewPly}
-              onSelect={(ply) => { setEditPly(null); setDraft(null); setViewPly(ply); }}
+              onSelect={(ply) => { stopEdit(); setViewPly(ply); }}
             />
           </div>
         </div>
@@ -465,6 +639,19 @@ export function AdminGame() {
 }
 
 /* ------------------------------------------------------------- sub-views */
+
+function GameStep({ game, label }: { game: Game | null; label: string }) {
+  if (!game) return <button className="small" disabled>{label}</button>;
+  return (
+    <Link
+      className="btn small"
+      to={`/admin/game/${game.id}`}
+      title={`${game.white} vs ${game.black} · ${formatDate(game.played_at)}`}
+    >
+      {label}
+    </Link>
+  );
+}
 
 function AnalysisBar({
   progress,
@@ -524,10 +711,20 @@ function PuzzleEditor({
   draftSan,
   note,
   existing,
+  candidates,
+  mainUci,
+  alts,
   altSans,
   addingAlt,
+  steps,
+  cursor,
+  lineBusy,
   onNote,
   onUseBest,
+  onToggleCandidate,
+  onCursor,
+  onExtend,
+  onTrim,
   onToggleAlt,
   onRemoveAlt,
   onCancel,
@@ -535,10 +732,20 @@ function PuzzleEditor({
 }: {
   ply: number;
   row: AnalysisRow | undefined;
-  played: { san: string; color: string; fenBefore: string };
+  played: { san: string; uci: string; color: string; fenBefore: string };
   draftSan: string | null;
   note: string;
   existing: Puzzle | undefined;
+  /** The engine's top moves here, best first; null while it is still searching. */
+  candidates: EngineLine[] | null;
+  mainUci: string;
+  steps: LineStep[];
+  cursor: number;
+  lineBusy: boolean;
+  onToggleCandidate: (uci: string) => void;
+  onCursor: (index: number) => void;
+  onExtend: () => void;
+  onTrim: () => void;
   alts: string[];
   altSans: { uci: string; san: string | null }[];
   addingAlt: boolean;
@@ -567,6 +774,32 @@ function PuzzleEditor({
             <span className="muted"> ({formatScore(row.eval_before, played.color === 'w')})</span>
           )}
         </dd>
+        <dt>Top moves</dt>
+        <dd className="row-tight" style={{ flexWrap: 'wrap' }}>
+          {!candidates && <span className="faint tiny">searching…</span>}
+          {candidates?.map((c) => {
+            const isMain = c.uci === mainUci;
+            const accepted = isMain || alts.includes(c.uci);
+            return (
+              <button
+                key={c.uci}
+                className="small mono"
+                disabled={isMain}
+                title={
+                  isMain ? 'The correct move'
+                    : accepted ? 'Accepted as an answer — click to stop accepting it'
+                      : c.uci === played.uci ? 'The move played in the game — click to accept it anyway'
+                        : 'Click to accept this as an answer too'
+                }
+                style={accepted ? { borderColor: 'var(--accent)', color: 'var(--accent)' } : undefined}
+                onClick={() => onToggleCandidate(c.uci)}
+              >
+                {accepted ? '✓ ' : ''}{uciToSan(played.fenBefore, c.uci) ?? c.uci}{' '}
+                <span className="muted">{formatScore(c.score, played.color === 'w')}</span>
+              </button>
+            );
+          })}
+        </dd>
         <dt>Correct move</dt>
         <dd className="mono">
           {draftSan ? <b style={{ color: 'var(--accent)' }}>{draftSan}</b> : <span className="faint">play a move on the board</span>}
@@ -587,11 +820,44 @@ function PuzzleEditor({
               </button>
             </span>
           ))}
-          <button className="small" onClick={onToggleAlt} disabled={!draftSan}>
+          <button className="small" onClick={onToggleAlt} disabled={!draftSan || cursor > 0}>
             {addingAlt ? 'Play it on the board…' : '+ Another move'}
           </button>
         </dd>
+
+        <dt>Line</dt>
+        <dd className="row-tight" style={{ flexWrap: 'wrap' }}>
+          {steps.map((step, i) => (
+            <button
+              key={i}
+              className="small mono"
+              title={i % 2 ? 'Their reply — select it, then play a different one on the board to override' : 'Your move'}
+              style={{
+                ...(i === cursor && steps.length > 1 ? { borderColor: 'var(--accent)' } : {}),
+                ...(i % 2 ? { opacity: 0.75 } : {}),
+              }}
+              onClick={() => onCursor(i)}
+            >
+              {moveLabel(ply + i)} {step.san}
+            </button>
+          ))}
+          <button className="small" onClick={onExtend} disabled={!draftSan || lineBusy}>
+            {lineBusy ? 'Engine thinking…' : '+ Reply & next move'}
+          </button>
+          {steps.length > 1 && (
+            <button className="small ghost" onClick={onTrim} title="Remove the last reply and answer">
+              − Shorten
+            </button>
+          )}
+        </dd>
       </dl>
+      {steps.length > 1 && (
+        <p className="tiny faint" style={{ marginTop: 8, marginBottom: 0 }}>
+          Multi-move puzzle: the trainer plays their replies and asks for each of your moves in turn.
+          Select a move above and play another on the board to override it — everything after it is
+          dropped, and a new reply gets a fresh engine answer.
+        </p>
+      )}
       {addingAlt && (
         <p className="tiny faint" style={{ marginTop: 8, marginBottom: 0 }}>
           The next move you play is added as a second acceptable answer instead of replacing the first.
@@ -690,6 +956,11 @@ function SavedPuzzles({
                   <span className="faint mono">{p.played_san}</span>
                   <span className="faint"> → </span>
                   <b className="mono">{p.solution_san}</b>
+                  {p.continuation.length > 0 && (
+                    <span className="faint tiny" title="Multi-move puzzle">
+                      {' '}+{p.continuation.length / 2} more
+                    </span>
+                  )}
                 </td>
                 <td style={{ width: 34 }}>
                   <span style={{ color: CLASSIFICATION_META[p.classification].color }}>

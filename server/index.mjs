@@ -3,7 +3,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { db, allSettings, setSetting } from './db.mjs';
 import { fetchGameByUrl, fetchRecentGames, gameFromPgn } from './chesscom.mjs';
-import { gamePositions, uciToSan } from './positions.mjs';
+import { gamePositions, lineIsLegal, uciToSan } from './positions.mjs';
 import { writePuzzleExport } from './export.mjs';
 import { buildPuzzlePayload, hydrateAnalysis, hydratePuzzle } from './payload.mjs';
 
@@ -195,20 +195,23 @@ app.post('/api/puzzles', wrap((req, res) => {
 
   const solutionSan = uciToSan(b.fen, b.solution_uci);
   if (!solutionSan) throw fail('That solution move is not legal in this position', 400);
+  const continuation = b.continuation ?? [];
+  checkContinuation(b.fen, b.solution_uci, continuation);
 
   const row = db.prepare(`
     INSERT INTO puzzles (game_id, ply, fen, side_to_move, played_san, played_uci,
-                         solution_san, solution_uci, alt_solutions, classification, wp_loss,
+                         solution_san, solution_uci, alt_solutions, continuation, classification, wp_loss,
                          eval_before, eval_after, fen_prev, prev_san, prev_uci, note, enabled, created_at)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     ON CONFLICT(game_id, ply) DO UPDATE SET
       solution_san = excluded.solution_san, solution_uci = excluded.solution_uci,
-      alt_solutions = excluded.alt_solutions, classification = excluded.classification,
+      alt_solutions = excluded.alt_solutions, continuation = excluded.continuation,
+      classification = excluded.classification,
       wp_loss = excluded.wp_loss, eval_before = excluded.eval_before,
       eval_after = excluded.eval_after, note = excluded.note, enabled = excluded.enabled
     RETURNING *`).get(
     game.id, b.ply, b.fen, b.side_to_move, b.played_san ?? null, b.played_uci ?? null,
-    solutionSan, b.solution_uci, JSON.stringify(b.alt_solutions ?? []),
+    solutionSan, b.solution_uci, JSON.stringify(b.alt_solutions ?? []), JSON.stringify(continuation),
     b.classification ?? 'mistake', b.wp_loss ?? null,
     JSON.stringify(b.eval_before ?? null), JSON.stringify(b.eval_after ?? null),
     b.fen_prev ?? null, b.prev_san ?? null, b.prev_uci ?? null, b.note ?? null,
@@ -222,11 +225,16 @@ app.patch('/api/puzzles/:id', wrap((req, res) => {
   const existing = db.prepare('SELECT * FROM puzzles WHERE id = ?').get(id);
   if (!existing) throw fail('No such puzzle', 404);
 
-  if (req.body.solution_uci !== undefined) {
-    const san = uciToSan(existing.fen, req.body.solution_uci);
+  if (req.body.solution_uci !== undefined || req.body.continuation !== undefined) {
+    const uci = req.body.solution_uci ?? existing.solution_uci;
+    const san = uciToSan(existing.fen, uci);
     if (!san) throw fail('That solution move is not legal in this position', 400);
-    db.prepare('UPDATE puzzles SET solution_uci = ?, solution_san = ? WHERE id = ?')
-      .run(req.body.solution_uci, san, id);
+    // A new first move leaves the old follow-up dangling, so it goes unless replaced.
+    const continuation = req.body.continuation
+      ?? (uci === existing.solution_uci ? JSON.parse(existing.continuation) : []);
+    checkContinuation(existing.fen, uci, continuation);
+    db.prepare('UPDATE puzzles SET solution_uci = ?, solution_san = ?, continuation = ? WHERE id = ?')
+      .run(uci, san, JSON.stringify(continuation), id);
   }
   if (req.body.alt_solutions !== undefined) {
     db.prepare('UPDATE puzzles SET alt_solutions = ? WHERE id = ?')
@@ -307,6 +315,16 @@ app.use((err, _req, res, _next) => {
   if (status >= 500) console.error(err);
   res.status(status).json({ error: err.message ?? 'Server error' });
 });
+
+/** A continuation is reply/answer pairs, so the puzzle always ends on the solver's move. */
+function checkContinuation(fen, solutionUci, continuation) {
+  if (!Array.isArray(continuation) || continuation.length % 2) {
+    throw fail('A multi-move line has to end on your own move', 400);
+  }
+  if (!lineIsLegal(fen, [solutionUci, ...continuation])) {
+    throw fail('That line has a move that is not legal where it is played', 400);
+  }
+}
 
 /** PGN files can hold many games back to back; split on the header starting each. */
 function splitPgns(text) {

@@ -251,6 +251,17 @@ function SettingsCard({ settings, onSave }: { settings: Settings; onSave: (s: Se
             onChange={(e) => setDraft({ ...draft, skipOpeningPlies: Number(e.target.value) })}
           />
         </label>
+        <label className="field" style={{ width: 170 }} title="Engine moves within this much win probability of the best are added as accepted answers on a new puzzle. 0 turns it off.">
+          <span>Also accept within (win %)</span>
+          <input
+            type="number"
+            min={0}
+            max={20}
+            step={0.5}
+            value={draft.altMargin}
+            onChange={(e) => setDraft({ ...draft, altMargin: Number(e.target.value) })}
+          />
+        </label>
         <label className="checkbox" style={{ paddingBottom: 9 }}>
           <input
             type="checkbox"

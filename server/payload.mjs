@@ -14,6 +14,7 @@ export const hydratePuzzle = (row) => ({
   ...row,
   enabled: !!row.enabled,
   alt_solutions: safeJson(row.alt_solutions, []),
+  continuation: safeJson(row.continuation, []),
   eval_before: safeJson(row.eval_before, null),
   eval_after: safeJson(row.eval_after, null),
 });
@@ -51,7 +52,8 @@ export function buildPuzzlePayload() {
       id: p.id, gameId: p.game_id, ply: p.ply, fen: p.fen, sideToMove: p.side_to_move,
       playedSan: p.played_san, playedUci: p.played_uci,
       solutionSan: p.solution_san, solutionUci: p.solution_uci,
-      altSolutions: p.alt_solutions, classification: p.classification, wpLoss: p.wp_loss,
+      altSolutions: p.alt_solutions, continuation: p.continuation,
+      classification: p.classification, wpLoss: p.wp_loss,
       evalBefore: p.eval_before, evalAfter: p.eval_after,
       fenPrev: p.fen_prev, prevSan: p.prev_san, prevUci: p.prev_uci, note: p.note,
     })),

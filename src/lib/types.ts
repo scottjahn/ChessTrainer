@@ -28,6 +28,8 @@ export interface Settings {
   heroUsername: string;
   depth: number;
   multipv: number;
+  /** Win-probability points a move may trail the best by and still be offered as an answer. */
+  altMargin: number;
   skipOpeningPlies: number;
   thresholds: Thresholds;
   onlyHeroMoves: boolean;
@@ -127,6 +129,8 @@ export interface Puzzle {
   solution_san: string;
   solution_uci: string;
   alt_solutions: string[];
+  /** UCI moves after the solution: their reply, your move, their reply, … */
+  continuation: string[];
   classification: Classification;
   wp_loss: number | null;
   eval_before: Score | null;
@@ -189,6 +193,8 @@ export interface ExportedPuzzle {
   solutionSan: string;
   solutionUci: string;
   altSolutions: string[];
+  /** Absent from packs exported before multi-move puzzles existed. */
+  continuation?: string[];
   classification: Classification;
   wpLoss: number | null;
   evalBefore: Score | null;

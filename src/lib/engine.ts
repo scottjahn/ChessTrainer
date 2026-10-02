@@ -1,12 +1,21 @@
 import { Chess } from 'chess.js';
 import type { Score } from './types';
 
+/** One of the engine's candidate moves, best first. */
+export interface EngineLine {
+  uci: string;
+  score: Score;
+  pv: string[];
+}
+
 export interface EvalResult {
   fen: string;
   depth: number;
   score: Score;
   bestUci: string | null;
   pv: string[];
+  /** Every candidate searched: one unless more were asked for with `multipv`. */
+  lines: EngineLine[];
   /** True when the position is already over, so no search was run. */
   terminal: boolean;
 }
@@ -17,11 +26,13 @@ const readLine = (event: MessageEvent): string =>
 type Pending = {
   fen: string;
   depth: number;
+  multipv: number;
   resolve: (r: EvalResult) => void;
   reject: (e: Error) => void;
   score: Score | null;
   reachedDepth: number;
   pv: string[];
+  lines: Map<number, EngineLine & { depth: number }>;
 };
 
 /**
@@ -36,6 +47,7 @@ export class Engine {
   private queue: Array<() => void> = [];
   private booted: Promise<void> | null = null;
   private disposed = false;
+  private multipv = 1;
 
   readonly multiThreaded = typeof crossOriginIsolated !== 'undefined' && crossOriginIsolated;
 
@@ -95,19 +107,25 @@ export class Engine {
     return this.booted;
   }
 
-  /** Search one position to a fixed depth. */
-  async analyse(fen: string, depth: number): Promise<EvalResult> {
+  /** Search one position to a fixed depth, for its `multipv` best moves. */
+  async analyse(fen: string, depth: number, multipv = 1): Promise<EvalResult> {
     await this.init();
     if (this.disposed) throw new Error('Engine was stopped');
 
     const terminal = terminalScore(fen);
     if (terminal) {
-      return { fen, depth: 0, score: terminal, bestUci: null, pv: [], terminal: true };
+      return { fen, depth: 0, score: terminal, bestUci: null, pv: [], lines: [], terminal: true };
     }
 
     return new Promise<EvalResult>((resolve, reject) => {
       const run = () => {
-        this.current = { fen, depth, resolve, reject, score: null, reachedDepth: 0, pv: [] };
+        this.current = {
+          fen, depth, multipv, resolve, reject, score: null, reachedDepth: 0, pv: [], lines: new Map(),
+        };
+        if (multipv !== this.multipv) {
+          this.multipv = multipv;
+          this.worker!.postMessage(`setoption name MultiPV value ${multipv}`);
+        }
         this.worker!.postMessage('ucinewgame');
         this.worker!.postMessage(`position fen ${fen}`);
         this.worker!.postMessage(`go depth ${depth}`);
@@ -128,12 +146,18 @@ export class Engine {
       if (!mate && !cp) return;
       if (depth < pending.reachedDepth) return;
 
-      pending.reachedDepth = depth;
-      pending.score = mate
+      const score: Score = mate
         ? { type: 'mate', value: Number(mate[1]) }
         : { type: 'cp', value: Number(cp![1]) };
-      const pv = line.match(/\bpv (.+)$/)?.[1];
-      if (pv) pending.pv = pv.trim().split(/\s+/);
+      const pv = line.match(/\bpv (.+)$/)?.[1]?.trim().split(/\s+/);
+      const rank = Number(line.match(/\bmultipv (\d+)/)?.[1] ?? 1);
+      if (pv?.length) pending.lines.set(rank, { uci: pv[0], score, pv, depth });
+      // The headline score is the best line's; the others only fill `lines`.
+      if (rank !== 1) return;
+
+      pending.reachedDepth = depth;
+      pending.score = score;
+      if (pv) pending.pv = pv;
       return;
     }
 
@@ -146,6 +170,9 @@ export class Engine {
         score: pending.score ?? { type: 'cp', value: 0 },
         bestUci: !best || best === '(none)' ? null : best,
         pv: pending.pv,
+        lines: [...pending.lines.entries()]
+          .sort(([a], [b]) => a - b)
+          .map(([, { uci, score, pv }]) => ({ uci, score, pv })),
         terminal: false,
       });
       this.queue.shift()?.();

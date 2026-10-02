@@ -5,6 +5,7 @@ import { useLocalApi } from '../App';
 import { Board } from '../components/Board';
 import { ClassPill, GameMeta, gameSummary } from '../components/bits';
 import { api } from '../lib/api';
+import { playLine } from '../lib/chessutil';
 import { formatScore } from '../lib/classify';
 import { newIssueUrl, puzzleUrl } from '../lib/links';
 import { DEFAULT_FILTERS, applyFilters, loadPack, pickPuzzle, type PuzzleFilters } from '../lib/puzzles';
@@ -61,10 +62,15 @@ export function Trainer() {
   const [phase, setPhase] = useState<Phase>('waiting');
   const [wrong, setWrong] = useState<WrongMove | null>(null);
   const [usedHint, setUsedHint] = useState(false);
+  // Where in the line the hint was asked for; it only rings that one move.
+  const [hintAt, setHintAt] = useState<number | null>(null);
+  // Every move made on the board so far, both sides, from the puzzle position.
+  const [playedLine, setPlayedLine] = useState<string[]>([]);
   const [step, setStep] = useState(0);
   const [missingLink, setMissingLink] = useState<string | null>(null);
   const recorded = useRef(false);
   const replayTimer = useRef<number | undefined>(undefined);
+  const replyTimer = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     if (local === null) return;
@@ -82,6 +88,9 @@ export function Trainer() {
       setPhase('waiting');
       setWrong(null);
       setUsedHint(false);
+      setHintAt(null);
+      setPlayedLine([]);
+      window.clearTimeout(replyTimer.current);
       recorded.current = false;
       // Replay the opponent's move into the puzzle position, the way a real
       // puzzle trainer does, so the position arrives with context.
@@ -102,7 +111,10 @@ export function Trainer() {
     show(pickPuzzle(pool, stats, puzzle?.id));
   }, [pool, stats, puzzle?.id, show]);
 
-  useEffect(() => () => window.clearTimeout(replayTimer.current), []);
+  useEffect(() => () => {
+    window.clearTimeout(replayTimer.current);
+    window.clearTimeout(replyTimer.current);
+  }, []);
 
   // A /puzzle/:id link wins over the random pick, and ignores the filters —
   // a shared link should always open the puzzle it names.
@@ -134,8 +146,22 @@ export function Trainer() {
   const mover = puzzle ? (puzzle.sideToMove === 'w' ? game?.white : game?.black) : undefined;
   const done = phase === 'solved' || phase === 'revealed';
 
+  // The whole answer: the solution, then reply / your move pairs if the puzzle
+  // runs on. Most puzzles are the one move.
+  const solution = useMemo(
+    () => (puzzle ? playLine(puzzle.fen, [puzzle.solutionUci, ...(puzzle.continuation ?? [])]) : []),
+    [puzzle]
+  );
+  // What the board has to show: the moves made so far, or all of them once
+  // the solution has been given away.
+  const steps = useMemo(
+    () => (phase === 'revealed' || !puzzle ? solution : playLine(puzzle.fen, playedLine)),
+    [phase, puzzle, solution, playedLine]
+  );
+  const yourTurn = playedLine.length % 2 === 0;
+
   // The board is a small timeline: the position before the opponent's move,
-  // the puzzle itself, and — once it is settled — the solution played out.
+  // the puzzle itself, and then each move of the answer as it gets played.
   const frames = useMemo<Frame[]>(() => {
     if (!puzzle) return [];
     const list: Frame[] = [];
@@ -154,23 +180,23 @@ export function Trainer() {
       label: puzzle.prevSan ? `${puzzle.prevSan} played — your move` : 'Your move',
     });
 
-    if (done) {
-      const chess = new Chess(puzzle.fen);
-      const move = tryMove(chess, puzzle.solutionUci);
-      if (move) {
-        list.push({
-          fen: chess.fen(),
-          lastMove: { from: move.from, to: move.to },
-          label: `After ${puzzle.solutionSan}`,
-        });
-      }
-    }
+    steps.forEach((s, i) => {
+      // A reply that leaves you to move again is a fresh question, not an ending.
+      const asking = !done && i === steps.length - 1 && i % 2 === 1;
+      list.push({
+        fen: s.fen,
+        lastMove: { from: s.from, to: s.to },
+        label: asking ? `${s.san} played — your move` : `After ${s.san}`,
+      });
+    });
 
     return list;
-  }, [puzzle, done]);
+  }, [puzzle, done, steps]);
 
-  // Where the puzzle position itself sits, and where we actually are now.
+  // Where the puzzle position itself sits, where the next move is due, and
+  // where we actually are now.
   const puzzleStep = puzzle?.fenPrev ? 1 : 0;
+  const liveStep = puzzleStep + playedLine.length;
   const index = Math.min(step, Math.max(frames.length - 1, 0));
 
   // Stepping by hand cancels the opening replay so it cannot yank you forward.
@@ -190,25 +216,39 @@ export function Trainer() {
     [puzzle, usedHint, local]
   );
 
-  const accepts = useCallback(
-    (uci: string) => puzzle != null && (uci === puzzle.solutionUci || puzzle.altSolutions.includes(uci)),
-    [puzzle]
-  );
-
   const onMove = useCallback(
     (from: string, to: string, promotion?: string) => {
-      if (!puzzle || phase === 'solved' || phase === 'revealed') return false;
+      if (!puzzle || phase === 'solved' || phase === 'revealed' || !yourTurn) return false;
 
-      const chess = new Chess(puzzle.fen);
-      const move = chess.move({ from, to, promotion: promotion ?? 'q' });
+      const at = playedLine.length;
+      const chess = new Chess(at ? steps[at - 1].fen : puzzle.fen);
+      const move = tryMove(chess, `${from}${to}${promotion ?? 'q'}`);
       if (!move) return false;
 
       const uci = `${move.from}${move.to}${move.promotion ?? ''}`;
-      if (accepts(uci)) {
-        settle(phase !== 'failed', false);
-        setPhase('solved');
+      // Alternatives are answers to the first move only, and end the puzzle
+      // there: the rest of the line was built on the main move. Later on, any
+      // mate is as good as the one in the line.
+      const offLine = uci !== solution[at]?.uci
+        && (at === 0 ? puzzle.altSolutions.includes(uci) : chess.isCheckmate());
+
+      if (uci === solution[at]?.uci || offLine) {
+        setPlayedLine([...playedLine, uci]);
         setWrong(null);
-        goto(puzzleStep + 1);
+        goto(puzzleStep + at + 1);
+        const reply = offLine ? undefined : solution[at + 1];
+        if (!reply) {
+          // Scored on the first try: an earlier slip has already been recorded.
+          settle(true, false);
+          setPhase('solved');
+          return true;
+        }
+        setPhase('waiting');
+        window.clearTimeout(replyTimer.current);
+        replyTimer.current = window.setTimeout(() => {
+          setPlayedLine((line) => (line.length === at + 1 ? [...line, reply.uci] : line));
+          setStep(puzzleStep + at + 2);
+        }, 500);
         return true;
       }
       settle(false, false);
@@ -216,21 +256,28 @@ export function Trainer() {
       setWrong((w) => ({ san: move.san, square: move.to, tries: (w?.tries ?? 0) + 1 }));
       return false; // snap the piece back
     },
-    [puzzle, phase, accepts, settle, goto, puzzleStep]
+    [puzzle, phase, yourTurn, playedLine, steps, solution, settle, goto, puzzleStep]
   );
 
   const reveal = useCallback(() => {
-    if (!puzzle) return;
+    if (!puzzle || phase === 'solved' || phase === 'revealed') return;
+    window.clearTimeout(replyTimer.current);
     settle(false, true);
     setPhase('revealed');
-    goto(puzzleStep + 1);
-  }, [puzzle, settle, goto, puzzleStep]);
+    // Land on the move that was being asked for, not the end of the line.
+    goto(puzzleStep + playedLine.length + (yourTurn ? 1 : 2));
+  }, [puzzle, phase, settle, goto, puzzleStep, playedLine.length, yourTurn]);
+
+  const hint = useCallback(() => {
+    setUsedHint(true);
+    setHintAt(playedLine.length);
+  }, [playedLine.length]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLElement && /input|textarea|select/i.test(e.target.tagName)) return;
       if (e.key === 'n' || e.key === 'Enter') next();
-      if (e.key === 'h') setUsedHint(true);
+      if (e.key === 'h') hint();
       if (e.key === 's') reveal();
       if (e.key === 'ArrowLeft' && index > 0) {
         e.preventDefault();
@@ -243,7 +290,7 @@ export function Trainer() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [next, reveal, goto, index, frames.length]);
+  }, [next, reveal, hint, goto, index, frames.length]);
 
   if (!pack) return <div className="empty"><p className="muted">Loading puzzles…</p></div>;
 
@@ -290,27 +337,31 @@ export function Trainer() {
 
   const orientation = puzzle.sideToMove === 'w' ? 'white' : 'black';
   const frame = frames[index];
-  const onPuzzleStep = index === puzzleStep;
+  // Only the position where the next move is due takes moves, hints and crosses.
+  const onLiveStep = index === liveStep;
+  const hinting = hintAt === playedLine.length && !done && yourTurn;
+  const multiMove = solution.length > 1;
+  const sans = (line: typeof steps) => line.map((s) => s.san).join(' ');
 
   const highlights: Record<string, React.CSSProperties> = {};
-  if (phase === 'failed' && wrong && onPuzzleStep) {
+  if (phase === 'failed' && wrong && onLiveStep) {
     highlights[wrong.square] = WRONG_SQUARE;
   }
-  if (usedHint && !done && onPuzzleStep) {
-    highlights[squares(puzzle.solutionUci).from] = {
+  if (hinting && onLiveStep && solution[playedLine.length]) {
+    highlights[solution[playedLine.length].from] = {
       boxShadow: 'inset 0 0 0 4px rgba(247, 198, 49, .85)',
       borderRadius: '4px',
     };
   }
 
   // The solution arrow only makes sense from the puzzle position onwards —
-  // on the earlier frame those squares hold different pieces.
-  const arrows = done && index >= puzzleStep
-    ? [{
-      startSquare: squares(puzzle.solutionUci).from,
-      endSquare: squares(puzzle.solutionUci).to,
-      color: 'rgba(127,166,80,.9)',
-    }]
+  // on the earlier frame those squares hold different pieces. Each position
+  // shows the move played from it; the final one, the move that led to it.
+  const arrowMove = done && index >= puzzleStep
+    ? steps[Math.min(index - puzzleStep, steps.length - 1)]
+    : undefined;
+  const arrows = arrowMove
+    ? [{ startSquare: arrowMove.from, endSquare: arrowMove.to, color: 'rgba(127,166,80,.9)' }]
     : [];
 
   return (
@@ -327,11 +378,11 @@ export function Trainer() {
           <Board
             fen={frame.fen}
             orientation={orientation}
-            onMove={done || !onPuzzleStep ? undefined : onMove}
+            onMove={done || !onLiveStep || !yourTurn ? undefined : onMove}
             highlights={highlights}
             arrows={arrows}
             lastMove={frame.lastMove}
-            status={phase === 'failed' && onPuzzleStep ? 'wrong' : null}
+            status={phase === 'failed' && onLiveStep ? 'wrong' : null}
             statusKey={wrong?.tries ?? 0}
           />
 
@@ -397,14 +448,21 @@ export function Trainer() {
 
             <div className="stack controls" style={{ gap: 9 }}>
               <div className="verdict" aria-live="polite">
-                {phase === 'solved' && <><span>✓</span><span className="good">Correct — {puzzle.solutionSan}</span></>}
+                {phase === 'solved' && <><span>✓</span><span className="good">Correct — {sans(steps)}</span></>}
                 {phase === 'failed' && <span className="bad">✗ {wrong?.san} is not it. Try again.</span>}
-                {phase === 'revealed' && <span className="shown">The move was {puzzle.solutionSan}</span>}
-                {phase === 'waiting' && usedHint && <span className="muted">Move the highlighted piece.</span>}
+                {phase === 'revealed' && (
+                  <span className="shown">The {multiMove ? 'line' : 'move'} was {sans(solution)}</span>
+                )}
+                {phase === 'waiting' && hinting && <span className="muted">Move the highlighted piece.</span>}
+                {phase === 'waiting' && !hinting && playedLine.length > 0 && (
+                  <span className="good">
+                    ✓ {steps[playedLine.length - (yourTurn ? 2 : 1)]?.san} is right — keep going.
+                  </span>
+                )}
               </div>
 
               <div className="row">
-                <button onClick={() => setUsedHint(true)} disabled={usedHint || done}>
+                <button onClick={hint} disabled={hinting || done || !yourTurn}>
                   Hint
                 </button>
                 <button onClick={reveal} disabled={done}>
@@ -428,7 +486,7 @@ export function Trainer() {
                 </dt>
                 <dd className="mono">{puzzle.playedSan ?? '—'}</dd>
                 <dt>Best</dt>
-                <dd className="mono">{puzzle.solutionSan}</dd>
+                <dd className="mono">{sans(solution)}</dd>
                 <dt>Eval</dt>
                 <dd className="mono">
                   {formatScore(puzzle.evalBefore, puzzle.sideToMove === 'w')} →{' '}
