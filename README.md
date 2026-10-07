@@ -14,7 +14,7 @@ Two halves, deliberately split:
 | Stats | mirrored into SQLite | the visitor's own browser |
 
 Your games, database and engine never leave your machine. `npm run export`
-freezes the finished puzzles into `public/data/puzzles.json`, and that one file
+freezes the finished puzzles and openings into `public/data/puzzles.json`, and that one file
 is what the published trainer reads — so anyone you share the link with can try
 your puzzles and keep their own score.
 
@@ -84,6 +84,33 @@ attempt is still scored on your first try across the whole line. Alternative
 answers apply to the first move only and end the puzzle there; later in a line,
 any checkmate is accepted.
 
+## Openings
+
+Openings are a second kind of drill, entered by hand rather than cut from your
+games. **Admin → Openings** is where you create one and say which side you play
+it as; the trainer's **Openings** tab is where you pick one and play it through.
+
+An opening holds *lines*. A line runs from the starting position to one of your
+own moves: play both sides on the board, or type the moves (`1. e4 e5 2. Nf3`)
+and press **Load**. *Branch* on a saved line starts a new one from its moves —
+step back and play something different.
+
+Stockfish checks every move as you enter it, at the depth in Settings, and
+questions any that cost 5% win probability or more — yours or theirs. It lists
+the move it would rather see, which you can click to take instead. Nothing stops
+you saving a line it disagrees with; the lines list keeps the warning.
+
+Lines that share their first moves form a tree. In the trainer:
+
+- their replies come from the line being drilled, picked the same weighted way
+  as puzzles — unseen lines first, then the ones you keep getting wrong;
+- any of your recorded answers to the position on the board is accepted, and
+  playing one from a different line switches the drill onto that line;
+- a line that is only the start of a longer one is not drilled separately.
+
+An opening with *Show in trainer* unticked, or with no lines, is left out of the
+trainer and the export.
+
 ## Publishing
 
 `npm run export` (or the Export button) writes `public/data/puzzles.json`.
@@ -146,7 +173,7 @@ server/        local admin API (Express + node:sqlite, no native modules)
   chesscom.mjs chess.com URL -> PGN resolution
   payload.mjs  the exported puzzle shape
 src/lib/       engine client, classification, puzzle selection, stats
-src/pages/     Trainer, Progress, AdminHome, AdminGame
+src/pages/     Trainer, Openings, Progress, AdminHome, AdminGame, AdminOpenings
 public/data/   puzzles.json  <- the published puzzle set (commit this)
 data/          chesstrainer.db  <- your library (git-ignored, back it up)
 engine/        Stockfish WASM, copied from node_modules (git-ignored)

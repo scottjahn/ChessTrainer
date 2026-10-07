@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { formatDate, formatTimeControl } from '../components/bits';
+import { AdminTabs, formatDate, formatTimeControl } from '../components/bits';
 import { api } from '../lib/api';
 import { CLASSIFICATION_META } from '../lib/classify';
 import type { Game, PuzzleIndexRow, RemoteGame, Settings } from '../lib/types';
@@ -42,6 +42,7 @@ export function AdminHome() {
 
   return (
     <div className="stack">
+      <AdminTabs />
       {error && <ErrorDialog message={error} onClose={() => setError(null)} />}
       {status && <div className="banner ok">{status}</div>}
 
@@ -91,7 +92,7 @@ export function AdminHome() {
         onExport={() =>
           run('export', async () => {
             const r = await api.exportPuzzles();
-            return `Wrote ${r.counts.puzzles} puzzles from ${r.counts.games} games to ${r.path} (${(r.bytes / 1024).toFixed(1)} kB). Commit and push to publish.`;
+            return `Wrote ${r.counts.puzzles} puzzles from ${r.counts.games} games and ${r.counts.lines ?? 0} lines from ${r.counts.openings ?? 0} openings to ${r.path} (${(r.bytes / 1024).toFixed(1)} kB). Commit and push to publish.`;
           })
         }
       />

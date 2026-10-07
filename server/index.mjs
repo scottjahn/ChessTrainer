@@ -3,9 +3,11 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { db, allSettings, setSetting } from './db.mjs';
 import { fetchGameByUrl, fetchRecentGames, gameFromPgn } from './chesscom.mjs';
-import { gamePositions, lineIsLegal, uciToSan } from './positions.mjs';
+import { START_FEN, gamePositions, lineIsLegal, uciToSan } from './positions.mjs';
 import { writePuzzleExport } from './export.mjs';
-import { buildPuzzlePayload, hydrateAnalysis, hydratePuzzle } from './payload.mjs';
+import {
+  buildPuzzlePayload, hydrateAnalysis, hydrateOpening, hydrateOpeningLine, hydratePuzzle,
+} from './payload.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 // Deliberately not PORT: dev tooling sets that for the Vite server.
@@ -271,6 +273,114 @@ app.get('/api/puzzles/index', (_req, res) => {
     ORDER BY p.id DESC`).all().map((r) => ({ ...r, enabled: !!r.enabled })));
 });
 
+/* ---------------------------------------------------------------- openings */
+
+const openingListSql = `
+  SELECT o.*, (SELECT COUNT(*) FROM opening_lines l WHERE l.opening_id = o.id) AS line_count
+  FROM openings o`;
+
+const getOpening = (id) => {
+  const row = db.prepare(`${openingListSql} WHERE o.id = ?`).get(id);
+  return row ? hydrateOpening(row) : null;
+};
+const getLine = (id) => {
+  const row = db.prepare('SELECT * FROM opening_lines WHERE id = ?').get(id);
+  return row ? hydrateOpeningLine(row) : null;
+};
+const text = (value) => String(value ?? '').trim() || null;
+
+app.get('/api/openings', (_req, res) => {
+  res.json(
+    db.prepare(`${openingListSql} ORDER BY o.color DESC, o.name COLLATE NOCASE`).all().map(hydrateOpening)
+  );
+});
+
+app.post('/api/openings', wrap((req, res) => {
+  const name = text(req.body.name);
+  if (!name) throw fail('An opening needs a name', 400);
+  if (!['w', 'b'].includes(req.body.color)) throw fail('Pick the side you play this opening as', 400);
+  const info = db
+    .prepare('INSERT INTO openings (name, color, note, enabled, created_at) VALUES (?,?,?,?,?)')
+    .run(name, req.body.color, text(req.body.note), req.body.enabled === false ? 0 : 1, now());
+  res.json(getOpening(Number(info.lastInsertRowid)));
+}));
+
+app.get('/api/openings/:id', wrap((req, res) => {
+  const opening = getOpening(Number(req.params.id));
+  if (!opening) throw fail('No such opening', 404);
+  const lines = db.prepare('SELECT * FROM opening_lines WHERE opening_id = ? ORDER BY moves').all(opening.id);
+  res.json({ opening, lines: lines.map(hydrateOpeningLine) });
+}));
+
+app.patch('/api/openings/:id', wrap((req, res) => {
+  const id = Number(req.params.id);
+  const opening = getOpening(id);
+  if (!opening) throw fail('No such opening', 404);
+
+  if (req.body.name !== undefined) {
+    const name = text(req.body.name);
+    if (!name) throw fail('An opening needs a name', 400);
+    db.prepare('UPDATE openings SET name = ? WHERE id = ?').run(name, id);
+  }
+  if (req.body.color !== undefined && req.body.color !== opening.color) {
+    if (!['w', 'b'].includes(req.body.color)) throw fail('Pick the side you play this opening as', 400);
+    // Every line ends on the trained side's move, so the lines pin the side.
+    if (opening.line_count) throw fail('Remove the lines before switching sides', 400);
+    db.prepare('UPDATE openings SET color = ? WHERE id = ?').run(req.body.color, id);
+  }
+  if (req.body.note !== undefined) {
+    db.prepare('UPDATE openings SET note = ? WHERE id = ?').run(text(req.body.note), id);
+  }
+  if (req.body.enabled !== undefined) {
+    db.prepare('UPDATE openings SET enabled = ? WHERE id = ?').run(req.body.enabled ? 1 : 0, id);
+  }
+  res.json(getOpening(id));
+}));
+
+app.delete('/api/openings/:id', wrap((req, res) => {
+  db.prepare('DELETE FROM openings WHERE id = ?').run(Number(req.params.id));
+  res.json({ ok: true });
+}));
+
+app.post('/api/openings/:id/lines', wrap((req, res) => {
+  const opening = getOpening(Number(req.params.id));
+  if (!opening) throw fail('No such opening', 404);
+  const moves = req.body.moves;
+  checkOpeningLine(opening, moves);
+
+  const info = db
+    .prepare('INSERT INTO opening_lines (opening_id, name, moves, note, review, created_at) VALUES (?,?,?,?,?,?)')
+    .run(opening.id, text(req.body.name), JSON.stringify(moves), text(req.body.note),
+      JSON.stringify(req.body.review ?? []), now());
+  res.json(getLine(Number(info.lastInsertRowid)));
+}));
+
+app.patch('/api/opening-lines/:id', wrap((req, res) => {
+  const id = Number(req.params.id);
+  const line = getLine(id);
+  if (!line) throw fail('No such line', 404);
+
+  if (req.body.moves !== undefined) {
+    checkOpeningLine(getOpening(line.opening_id), req.body.moves, id);
+    // The engine's verdicts belong to the moves they were made on.
+    db.prepare('UPDATE opening_lines SET moves = ?, review = ? WHERE id = ?')
+      .run(JSON.stringify(req.body.moves), JSON.stringify(req.body.review ?? []), id);
+  } else if (req.body.review !== undefined) {
+    db.prepare('UPDATE opening_lines SET review = ? WHERE id = ?').run(JSON.stringify(req.body.review), id);
+  }
+  for (const f of ['name', 'note']) {
+    if (req.body[f] !== undefined) {
+      db.prepare(`UPDATE opening_lines SET ${f} = ? WHERE id = ?`).run(text(req.body[f]), id);
+    }
+  }
+  res.json(getLine(id));
+}));
+
+app.delete('/api/opening-lines/:id', wrap((req, res) => {
+  db.prepare('DELETE FROM opening_lines WHERE id = ?').run(Number(req.params.id));
+  res.json({ ok: true });
+}));
+
 /* ------------------------------------------------------------------- stats */
 
 app.get('/api/stats', (_req, res) => res.json(db.prepare('SELECT * FROM stats').all()));
@@ -324,6 +434,24 @@ function checkContinuation(fen, solutionUci, continuation) {
   if (!lineIsLegal(fen, [solutionUci, ...continuation])) {
     throw fail('That line has a move that is not legal where it is played', 400);
   }
+}
+
+/** An opening line runs from the starting position to one of the trained side's moves. */
+function checkOpeningLine(opening, moves, lineId = null) {
+  if (!Array.isArray(moves) || !moves.length || moves.some((m) => typeof m !== 'string')) {
+    throw fail('A line needs at least one move', 400);
+  }
+  if (!lineIsLegal(START_FEN, moves)) {
+    throw fail('That line has a move that is not legal where it is played', 400);
+  }
+  // White's moves are the odd-numbered plies, so a White line has odd length.
+  if ((moves.length % 2 === 1) !== (opening.color === 'w')) {
+    throw fail('A line has to end on your own move', 400);
+  }
+  const twin = db
+    .prepare('SELECT id FROM opening_lines WHERE opening_id = ? AND moves = ?')
+    .get(opening.id, JSON.stringify(moves));
+  if (twin && twin.id !== lineId) throw fail('That line is already in this opening', 409);
 }
 
 /** PGN files can hold many games back to back; split on the header starting each. */

@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom';
 import { CLASSIFICATION_META } from '../lib/classify';
 import type { Classification, ExportedGame } from '../lib/types';
 
@@ -8,6 +9,16 @@ export function ClassPill({ value }: { value: Classification }) {
       <span aria-hidden>{meta.icon}</span>
       {meta.label}
     </span>
+  );
+}
+
+/** The two halves of the admin area: puzzles cut from games, and openings entered by hand. */
+export function AdminTabs() {
+  return (
+    <nav className="tabs">
+      <NavLink to="/admin" end className="tab">Games</NavLink>
+      <NavLink to="/admin/openings" className="tab">Openings</NavLink>
+    </nav>
   );
 }
 

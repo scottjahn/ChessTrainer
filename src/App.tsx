@@ -6,6 +6,8 @@ import { Trainer } from './pages/Trainer';
 import { Progress } from './pages/Progress';
 import { AdminHome } from './pages/AdminHome';
 import { AdminGame } from './pages/AdminGame';
+import { AdminOpening, AdminOpenings } from './pages/AdminOpenings';
+import { OpeningDrill, Openings } from './pages/Openings';
 
 /** null while we are still probing for the local admin API. */
 const LocalApiContext = createContext<boolean | null>(null);
@@ -33,6 +35,7 @@ export function App() {
             </NavLink>
             <nav className="tabs">
               <NavLink to="/" end className="tab">Train</NavLink>
+              <NavLink to="/openings" className="tab">Openings</NavLink>
               <NavLink to="/progress" className="tab">Progress</NavLink>
               {local && <NavLink to="/admin" className="tab">Admin</NavLink>}
             </nav>
@@ -45,9 +48,13 @@ export function App() {
             <Routes>
               <Route path="/" element={<Trainer />} />
               <Route path="/puzzle/:puzzleId" element={<Trainer />} />
+              <Route path="/openings" element={<Openings />} />
+              <Route path="/openings/:openingId" element={<OpeningDrill />} />
               <Route path="/progress" element={<Progress />} />
               <Route path="/admin" element={local ? <AdminHome /> : <Navigate to="/" replace />} />
               <Route path="/admin/game/:id" element={local ? <AdminGame /> : <Navigate to="/" replace />} />
+              <Route path="/admin/openings" element={local ? <AdminOpenings /> : <Navigate to="/" replace />} />
+              <Route path="/admin/openings/:id" element={local ? <AdminOpening /> : <Navigate to="/" replace />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>

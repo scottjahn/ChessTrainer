@@ -19,6 +19,29 @@ export const hydratePuzzle = (row) => ({
   eval_after: safeJson(row.eval_after, null),
 });
 
+export const hydrateOpening = (row) => ({ ...row, enabled: !!row.enabled });
+
+export const hydrateOpeningLine = (row) => ({
+  ...row,
+  moves: safeJson(row.moves, []),
+  review: safeJson(row.review, []),
+});
+
+/** Openings that are switched on and have something to drill, White's first. */
+function buildOpenings() {
+  const lines = db.prepare('SELECT * FROM opening_lines WHERE opening_id = ? ORDER BY moves');
+  return db
+    .prepare('SELECT * FROM openings WHERE enabled = 1 ORDER BY color DESC, name COLLATE NOCASE')
+    .all()
+    .map((o) => ({
+      id: o.id, name: o.name, color: o.color, note: o.note,
+      lines: lines.all(o.id).map(hydrateOpeningLine).map((l) => ({
+        id: l.id, name: l.name, moves: l.moves, note: l.note,
+      })),
+    }))
+    .filter((o) => o.lines.length);
+}
+
 /**
  * The shape the public trainer consumes. Games are kept in a side map so the
  * metadata for a 12-puzzle game is stored once rather than twelve times.
@@ -43,11 +66,19 @@ export function buildPuzzlePayload() {
     };
   }
 
+  const openings = buildOpenings();
+
   return {
     version: 1,
     exportedAt: new Date().toISOString(),
-    counts: { puzzles: puzzles.length, games: Object.keys(games).length },
+    counts: {
+      puzzles: puzzles.length,
+      games: Object.keys(games).length,
+      openings: openings.length,
+      lines: openings.reduce((n, o) => n + o.lines.length, 0),
+    },
     games,
+    openings,
     puzzles: puzzles.map((p) => ({
       id: p.id, gameId: p.game_id, ply: p.ply, fen: p.fen, sideToMove: p.side_to_move,
       playedSan: p.played_san, playedUci: p.played_uci,

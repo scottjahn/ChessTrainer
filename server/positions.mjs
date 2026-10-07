@@ -2,6 +2,9 @@ import { Chess } from 'chess.js';
 
 export const toUci = (m) => `${m.from}${m.to}${m.promotion ?? ''}`;
 
+/** Where every opening line starts. */
+export const START_FEN = new Chess().fen();
+
 /**
  * Replay a PGN into one record per ply plus the final position.
  * `fenBefore` is the position the mover faced, which is exactly the puzzle FEN

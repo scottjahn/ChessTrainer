@@ -122,7 +122,28 @@ CREATE TABLE IF NOT EXISTS settings (
   value TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS openings (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  name       TEXT NOT NULL,
+  color      TEXT NOT NULL,
+  note       TEXT,
+  enabled    INTEGER NOT NULL DEFAULT 1,
+  created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS opening_lines (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  opening_id INTEGER NOT NULL REFERENCES openings(id) ON DELETE CASCADE,
+  name       TEXT,
+  moves      TEXT NOT NULL,
+  note       TEXT,
+  review     TEXT NOT NULL DEFAULT '[]',
+  created_at TEXT NOT NULL,
+  UNIQUE (opening_id, moves)
+);
+
 CREATE INDEX IF NOT EXISTS idx_puzzles_game ON puzzles(game_id);
+CREATE INDEX IF NOT EXISTS idx_opening_lines_opening ON opening_lines(opening_id);
 CREATE INDEX IF NOT EXISTS idx_analysis_game ON analysis(game_id);
 `);
 

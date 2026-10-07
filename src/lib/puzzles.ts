@@ -90,7 +90,7 @@ export function pickPuzzle(
   return pool[pool.length - 1];
 }
 
-function weightFor(stat: PuzzleStat | undefined): number {
+export function weightFor(stat: PuzzleStat | undefined): number {
   if (!stat || stat.attempts === 0) return 12;
   const solveRate = stat.solves / stat.attempts;
   const base = 1 + 9 * (1 - solveRate);

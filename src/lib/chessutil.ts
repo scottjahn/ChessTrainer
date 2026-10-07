@@ -1,5 +1,8 @@
 import { Chess } from 'chess.js';
 
+/** Where every opening line starts. */
+export const START_FEN = new Chess().fen();
+
 /** SAN for a UCI move in a position, or null when the move is not legal there. */
 export function uciToSan(fen: string, uci: string | null | undefined): string | null {
   if (!uci || uci.length < 4) return null;

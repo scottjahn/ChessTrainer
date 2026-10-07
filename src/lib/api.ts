@@ -1,4 +1,7 @@
-import type { AnalysisRow, Game, Ply, Puzzle, PuzzleIndexRow, PuzzlePack, RemoteGame, Settings } from './types';
+import type {
+  AnalysisRow, Color, Game, LineMoveReview, Opening, OpeningLine, PackCounts, Ply, Puzzle,
+  PuzzleIndexRow, PuzzlePack, RemoteGame, Settings,
+} from './types';
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(path, {
@@ -40,6 +43,21 @@ export interface GameDetail {
   puzzles: Puzzle[];
 }
 
+export interface OpeningDetail {
+  opening: Opening;
+  lines: OpeningLine[];
+}
+
+export interface LineInput {
+  name?: string | null;
+  note?: string | null;
+  moves?: string[];
+  review?: LineMoveReview[];
+}
+
+const patch = <T>(path: string, body: unknown) =>
+  request<T>(path, { method: 'PATCH', body: JSON.stringify(body) });
+
 export const api = {
   settings: () => request<Settings>('/api/settings'),
   saveSettings: (patch: Partial<Settings>) =>
@@ -74,9 +92,19 @@ export const api = {
   puzzles: () => request<PuzzlePack>('/api/puzzles'),
   puzzleIndex: () => request<PuzzleIndexRow[]>('/api/puzzles/index'),
   exportPuzzles: () =>
-    post<{ ok: true; path: string; bytes: number; counts: { puzzles: number; games: number } }>(
-      '/api/export'
-    ),
+    post<{ ok: true; path: string; bytes: number; counts: PackCounts }>('/api/export'),
+
+  openings: () => request<Opening[]>('/api/openings'),
+  opening: (id: number) => request<OpeningDetail>(`/api/openings/${id}`),
+  createOpening: (body: { name: string; color: Color; note?: string | null }) =>
+    post<Opening>('/api/openings', body),
+  patchOpening: (id: number, body: Partial<Pick<Opening, 'name' | 'color' | 'note' | 'enabled'>>) =>
+    patch<Opening>(`/api/openings/${id}`, body),
+  deleteOpening: (id: number) => request<{ ok: true }>(`/api/openings/${id}`, { method: 'DELETE' }),
+  createLine: (openingId: number, body: LineInput) =>
+    post<OpeningLine>(`/api/openings/${openingId}/lines`, body),
+  patchLine: (id: number, body: LineInput) => patch<OpeningLine>(`/api/opening-lines/${id}`, body),
+  deleteLine: (id: number) => request<{ ok: true }>(`/api/opening-lines/${id}`, { method: 'DELETE' }),
 
   recordAttempt: (puzzleId: number, body: { solved: boolean; usedHint: boolean; usedSolution: boolean }) =>
     post<unknown>(`/api/stats/${puzzleId}`, body),

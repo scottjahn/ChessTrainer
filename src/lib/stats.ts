@@ -13,7 +13,7 @@ const EMPTY: PuzzleStat = {
  * anyone's history, and means everyone who tries the published trainer keeps
  * their own record without a server.
  */
-export function puzzleKey(p: Pick<ExportedPuzzle, 'fen' | 'solutionUci'>): string {
+export function puzzleKey(p: StatRef): string {
   let hash = 5381;
   const input = `${p.fen}|${p.solutionUci}`;
   for (let i = 0; i < input.length; i++) hash = ((hash << 5) + hash + input.charCodeAt(i)) | 0;
@@ -21,6 +21,9 @@ export function puzzleKey(p: Pick<ExportedPuzzle, 'fen' | 'solutionUci'>): strin
 }
 
 type StatMap = Record<string, PuzzleStat>;
+
+/** Anything with a stats record: a puzzle, or an opening line dressed as one. */
+export type StatRef = Pick<ExportedPuzzle, 'fen' | 'solutionUci'>;
 
 export function loadStats(): StatMap {
   try {
@@ -39,7 +42,7 @@ function persist(stats: StatMap) {
   }
 }
 
-export const statFor = (stats: StatMap, puzzle: ExportedPuzzle): PuzzleStat =>
+export const statFor = (stats: StatMap, puzzle: StatRef): PuzzleStat =>
   stats[puzzleKey(puzzle)] ?? EMPTY;
 
 export interface AttemptOutcome {
@@ -50,7 +53,7 @@ export interface AttemptOutcome {
 
 export function recordAttempt(
   stats: StatMap,
-  puzzle: ExportedPuzzle,
+  puzzle: StatRef,
   outcome: AttemptOutcome
 ): StatMap {
   const key = puzzleKey(puzzle);

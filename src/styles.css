@@ -431,6 +431,11 @@ button.wide { justify-content: center; }
 .stat b { font-size: 21px; font-weight: 650; font-variant-numeric: tabular-nums; line-height: 1.15; }
 .stat span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-faint); }
 
+.opening-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.opening-card { display: flex; flex-direction: column; gap: 8px; color: var(--text); text-decoration: none; }
+.opening-card:hover { border-color: var(--accent); }
+.opening-card p { margin: 0; }
+
 .player-line { display: flex; align-items: center; gap: 8px; font-size: 14px; }
 .side-dot {
   width: 11px;

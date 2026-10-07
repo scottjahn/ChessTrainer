@@ -27,7 +27,8 @@ if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith
   const { buildPuzzlePayload } = await import('./payload.mjs');
   const result = await writePuzzleExport(buildPuzzlePayload());
   console.log(
-    `exported ${result.counts.puzzles} puzzles from ${result.counts.games} games ` +
+    `exported ${result.counts.puzzles} puzzles from ${result.counts.games} games and ` +
+    `${result.counts.lines} lines from ${result.counts.openings} openings ` +
     `-> ${result.path} (${(result.bytes / 1024).toFixed(1)} kB)`
   );
 }

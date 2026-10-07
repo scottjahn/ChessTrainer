@@ -158,6 +158,39 @@ export interface PuzzleIndexRow {
   played_at: string | null;
 }
 
+/** Stockfish's verdict on one move of an opening line. */
+export interface LineMoveReview {
+  bestUci: string | null;
+  evalBefore: Score | null;
+  evalAfter: Score | null;
+  wpLoss: number;
+  classification: Classification;
+  depth: number;
+}
+
+export interface Opening {
+  id: number;
+  name: string;
+  /** The side this opening is trained as. */
+  color: Color;
+  note: string | null;
+  enabled: boolean;
+  created_at: string;
+  line_count: number;
+}
+
+export interface OpeningLine {
+  id: number;
+  opening_id: number;
+  name: string | null;
+  /** UCI moves from the starting position, ending on the trained side's move. */
+  moves: string[];
+  note: string | null;
+  /** One entry per move, or empty when the line was saved before the engine finished. */
+  review: LineMoveReview[];
+  created_at: string;
+}
+
 /* ---- the exported (public) shape the trainer reads ---- */
 
 export interface ExportedGame {
@@ -205,12 +238,37 @@ export interface ExportedPuzzle {
   note: string | null;
 }
 
+export interface ExportedOpeningLine {
+  id: number;
+  name: string | null;
+  moves: string[];
+  note: string | null;
+}
+
+export interface ExportedOpening {
+  id: number;
+  name: string;
+  color: Color;
+  note: string | null;
+  lines: ExportedOpeningLine[];
+}
+
+export interface PackCounts {
+  puzzles: number;
+  games: number;
+  /** Absent from packs exported before openings existed. */
+  openings?: number;
+  lines?: number;
+}
+
 export interface PuzzlePack {
   version: number;
   exportedAt: string;
-  counts: { puzzles: number; games: number };
+  counts: PackCounts;
   games: Record<string, ExportedGame>;
   puzzles: ExportedPuzzle[];
+  /** Absent from packs exported before openings existed. */
+  openings?: ExportedOpening[];
 }
 
 export interface PuzzleStat {
