@@ -1,5 +1,5 @@
 import type {
-  AnalysisRow, Color, Game, LineMoveReview, Opening, OpeningLine, PackCounts, Ply, Puzzle,
+  AnalysisRow, Color, Game, LineMoveReview, Opening, OpeningGame, OpeningLine, PackCounts, Ply, Puzzle,
   PuzzleIndexRow, PuzzlePack, RemoteGame, Settings,
 } from './types';
 
@@ -104,6 +104,12 @@ export const api = {
   createLine: (openingId: number, body: LineInput) =>
     post<OpeningLine>(`/api/openings/${openingId}/lines`, body),
   patchLine: (id: number, body: LineInput) => patch<OpeningLine>(`/api/opening-lines/${id}`, body),
+  chesscomMonths: (username: string) =>
+    request<string[]>(`/api/chesscom/months?username=${encodeURIComponent(username)}`),
+  chesscomOpeningGames: (username: string, month: string, color: Color) =>
+    request<OpeningGame[]>(
+      `/api/chesscom/opening-games?username=${encodeURIComponent(username)}&month=${month}&color=${color}`
+    ),
   deleteLine: (id: number) => request<{ ok: true }>(`/api/opening-lines/${id}`, { method: 'DELETE' }),
 
   recordAttempt: (puzzleId: number, body: { solved: boolean; usedHint: boolean; usedSolution: boolean }) =>

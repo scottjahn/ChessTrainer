@@ -76,22 +76,77 @@ export async function fetchGameByUrl(input) {
   );
 }
 
-/** Newest-first games for a player, walking monthly archives backwards. */
-export async function fetchRecentGames(username, limit = 20) {
+/** A player's monthly archive URLs, oldest first, as chess.com lists them. */
+async function fetchArchives(username) {
   const user = String(username ?? '').trim().toLowerCase();
   if (!user) throw Object.assign(new Error('username is required'), { status: 400 });
-
-  let archives;
   try {
-    ({ archives } = await getJson(
+    const { archives } = await getJson(
       `https://api.chess.com/pub/player/${encodeURIComponent(user)}/games/archives`
-    ));
+    );
+    return archives ?? [];
   } catch (err) {
     if (err.status === 404) {
       throw Object.assign(new Error(`chess.com has no player called "${username}"`), { status: 404 });
     }
     throw err;
   }
+}
+
+/** The months a player has games in, oldest first, as "2024/03". */
+export async function fetchArchiveMonths(username) {
+  return (await fetchArchives(username))
+    .map((url) => url.match(/(\d{4}\/\d{2})$/)?.[1])
+    .filter(Boolean);
+}
+
+/** An opening is over long before this; it keeps a 5,000-game account's list light. */
+const OPENING_PLIES = 60;
+
+/**
+ * One month of a player's games as one colour, oldest first, each with the
+ * moves it opened with — the raw material for an opening line.
+ */
+export async function fetchOpeningGames(username, month, color) {
+  const user = String(username ?? '').trim().toLowerCase();
+  if (!user) throw Object.assign(new Error('username is required'), { status: 400 });
+  if (!/^\d{4}\/\d{2}$/.test(String(month))) throw Object.assign(new Error('month must look like 2024/03'), { status: 400 });
+  const [mine, theirs] = color === 'b' ? ['black', 'white'] : ['white', 'black'];
+
+  const { games } = await getJson(
+    `https://api.chess.com/pub/player/${encodeURIComponent(user)}/games/${month}`
+  );
+  const out = [];
+  for (const g of [...(games ?? [])].sort((a, b) => (a.end_time ?? 0) - (b.end_time ?? 0))) {
+    // Variants and games from a set-up position do not start where a line does.
+    if (g.rules !== 'chess' || g[mine]?.username?.toLowerCase() !== user) continue;
+    let parsed;
+    try {
+      parsed = parsePgn(g.pgn);
+    } catch {
+      continue; // skip anything chess.js cannot replay
+    }
+    if (parsed.headers.SetUp === '1' || !parsed.plyCount) continue;
+    const ecoUrl = parsed.headers.ECOUrl ?? (typeof g.eco === 'string' && g.eco.startsWith('http') ? g.eco : null);
+    out.push({
+      url: g.url ?? null,
+      opponent: g[theirs]?.username ?? null,
+      opponent_elo: num(g[theirs]?.rating),
+      elo: num(g[mine]?.rating),
+      result: g[mine]?.result === 'win' ? 'win' : g[theirs]?.result === 'win' ? 'loss' : 'draw',
+      ended_at: endTimeIso(g.end_time),
+      time_class: g.time_class ?? null,
+      opening: ecoUrl?.split('/').pop()?.replaceAll('-', ' ') ?? null,
+      ply_count: parsed.plyCount,
+      moves: parsed.moves.slice(0, OPENING_PLIES).map((m) => `${m.from}${m.to}${m.promotion ?? ''}`),
+    });
+  }
+  return out;
+}
+
+/** Newest-first games for a player, walking monthly archives backwards. */
+export async function fetchRecentGames(username, limit = 20) {
+  const archives = await fetchArchives(username);
 
   const out = [];
   for (const monthUrl of [...(archives ?? [])].reverse()) {

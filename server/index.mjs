@@ -2,7 +2,9 @@ import express from 'express';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { db, allSettings, setSetting } from './db.mjs';
-import { fetchGameByUrl, fetchRecentGames, gameFromPgn } from './chesscom.mjs';
+import {
+  fetchArchiveMonths, fetchGameByUrl, fetchOpeningGames, fetchRecentGames, gameFromPgn,
+} from './chesscom.mjs';
 import { START_FEN, gamePositions, lineIsLegal, uciToSan } from './positions.mjs';
 import { writePuzzleExport } from './export.mjs';
 import {
@@ -379,6 +381,15 @@ app.patch('/api/opening-lines/:id', wrap((req, res) => {
 app.delete('/api/opening-lines/:id', wrap((req, res) => {
   db.prepare('DELETE FROM opening_lines WHERE id = ?').run(Number(req.params.id));
   res.json({ ok: true });
+}));
+
+// A whole account is too much for one request, so the client walks it a month at a time.
+app.get('/api/chesscom/months', wrap(async (req, res) => {
+  res.json(await fetchArchiveMonths(req.query.username));
+}));
+
+app.get('/api/chesscom/opening-games', wrap(async (req, res) => {
+  res.json(await fetchOpeningGames(req.query.username, req.query.month, req.query.color));
 }));
 
 /* ------------------------------------------------------------------- stats */

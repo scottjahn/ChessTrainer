@@ -95,17 +95,28 @@ own moves: play both sides on the board, or type the moves (`1. e4 e5 2. Nf3`)
 and press **Load**. *Branch* on a saved line starts a new one from its moves —
 step back and play something different.
 
+**Import from chess.com games**, under the editor, turns real games into lines.
+Enter a username and it lists every standard game that account played as the
+opening's side, oldest first, a month at a time. *Import* loads a game's first
+eight moves into the editor with the rest of the game shown dashed: click a
+later move of yours to run the line that far, or select an earlier one and press
+**End here** to cut it short. Then save it like any other line. Only the first
+30 moves of a game are offered.
+
 Stockfish checks every move as you enter it, at the depth in Settings, and
 questions any that cost 5% win probability or more — yours or theirs. It lists
 the move it would rather see, which you can click to take instead. Nothing stops
 you saving a line it disagrees with; the lines list keeps the warning.
 
-Lines that share their first moves form a tree. In the trainer:
+Lines are matched on the position on the board, not on the moves that led to
+it, so different move orders that reach the same position count as the same
+place. In the trainer:
 
-- their replies come from the line being drilled, picked the same weighted way
-  as puzzles — unseen lines first, then the ones you keep getting wrong;
-- any of your recorded answers to the position on the board is accepted, and
-  playing one from a different line switches the drill onto that line;
+- each of their replies is drawn at random from all the lines that reach the
+  position, weighted like puzzles — unseen lines first, then the ones you keep
+  getting wrong;
+- any move one of those lines plays from the position is accepted as yours, and
+  the drill carries on down a line that plays it;
 - a line that is only the start of a longer one is not drilled separately.
 
 An opening with *Show in trainer* unticked, or with no lines, is left out of the

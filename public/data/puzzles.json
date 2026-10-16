@@ -1,9 +1,11 @@
 {
   "version": 1,
-  "exportedAt": "2026-10-02T02:52:40.301Z",
+  "exportedAt": "2026-10-16T23:49:58.010Z",
   "counts": {
     "puzzles": 47,
-    "games": 14
+    "games": 14,
+    "openings": 7,
+    "lines": 52
   },
   "games": {
     "1": {
@@ -301,6 +303,1221 @@
       "blackAccuracy": 77.82
     }
   },
+  "openings": [
+    {
+      "id": 6,
+      "name": "Italian — Active (c3/d4, Ng5)",
+      "color": "w",
+      "note": "Against 3…Bc5: c3 and d4 for a big center; push e5 whenever it kicks the f6 knight. Against 3…Nf6: 4.Ng5 at f7. Every move: is f7 guarded only by the king? Look at Ng5, Qh5/Qf3, Bxf7+.",
+      "lines": [
+        {
+          "id": 31,
+          "name": "Blackburne Shilling 3…Nd4",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "c6d4",
+            "f3d4",
+            "e5d4",
+            "e1g1"
+          ],
+          "note": "Do NOT take e5: 4.Nxe5? Qg5! and 5.Nxf7?? Qxg2 6.Rf1 Qxe4+ 7.Be2 Nf3# is mate. Trade on d4 and castle; Re1 and c3 come next."
+        },
+        {
+          "id": 24,
+          "name": "3…Bc5 — passive 4…d6",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "f8c5",
+            "c2c3",
+            "d7d6",
+            "d2d4",
+            "e5d4",
+            "c3d4",
+            "c5b6",
+            "b1c3",
+            "g8f6",
+            "c4b3"
+          ],
+          "note": "A big center for free. Don’t rush e5 here (…dxe5 trades queens): tuck the bishop on b3, then Be3, O-O, h3."
+        },
+        {
+          "id": 22,
+          "name": "3…Bc5 — c3/d4 main",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "f8c5",
+            "c2c3",
+            "g8f6",
+            "d2d4",
+            "e5d4",
+            "c3d4",
+            "c5b4",
+            "c1d2",
+            "b4d2",
+            "b1d2",
+            "d7d5",
+            "e4d5",
+            "f6d5",
+            "d1b3"
+          ],
+          "note": "Two pawns in the middle. Qb3 hits d5 and f7 together."
+        },
+        {
+          "id": 23,
+          "name": "3…Bc5 — 7…Nxe4 grab",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "f8c5",
+            "c2c3",
+            "g8f6",
+            "d2d4",
+            "e5d4",
+            "c3d4",
+            "c5b4",
+            "c1d2",
+            "f6e4",
+            "d2b4",
+            "c6b4",
+            "c4f7",
+            "e8f7",
+            "d1b3",
+            "d7d5",
+            "f3e5",
+            "f7f6",
+            "f2f3"
+          ],
+          "note": "Bxf7+ drags the king out; Qb3+ forks the king and the b4 knight, and f3 traps the e4 knight."
+        },
+        {
+          "id": 25,
+          "name": "Two Knights 4.Ng5 — correct 5…Na5",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "g8f6",
+            "f3g5",
+            "d7d5",
+            "e4d5",
+            "c6a5",
+            "c4b5",
+            "c7c6",
+            "d5c6",
+            "b7c6",
+            "b5e2",
+            "h7h6",
+            "g5f3",
+            "e5e4",
+            "f3e5"
+          ],
+          "note": "You are a pawn up. Bb5+, Be2, and just develop."
+        },
+        {
+          "id": 26,
+          "name": "TRAP · 5…Nxd5? 6.d4",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "g8f6",
+            "f3g5",
+            "d7d5",
+            "e4d5",
+            "f6d5",
+            "d2d4",
+            "e5d4",
+            "e1g1",
+            "f8e7",
+            "g5f7",
+            "e8f7",
+            "d1f3",
+            "f7e6",
+            "f1e1"
+          ],
+          "note": "The safer punishment: open lines first, then Nxf7, Qf3+ and Re1+ with the king stuck in the center."
+        },
+        {
+          "id": 27,
+          "name": "TRAP · 5…Nxd5? Fried Liver",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "g8f6",
+            "f3g5",
+            "d7d5",
+            "e4d5",
+            "f6d5",
+            "g5f7",
+            "e8f7",
+            "d1f3",
+            "f7e6",
+            "b1c3",
+            "c6b4",
+            "c4b3",
+            "c7c6",
+            "a2a3",
+            "d8f6",
+            "f3e4",
+            "b4a6",
+            "c3d5"
+          ],
+          "note": "The pinned d5 knight is the target. Bb3 keeps the pin, a3 kicks the b4 knight, Qe4 piles on, and Nxd5 wins material back with the king exposed."
+        },
+        {
+          "id": 28,
+          "name": "TRAP · Traxler 4…Bc5",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "g8f6",
+            "f3g5",
+            "f8c5",
+            "c4f7",
+            "e8e7",
+            "f7d5"
+          ],
+          "note": "Not 5.Nxf7? Bxf2+ (chaos). Take with the bishop: the king loses castling and you are simply better."
+        },
+        {
+          "id": 32,
+          "name": "Passive 3…h6 — open the center",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "h7h6",
+            "d2d4",
+            "e5d4",
+            "e1g1",
+            "d7d6",
+            "f3d4"
+          ],
+          "note": "Black wasted a move: d4 now, while you are ahead in development."
+        },
+        {
+          "id": 30,
+          "name": "TRAP · Legal’s, declined",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "d7d6",
+            "f1c4",
+            "c8g4",
+            "b1c3",
+            "g7g6",
+            "f3e5",
+            "d6e5",
+            "d1g4"
+          ],
+          "note": "If Black does not take the queen, you have just won a pawn."
+        },
+        {
+          "id": 29,
+          "name": "TRAP · Legal’s Mate",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "d7d6",
+            "f1c4",
+            "c8g4",
+            "b1c3",
+            "g7g6",
+            "f3e5",
+            "g4d1",
+            "c4f7",
+            "e8e7",
+            "c3d5"
+          ],
+          "note": "Pin on f3 with …Nf6 not played: Nxe5! gives up the queen for mate."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Italian — Evans Gambit",
+      "color": "w",
+      "note": "3…Bc5 4.b4!? Bxb4 5.c3 and d4. A pawn for time and a huge center; aim at f7 with Qb3 and at the king with Ba3.",
+      "lines": [
+        {
+          "id": 34,
+          "name": "TRAP · greedy 7…dxc3",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "f8c5",
+            "b2b4",
+            "c5b4",
+            "c2c3",
+            "b4a5",
+            "d2d4",
+            "e5d4",
+            "e1g1",
+            "d4c3",
+            "d1b3",
+            "d8f6",
+            "e4e5",
+            "f6g6",
+            "b1c3",
+            "g8e7",
+            "c1a3"
+          ],
+          "note": "Three pawns down, but Qb3 hits f7, e5 kicks the queen, and Ba3 pins the king in the center."
+        },
+        {
+          "id": 33,
+          "name": "Accepted, 5…Ba5 — main",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "f8c5",
+            "b2b4",
+            "c5b4",
+            "c2c3",
+            "b4a5",
+            "d2d4",
+            "e5d4",
+            "e1g1",
+            "g8e7",
+            "c3d4",
+            "d7d5",
+            "e4d5",
+            "e7d5",
+            "c1a3"
+          ],
+          "note": "Ba3 stops Black castling short. Keep the king in the middle."
+        },
+        {
+          "id": 36,
+          "name": "Accepted, 5…Bc5 — normal",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "f8c5",
+            "b2b4",
+            "c5b4",
+            "c2c3",
+            "b4c5",
+            "d2d4",
+            "e5d4",
+            "e1g1",
+            "d7d6",
+            "c3d4",
+            "c5b6",
+            "b1c3"
+          ],
+          "note": "The classic Evans center: d4 and e4, everything aimed at the Black king."
+        },
+        {
+          "id": 37,
+          "name": "TRAP · 7…Nf6? 8.cxd4 and e5",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "f8c5",
+            "b2b4",
+            "c5b4",
+            "c2c3",
+            "b4c5",
+            "d2d4",
+            "e5d4",
+            "e1g1",
+            "g8f6",
+            "c3d4",
+            "c5b6",
+            "e4e5",
+            "f6g4",
+            "b1c3",
+            "d7d6",
+            "c1g5"
+          ],
+          "note": "Take back on d4 FIRST so the bishop has to retreat, then e5 kicks the knight to the rim. Bg5 hits the queen; Black is badly behind."
+        },
+        {
+          "id": 35,
+          "name": "Accepted, 5…Be7",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "f8c5",
+            "b2b4",
+            "c5b4",
+            "c2c3",
+            "b4e7",
+            "d2d4",
+            "c6a5",
+            "f3e5",
+            "a5c4",
+            "e5c4",
+            "d7d5",
+            "e4d5",
+            "d8d5",
+            "c4e3"
+          ],
+          "note": "Black grabs the bishop pair; you get the pawn back and a lead in development."
+        },
+        {
+          "id": 38,
+          "name": "Declined 4…Bb6",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "f8c5",
+            "b2b4",
+            "c5b6",
+            "a2a4",
+            "a7a6",
+            "b1c3",
+            "g8f6",
+            "c3d5"
+          ],
+          "note": "Gain space on the queenside with a4, then put a knight on d5."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Italian — Quiet (Giuoco Pianissimo)",
+      "color": "w",
+      "note": "Slow build: c3, d3, O-O, Re1, h3, then the knight tour Nbd2–f1–g3. No early fireworks; aim for a later d4 or a kingside push.",
+      "lines": [
+        {
+          "id": 10,
+          "name": "vs 3…Bc5 — main setup",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "f8c5",
+            "c2c3",
+            "g8f6",
+            "d2d3",
+            "d7d6",
+            "e1g1",
+            "e8g8",
+            "f1e1",
+            "a7a6",
+            "h2h3",
+            "c5a7",
+            "b1d2",
+            "f8e8",
+            "d2f1",
+            "h7h6",
+            "f1g3"
+          ],
+          "note": "h3 stops …Bg4/…Ng4; Nbd2–f1–g3 reroutes the knight toward f5 and h5."
+        },
+        {
+          "id": 11,
+          "name": "vs 3…Nf6 — Two Knights, quiet",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "g8f6",
+            "d2d3",
+            "f8e7",
+            "e1g1",
+            "e8g8",
+            "f1e1",
+            "d7d6",
+            "c2c3",
+            "c6a5",
+            "c4b5",
+            "a7a6",
+            "b5a4",
+            "b7b5",
+            "a4c2",
+            "c7c5",
+            "b1d2",
+            "a5c6",
+            "d2f1",
+            "f8e8",
+            "f1g3"
+          ],
+          "note": "Against …Na5, retreat the bishop to c2 via b5–a4 and keep the plan."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Scotch (White)",
+      "color": "w",
+      "note": "Strike the center on move 3 and play with pieces. Watch for: …Qf6 + …Bc5 means check f2 (…Qxf2#); after Nxc6 bxc6, e5 kicks the f6 knight; when …Bb4 pins Nc3, guard e4 first (Bd3/Qd3); look for Nd5 and forks on c7.",
+      "lines": [
+        {
+          "id": 45,
+          "name": "3…Nxd4?",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "d2d4",
+            "c6d4",
+            "f3d4",
+            "e5d4",
+            "d1d4"
+          ],
+          "note": "A dominant queen in the center and a free hand."
+        },
+        {
+          "id": 44,
+          "name": "3…d6 — Philidor",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "d2d4",
+            "d7d6",
+            "f1b5",
+            "c8d7",
+            "b1c3",
+            "e5d4",
+            "f3d4"
+          ],
+          "note": "Black is cramped. Pin with Bb5 and develop."
+        },
+        {
+          "id": 46,
+          "name": "4…Nxd4",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "d2d4",
+            "e5d4",
+            "f3d4",
+            "c6d4",
+            "d1d4"
+          ],
+          "note": "Same idea: centralized queen. If …Qf6, play e5."
+        },
+        {
+          "id": 42,
+          "name": "4…Qh4 — Steinitz",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "d2d4",
+            "e5d4",
+            "f3d4",
+            "d8h4",
+            "b1c3",
+            "f8b4",
+            "f1e2",
+            "h4e4",
+            "d4b5",
+            "b4c3",
+            "b2c3",
+            "e8d8",
+            "e1g1"
+          ],
+          "note": "Looks scary. Just develop: if the queen grabs e4, Nb5 hits c7 and you are far ahead in development."
+        },
+        {
+          "id": 40,
+          "name": "4…Bc5 — 5.Be3 Qf6 6.c3",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "d2d4",
+            "e5d4",
+            "f3d4",
+            "f8c5",
+            "c1e3",
+            "d8f6",
+            "c2c3",
+            "g8e7",
+            "f1c4"
+          ],
+          "note": "c3 holds the d4 knight, so the f2 threat goes away."
+        },
+        {
+          "id": 39,
+          "name": "4…Bc5 — 5.Nxc6 Qf6 6.Qd2",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "d2d4",
+            "e5d4",
+            "f3d4",
+            "f8c5",
+            "d4c6",
+            "d8f6",
+            "d1d2",
+            "d7c6",
+            "b1c3"
+          ],
+          "note": "After 5.Nxc6, Black threatens …Qxf2#. 6.Qd2 is forced and good; then Nc3 and develop."
+        },
+        {
+          "id": 43,
+          "name": "4…g6",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "d2d4",
+            "e5d4",
+            "f3d4",
+            "g7g6",
+            "b1c3",
+            "f8g7",
+            "c1e3",
+            "g8f6",
+            "d4c6",
+            "b7c6",
+            "e4e5",
+            "f6g8",
+            "e3d4"
+          ],
+          "note": "Nxc6 then e5 drives the knight back to g8. Bd4 trades off Black’s best piece."
+        },
+        {
+          "id": 41,
+          "name": "4…Nf6 — Scotch Four Knights",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "d2d4",
+            "e5d4",
+            "f3d4",
+            "g8f6",
+            "b1c3",
+            "f8b4",
+            "d4c6",
+            "b7c6",
+            "f1d3",
+            "d7d5",
+            "e4d5",
+            "c6d5",
+            "e1g1",
+            "e8g8",
+            "c1g5",
+            "c7c6",
+            "d1f3"
+          ],
+          "note": "…Bb4 pins Nc3, so e4 is loose: Bd3 guards it. Castle, Bg5, Qf3."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "1…d5 — …c5 and …Nc6 vs London",
+      "color": "b",
+      "note": "Keep 1…d5. Against the London, hit d4 early with …c5 and …Nc6 instead of mirroring.",
+      "lines": [
+        {
+          "id": 18,
+          "name": "London — …e6 / …Bd6",
+          "moves": [
+            "d2d4",
+            "d7d5",
+            "c1f4",
+            "g8f6",
+            "e2e3",
+            "c7c5",
+            "c2c3",
+            "b8c6",
+            "b1d2",
+            "e7e6",
+            "g1f3",
+            "f8d6",
+            "f4g3",
+            "e8g8",
+            "f1d3",
+            "b7b6"
+          ],
+          "note": "Offer the bishop trade on d6; …b6 and …Bb7 or …Ba6 next."
+        },
+        {
+          "id": 19,
+          "name": "London — …Qb6 hits b2",
+          "moves": [
+            "d2d4",
+            "d7d5",
+            "c1f4",
+            "g8f6",
+            "e2e3",
+            "c7c5",
+            "g1f3",
+            "b8c6",
+            "c2c3",
+            "d8b6",
+            "d1b3",
+            "c5c4",
+            "b3b6",
+            "a7b6",
+            "b1d2",
+            "b6b5"
+          ],
+          "note": "If White skips Nd2/Qb3, …Qb6 wins b2. After the trade, the a-file and …b5–b4 are yours."
+        },
+        {
+          "id": 54,
+          "name": "DEFENSE · London Qb3 vs …Bf5",
+          "moves": [
+            "d2d4",
+            "d7d5",
+            "c1f4",
+            "g8f6",
+            "e2e3",
+            "c8f5",
+            "c2c4",
+            "e7e6",
+            "d1b3",
+            "b8c6",
+            "b3b7",
+            "c6b4"
+          ],
+          "note": "With …Bf5 out, Qb3 hits b7. Let it go: …Nb4 threatens …Nc2+ (the fork you lost to) and …Rb8."
+        },
+        {
+          "id": 53,
+          "name": "DEFENSE · Elephant Trap (QGD)",
+          "moves": [
+            "d2d4",
+            "d7d5",
+            "c2c4",
+            "e7e6",
+            "b1c3",
+            "g8f6",
+            "c1g5",
+            "b8d7",
+            "c4d5",
+            "e6d5",
+            "c3d5",
+            "f6d5",
+            "g5d8",
+            "f8b4",
+            "d1d2",
+            "b4d2",
+            "e1d2",
+            "e8d8"
+          ],
+          "note": "The d4 cousin of Legal’s: the f6 knight looks pinned, but it is not. Nxd5? Nxd5! Bxd8 Bb4+ and you come out a piece up."
+        },
+        {
+          "id": 21,
+          "name": "Queen's Gambit — QGD",
+          "moves": [
+            "d2d4",
+            "d7d5",
+            "c2c4",
+            "e7e6",
+            "b1c3",
+            "g8f6",
+            "c1g5",
+            "f8e7",
+            "e2e3",
+            "e8g8",
+            "g1f3",
+            "h7h6"
+          ],
+          "note": "If White plays 2.c4 instead, the solid Queen’s Gambit Declined."
+        },
+        {
+          "id": 20,
+          "name": "London via 2.Nf3",
+          "moves": [
+            "d2d4",
+            "d7d5",
+            "g1f3",
+            "g8f6",
+            "c1f4",
+            "c7c5",
+            "e2e3",
+            "b8c6",
+            "c2c3",
+            "d8b6",
+            "d1b3",
+            "c5c4",
+            "b3b6",
+            "a7b6",
+            "b1d2",
+            "b6b5"
+          ],
+          "note": "Same plan when White delays Bf4: …c5, …Nc6, …Qb6."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "1…e5 — knight before bishop",
+      "color": "b",
+      "note": "One rule: …Nf6 before …Bc5. The f6 knight blocks the f-file against Qf3 ideas and hits a queen on h5.",
+      "lines": [
+        {
+          "id": 49,
+          "name": "DEFENSE · Scholar’s Mate 2.Qh5",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "d1h5",
+            "b8c6",
+            "f1c4",
+            "g7g6",
+            "h5f3",
+            "g8f6"
+          ],
+          "note": "…g6 blocks Qxf7, and when the queen goes to f3, …Nf6 blocks the f-file. Never …Nf6 while the queen is on h5 with e5 loose."
+        },
+        {
+          "id": 50,
+          "name": "DEFENSE · Scholar’s Mate via Bc4/Qf3",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "f1c4",
+            "b8c6",
+            "d1f3",
+            "g8f6"
+          ],
+          "note": "…Nf6 is the answer to any queen on f3: it covers f7 down the f-file."
+        },
+        {
+          "id": 17,
+          "name": "Scotch Gambit 4.Bc4 — 5.O-O",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "d2d4",
+            "e5d4",
+            "f1c4",
+            "g8f6",
+            "e1g1",
+            "f6e4",
+            "f1e1",
+            "d7d5",
+            "c4d5",
+            "d8d5",
+            "b1c3",
+            "d5a5"
+          ],
+          "note": "Grab e4, return with …d5; the queen steps to a5 out of the pin."
+        },
+        {
+          "id": 16,
+          "name": "Scotch Gambit 4.Bc4 — 5.e5",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "d2d4",
+            "e5d4",
+            "f1c4",
+            "g8f6",
+            "e4e5",
+            "d7d5",
+            "c4b5",
+            "f6e4",
+            "f3d4",
+            "c8d7"
+          ],
+          "note": "4…Nf6 transposes to Two Knights. Strike back with …d5."
+        },
+        {
+          "id": 15,
+          "name": "Scotch 4.Nxd4 — Four Knights",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "d2d4",
+            "e5d4",
+            "f3d4",
+            "g8f6",
+            "b1c3",
+            "f8b4",
+            "d4c6",
+            "b7c6",
+            "f1d3",
+            "d7d5",
+            "e4d5",
+            "c6d5",
+            "e1g1",
+            "e8g8",
+            "c1g5",
+            "c7c6"
+          ],
+          "note": "Bishop pins the c3 knight once f6 is covered."
+        },
+        {
+          "id": 14,
+          "name": "Scotch 4.Nxd4 — Mieses",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "d2d4",
+            "e5d4",
+            "f3d4",
+            "g8f6",
+            "d4c6",
+            "b7c6",
+            "e4e5",
+            "d8e7",
+            "d1e2",
+            "f6d5",
+            "c2c4",
+            "c8a6"
+          ],
+          "note": "6…Qe7 pins the e5 pawn; 8…Ba6 hits c4 against the queen."
+        },
+        {
+          "id": 51,
+          "name": "DEFENSE · 4.Nc3 fork trick",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "g8f6",
+            "b1c3",
+            "f6e4",
+            "c3e4",
+            "d7d5"
+          ],
+          "note": "If White plays 4.Nc3, take e4: …d5 forks bishop and knight and wins the piece back."
+        },
+        {
+          "id": 12,
+          "name": "Italian 3.Bc4 → Two Knights, 4.d3",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "g8f6",
+            "d2d3",
+            "f8c5",
+            "c2c3",
+            "d7d6",
+            "e1g1",
+            "e8g8"
+          ],
+          "note": "Knight first, then the bishop comes to c5 safely."
+        },
+        {
+          "id": 52,
+          "name": "DEFENSE · Legal’s-style Nxe5 vs …Bg4",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "g8f6",
+            "d2d3",
+            "f8c5",
+            "e1g1",
+            "d7d6",
+            "b1c3",
+            "c8g4",
+            "f3e5",
+            "d6e5"
+          ],
+          "note": "Pin with …Bg4 only once …Nf6 is in. If White sacs Nxe5, take it with the pawn: …Bxd1 is still threatened, and with …Nf6 there is no mate. You come out a piece up."
+        },
+        {
+          "id": 13,
+          "name": "Two Knights, 4.Ng5",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "g8f6",
+            "f3g5",
+            "d7d5",
+            "e4d5",
+            "c6a5",
+            "c4b5",
+            "c7c6",
+            "d5c6",
+            "b7c6",
+            "b5e2",
+            "h7h6",
+            "g5f3",
+            "e5e4",
+            "f3e5",
+            "f8d6"
+          ],
+          "note": "Never recapture 5…Nxd5 (Fried Liver). …Na5 hits the bishop; a pawn down for fast development."
+        },
+        {
+          "id": 48,
+          "name": "DEFENSE · 4.Ng5 … 8.Qf3",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "g8f6",
+            "f3g5",
+            "d7d5",
+            "e4d5",
+            "c6a5",
+            "c4b5",
+            "c7c6",
+            "d5c6",
+            "b7c6",
+            "d1f3",
+            "a8b8"
+          ],
+          "note": "Qf3 pins c6 to the rook. …Rb8 hits the b5 bishop and frees the pawn."
+        },
+        {
+          "id": 47,
+          "name": "DEFENSE · 4.Ng5 d5 5.exd5 Na5 6.d3",
+          "moves": [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1c4",
+            "g8f6",
+            "f3g5",
+            "d7d5",
+            "e4d5",
+            "c6a5",
+            "d2d3",
+            "h7h6",
+            "g5f3",
+            "e5e4",
+            "d1e2",
+            "a5c4",
+            "d3c4",
+            "f8c5"
+          ],
+          "note": "Anti-Fried-Liver: never 5…Nxd5. After 6.d3, kick the knight with …h6 and …e4, grab the bishop."
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Nf3",
+      "color": "b",
+      "note": null,
+      "lines": [
+        {
+          "id": 7,
+          "name": "vs Calistan100 · Jan 9, 2026",
+          "moves": [
+            "d2d4",
+            "b8c6",
+            "e2e3",
+            "d7d5",
+            "a2a3",
+            "e7e5",
+            "d4e5",
+            "c6e5",
+            "f2f4",
+            "e5c6",
+            "f1b5",
+            "g8f6",
+            "b5c6",
+            "b7c6",
+            "d1e2",
+            "f8c5"
+          ],
+          "note": null
+        },
+        {
+          "id": 5,
+          "name": "vs eatwolfrn · Jan 9, 2026",
+          "moves": [
+            "d2d4",
+            "b8c6",
+            "e2e3",
+            "d7d5",
+            "f1b5",
+            "d8d6",
+            "g1f3",
+            "c8g4",
+            "e1g1",
+            "e8c8",
+            "b1c3",
+            "g8f6",
+            "h2h3",
+            "g4f3"
+          ],
+          "note": null
+        },
+        {
+          "id": 3,
+          "name": "vs popol299 · Jan 9, 2026",
+          "moves": [
+            "e2e4",
+            "b8c6",
+            "b1c3",
+            "f7f5",
+            "d2d3",
+            "e7e5",
+            "e4f5",
+            "d7d5",
+            "g2g4",
+            "h7h5",
+            "d1e2",
+            "h5g4"
+          ],
+          "note": null
+        },
+        {
+          "id": 9,
+          "name": "vs Llarza · Jan 9, 2026",
+          "moves": [
+            "e2e4",
+            "b8c6",
+            "d2d3",
+            "d7d5",
+            "g1f3",
+            "e7e5",
+            "f1e2",
+            "g8f6",
+            "b1d2",
+            "f8c5",
+            "e1g1",
+            "e8g8"
+          ],
+          "note": null
+        },
+        {
+          "id": 4,
+          "name": "vs youless · Jan 9, 2026",
+          "moves": [
+            "e2e4",
+            "b8c6",
+            "d2d4",
+            "d7d5",
+            "c2c3",
+            "d5e4",
+            "d1e2",
+            "g8f6",
+            "c1g5",
+            "c8f5",
+            "g5f6",
+            "g7f6"
+          ],
+          "note": null
+        },
+        {
+          "id": 6,
+          "name": "vs JudasKnightly · Jan 9, 2026",
+          "moves": [
+            "e2e4",
+            "b8c6",
+            "d2d4",
+            "d7d5",
+            "e4e5",
+            "c8f5",
+            "c2c3",
+            "e7e6",
+            "g1f3",
+            "f7f6",
+            "f1e2",
+            "d8d7",
+            "c1f4",
+            "g8e7",
+            "b1d2",
+            "e7g6"
+          ],
+          "note": null
+        },
+        {
+          "id": 8,
+          "name": "vs MEDE9X · Jan 9, 2026",
+          "moves": [
+            "e2e4",
+            "b8c6",
+            "g1f3",
+            "d7d5",
+            "e4d5",
+            "d8d5",
+            "b1c3",
+            "d5h5",
+            "f1e2",
+            "c8g4",
+            "e1g1",
+            "e8c8"
+          ],
+          "note": null
+        }
+      ]
+    }
+  ],
   "puzzles": [
     {
       "id": 1,

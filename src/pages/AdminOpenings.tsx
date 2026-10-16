@@ -2,13 +2,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Chess } from 'chess.js';
 import { Board } from '../components/Board';
-import { AdminTabs } from '../components/bits';
+import { AdminTabs, formatDate } from '../components/bits';
 import { api } from '../lib/api';
 import { CLASSIFICATION_META, classifyMove, formatScore, negate } from '../lib/classify';
 import { Engine, type EvalResult } from '../lib/engine';
 import { START_FEN, moveLabel, playLine, uciToSan } from '../lib/chessutil';
-import { QUESTIONABLE, isYourPly, leafLines, lineSan, parseMoveText, startsWith } from '../lib/openings';
-import type { Color, LineMoveReview, Opening, OpeningLine, Settings } from '../lib/types';
+import {
+  QUESTIONABLE, isYourPly, leafLines, lineSan, moveFrom, parseMoveText, positionKey, startsWith,
+} from '../lib/openings';
+import type { Color, LineMoveReview, Opening, OpeningGame, OpeningLine, Settings } from '../lib/types';
 
 const SIDE: Record<Color, string> = { w: 'White', b: 'Black' };
 
@@ -136,6 +138,9 @@ interface Draft {
 
 const EMPTY_DRAFT: Draft = { id: null, name: '', note: '', moves: [] };
 
+/** Where an imported game is cut to begin with: eight moves or so is an opening. */
+const IMPORT_PLIES = 16;
+
 /** Keyed by opening, so moving to another one starts from a clean slate. */
 export function AdminOpening() {
   const id = Number(useParams().id);
@@ -149,7 +154,11 @@ function OpeningEditor({ openingId }: { openingId: number }) {
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
   // How many of the draft's moves are on the board: 0 is the starting position.
   const [cursor, setCursor] = useState(0);
+  // The rest of an imported game, past where the line ends for now.
+  const [tail, setTail] = useState<string[]>([]);
   const [paste, setPaste] = useState('');
+  // The saved lines and the chess.com games share the space under the editor.
+  const [listTab, setListTab] = useState<'lines' | 'import'>('lines');
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   // Bumped as engine results land, to redraw the verdicts read from the cache.
@@ -220,15 +229,28 @@ function OpeningEditor({ openingId }: { openingId: number }) {
 
   const at = Math.min(cursor, steps.length);
 
-  const play = useCallback((uci: string) => {
-    setDraft((d) => (d.moves[at] === uci ? d : { ...d, moves: [...d.moves.slice(0, at), uci] }));
-    setCursor(at + 1);
+  /** Put a move on the board, replacing whatever the line had from here on. */
+  const replaceFrom = useCallback((ply: number, uci: string) => {
+    setDraft((d) => (d.moves[ply] === uci ? d : { ...d, moves: [...d.moves.slice(0, ply), uci] }));
+    // Leaving the game's moves leaves the rest of the game behind too.
+    if (draft.moves[ply] !== uci) setTail((t) => (ply === draft.moves.length && t[0] === uci ? t.slice(1) : []));
+    setCursor(ply + 1);
     setStatus(null);
-  }, [at]);
+  }, [draft.moves]);
+  const play = useCallback((uci: string) => replaceFrom(at, uci), [replaceFrom, at]);
+
+  /** Move the end of the line; what is cut off waits in the tail. */
+  const endAt = (ply: number) => {
+    const all = [...draft.moves, ...tail];
+    setDraft((d) => ({ ...d, moves: all.slice(0, ply) }));
+    setTail(all.slice(ply));
+    setCursor(ply);
+  };
 
   const edit = (line: OpeningLine | null, moves = line?.moves ?? []) => {
     setDraft(line ? { id: line.id, name: line.name ?? '', note: line.note ?? '', moves } : { ...EMPTY_DRAFT, moves });
     setCursor(moves.length);
+    setTail([]);
     setPaste('');
     setError(null);
     setStatus(null);
@@ -259,13 +281,13 @@ function OpeningEditor({ openingId }: { openingId: number }) {
   const complete = steps.length > 0 && checked === steps.length;
   const endsOnYours = steps.length > 0 && isYourPly(color, steps.length - 1);
 
-  // Where the other lines go from the position on the board.
-  const prefix = draft.moves.slice(0, at);
+  // Where the other lines go from the position on the board, however they reach it.
   const known = new Map<string, number>();
   for (const l of lines) {
-    if (l.id === draft.id || l.moves.length <= at || !startsWith(l.moves, prefix)) continue;
-    known.set(l.moves[at], (known.get(l.moves[at]) ?? 0) + 1);
+    const uci = l.id === draft.id ? undefined : moveFrom(l, positionKey(fens[at]));
+    if (uci) known.set(uci, (known.get(uci) ?? 0) + 1);
   }
+  const tailSteps = playLine(fens[steps.length], tail);
   const others = lines.filter((l) => l.id !== draft.id);
   const swallowed = endsOnYours
     && others.some((l) => l.moves.length > draft.moves.length && startsWith(l.moves, draft.moves));
@@ -308,8 +330,25 @@ function OpeningEditor({ openingId }: { openingId: number }) {
     const { moves, error: problem } = parseMoveText(paste);
     setDraft((d) => ({ ...d, moves }));
     setCursor(moves.length);
+    setTail([]);
     setError(problem);
     if (!problem) setPaste('');
+  };
+
+  const importGame = (game: OpeningGame) => {
+    let end = Math.min(IMPORT_PLIES, game.moves.length);
+    if (end > 0 && !isYourPly(color, end - 1)) end -= 1;
+    setDraft({
+      id: null,
+      name: `vs ${game.opponent ?? 'unknown'} · ${formatDate(game.ended_at)}`,
+      note: '',
+      moves: game.moves.slice(0, end),
+    });
+    setTail(game.moves.slice(end));
+    setCursor(end);
+    setPaste('');
+    setError(null);
+    setStatus(null);
   };
 
   return (
@@ -330,8 +369,8 @@ function OpeningEditor({ openingId }: { openingId: number }) {
 
       <OpeningCard opening={opening} locked={lines.length > 0} onSaved={setOpening} onError={setError} />
 
-      <div className="cols">
-        <div className="stack">
+      <div className="cols editor-cols">
+        <div className="stack board-pin">
           <Board
             fen={fens[at]}
             orientation={color === 'b' ? 'black' : 'white'}
@@ -356,7 +395,9 @@ function OpeningEditor({ openingId }: { openingId: number }) {
               {at === 0 ? 'Starting position' : `${moveLabel(at - 1)} ${steps[at - 1].san}`}
             </span>
           </div>
+        </div>
 
+        <div className="stack">
           <div className="card" style={{ borderColor: 'var(--accent)' }}>
             <div className="card-head">
               <h2>{draft.id == null ? 'New line' : 'Edit line'}</h2>
@@ -389,14 +430,34 @@ function OpeningEditor({ openingId }: { openingId: number }) {
                     </button>
                   );
                 })}
+                {tailSteps.map((step, j) => {
+                  const ply = steps.length + j;
+                  return (
+                    <button
+                      key={`t${j}`}
+                      className="small mono ghost"
+                      disabled={!isYourPly(color, ply)}
+                      title={isYourPly(color, ply) ? 'Later in the game — click to run the line to here' : 'Their move — a line ends on yours'}
+                      style={{ borderStyle: 'dashed', opacity: 0.55 }}
+                      onClick={() => endAt(ply + 1)}
+                    >
+                      {moveLabel(ply)} {step.san}
+                    </button>
+                  );
+                })}
+                {at > 0 && at < steps.length && (
+                  <button className="small" title="Stop the line at the move on the board" onClick={() => endAt(at)}>
+                    ✂ End here
+                  </button>
+                )}
                 {steps.length > 0 && (
                   <button
                     className="small ghost"
                     title="Remove the last move"
-                    onClick={() => {
-                      setDraft((d) => ({ ...d, moves: d.moves.slice(0, -1) }));
-                      setCursor(steps.length - 1);
-                    }}
+                    onClick={() => (tail.length ? endAt(steps.length - 1) : (
+                      setDraft((d) => ({ ...d, moves: d.moves.slice(0, -1) })),
+                      setCursor(steps.length - 1)
+                    ))}
                   >
                     − Undo
                   </button>
@@ -467,10 +528,7 @@ function OpeningEditor({ openingId }: { openingId: number }) {
                             className="small mono"
                             disabled={!r.bestUci}
                             title="Replace this move with the engine's — everything after it is dropped"
-                            onClick={() => {
-                              setDraft((d) => ({ ...d, moves: [...d.moves.slice(0, i), r.bestUci!] }));
-                              setCursor(i + 1);
-                            }}
+                            onClick={() => replaceFrom(i, r.bestUci!)}
                           >
                             {best ?? '—'}
                           </button>{' '}
@@ -489,6 +547,12 @@ function OpeningEditor({ openingId }: { openingId: number }) {
             {steps.length > 0 && !endsOnYours && (
               <p className="tiny faint" style={{ marginTop: 10, marginBottom: 0 }}>
                 A line ends on your own move — add {SIDE[color]}'s answer to {steps[steps.length - 1].san}.
+              </p>
+            )}
+            {tail.length > 0 && (
+              <p className="tiny faint" style={{ marginTop: 10, marginBottom: 0 }}>
+                From a game: the dashed moves are how it went on. Click one of yours to run the line that
+                far, or select an earlier move and press End here.
               </p>
             )}
             {swallowed && (
@@ -542,10 +606,21 @@ function OpeningEditor({ openingId }: { openingId: number }) {
               </button>
             </div>
           </div>
-        </div>
 
-        <div className="stack">
-          <div className="card">
+          <div className="row">
+            {(['lines', 'import'] as const).map((tab) => (
+              <button
+                key={tab}
+                className="small"
+                style={listTab === tab ? { borderColor: 'var(--accent)', color: 'var(--accent)' } : undefined}
+                onClick={() => setListTab(tab)}
+              >
+                {tab === 'lines' ? `Lines (${lines.length})` : 'Import from chess.com'}
+              </button>
+            ))}
+          </div>
+
+          <div className="card" style={listTab === 'lines' ? undefined : { display: 'none' }}>
             <div className="card-head">
               <h2>Lines</h2>
               <span className="tiny faint">{lines.length}</span>
@@ -556,7 +631,7 @@ function OpeningEditor({ openingId }: { openingId: number }) {
                 become one tree: the trainer accepts any of your recorded answers and follows that branch.
               </p>
             ) : (
-              <table className="table">
+              <div className="scroll-list"><table className="table">
                 <tbody>
                   {[...lines].sort((a, b) => a.moves.join(' ').localeCompare(b.moves.join(' '))).map((l) => (
                     <tr key={l.id} style={l.id === draft.id ? { background: 'var(--accent-soft)' } : undefined}>
@@ -579,8 +654,13 @@ function OpeningEditor({ openingId }: { openingId: number }) {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
             )}
+          </div>
+
+          {/* Hidden rather than unmounted, so the fetched games survive a look at the lines. */}
+          <div style={listTab === 'import' ? undefined : { display: 'none' }}>
+            <ImportGamesCard color={color} lines={lines} username={settings.heroUsername} onImport={importGame} />
           </div>
         </div>
       </div>
@@ -589,6 +669,166 @@ function OpeningEditor({ openingId }: { openingId: number }) {
 }
 
 /* ------------------------------------------------------------- sub-views */
+
+const PAGE = 100;
+
+/**
+ * Every game an account played as this opening's side, oldest first, each one
+ * a line waiting to be cut. chess.com files games by month, so they arrive a
+ * month at a time.
+ */
+function ImportGamesCard({
+  color,
+  lines,
+  username,
+  onImport,
+}: {
+  color: Color;
+  lines: OpeningLine[];
+  username: string;
+  onImport: (game: OpeningGame) => void;
+}) {
+  const [name, setName] = useState(username);
+  const [games, setGames] = useState<OpeningGame[] | null>(null);
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState('');
+  const [limit, setLimit] = useState(PAGE);
+  // Bumped to abandon a load in flight: a new fetch, Stop, or leaving the page.
+  const run = useRef(0);
+  useEffect(() => () => { run.current++; }, []);
+
+  const load = async () => {
+    const token = ++run.current;
+    setError(null);
+    setGames([]);
+    setLimit(PAGE);
+    try {
+      const months = await api.chesscomMonths(name.trim());
+      for (let i = 0; i < months.length && token === run.current; i++) {
+        setProgress({ done: i, total: months.length });
+        const batch = await api.chesscomOpeningGames(name.trim(), months[i], color);
+        if (token !== run.current) return;
+        setGames((list) => [...(list ?? []), ...batch]);
+      }
+    } catch (e) {
+      if (token === run.current) setError((e as Error).message);
+    } finally {
+      if (token === run.current) setProgress(null);
+    }
+  };
+
+  const term = query.trim().toLowerCase();
+  const hits = useMemo(
+    () => (games ?? []).filter((g) =>
+      !term || [g.opponent, g.opening, g.time_class, g.result].some((f) => f?.toLowerCase().includes(term))),
+    [games, term]
+  );
+
+  return (
+    <div className="card">
+      <div className="card-head">
+        <h2>Import from chess.com games</h2>
+        <input
+          type="text"
+          style={{ width: 200 }}
+          value={name}
+          placeholder="username"
+          onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && name.trim() && !progress && load()}
+        />
+        {progress ? (
+          <button className="small danger" onClick={() => { run.current++; setProgress(null); }}>Stop</button>
+        ) : (
+          <button className="small" disabled={!name.trim()} onClick={load}>Fetch games as {SIDE[color]}</button>
+        )}
+      </div>
+
+      {error && <div className="banner err">{error}</div>}
+      {progress && (
+        <>
+          <div className="progress-track">
+            <div className="progress-fill" style={{ width: `${(progress.done / Math.max(1, progress.total)) * 100}%` }} />
+          </div>
+          <p className="tiny faint" style={{ marginTop: 7 }}>
+            Month {progress.done + 1} of {progress.total} · {games?.length ?? 0} games so far
+          </p>
+        </>
+      )}
+
+      {!games ? (
+        <p className="tiny faint" style={{ margin: 0 }}>
+          Lists every standard game the account played as {SIDE[color]}, oldest first. Import one to load its
+          moves into the editor above, choose where the line stops, and save it.
+        </p>
+      ) : !games.length ? (
+        !progress && !error && <p className="tiny faint" style={{ margin: 0 }}>No games as {SIDE[color]} on that account.</p>
+      ) : (
+        <>
+          <div className="row" style={{ marginBottom: 8 }}>
+            <input
+              type="search"
+              style={{ width: 260 }}
+              value={query}
+              placeholder="filter by opponent or opening"
+              onChange={(e) => { setQuery(e.target.value); setLimit(PAGE); }}
+            />
+            <span className="tiny faint">
+              {term ? `${hits.length} of ${games.length} games` : `${games.length} games`}
+            </span>
+          </div>
+          <div className="scroll-list"><table className="table">
+            <thead>
+              <tr>
+                <th>Finished</th>
+                <th>Opponent</th>
+                <th>Result</th>
+                <th>Opening</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {hits.slice(0, limit).map((g, i) => {
+                const imported = lines.some((l) => startsWith(g.moves, l.moves));
+                return (
+                  <tr key={g.url ?? i}>
+                    <td className="tiny muted" style={{ whiteSpace: 'nowrap' }}>{formatDate(g.ended_at)}</td>
+                    <td>
+                      {g.opponent} {g.opponent_elo && <span className="faint">({g.opponent_elo})</span>}
+                      <div className="tiny faint">{g.time_class}</div>
+                    </td>
+                    <td className="tiny">{g.result}</td>
+                    <td className="tiny muted">
+                      {g.opening ?? '—'}
+                      <div className="mono faint">{lineSan(g.moves.slice(0, 8))} …</div>
+                    </td>
+                    <td className="num" style={{ whiteSpace: 'nowrap' }}>
+                      {g.url && <a className="btn small" href={g.url} target="_blank" rel="noreferrer">chess.com ↗</a>}{' '}
+                      <button
+                        className={imported ? 'small' : 'small primary'}
+                        title={imported ? 'A saved line already follows this game' : undefined}
+                        onClick={() => onImport(g)}
+                      >
+                        {imported ? 'Imported ✓' : 'Import'}
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table></div>
+          {hits.length > limit && (
+            <div className="row" style={{ marginTop: 10, justifyContent: 'center' }}>
+              <button className="small" onClick={() => setLimit(limit + PAGE)}>
+                Show {Math.min(PAGE, hits.length - limit)} more
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
 
 /** What the engine made of a saved line, from the review stored with it. */
 function LineVerdict({ line, color, drilled }: { line: OpeningLine; color: Color; drilled: boolean }) {

@@ -436,6 +436,12 @@ button.wide { justify-content: center; }
 .opening-card:hover { border-color: var(--accent); }
 .opening-card p { margin: 0; }
 
+/* The opening editor keeps the board in view while its lists scroll beside it. */
+.editor-cols { grid-template-columns: minmax(320px, 520px) minmax(0, 1fr); }
+.board-pin { position: sticky; top: 66px; }
+.scroll-list { max-height: 46vh; overflow-y: auto; }
+.scroll-list thead th { position: sticky; top: 0; background: var(--bg-raised); padding-top: 4px; }
+
 .player-line { display: flex; align-items: center; gap: 8px; font-size: 14px; }
 .side-dot {
   width: 11px;
@@ -449,6 +455,7 @@ button.wide { justify-content: center; }
 
 @media (max-width: 960px) {
   .cols { grid-template-columns: 1fr; }
+  .board-pin { position: static; }
   .main { padding: 16px 14px 40px; }
   .topbar { padding: 10px 14px; gap: 12px; }
   .brand span:last-child { display: none; }

@@ -17,6 +17,27 @@ export const isYourPly = (color: Color, ply: number): boolean => (ply % 2 === 0)
 export const startsWith = (moves: string[], prefix: string[]): boolean =>
   prefix.length <= moves.length && prefix.every((m, i) => moves[i] === m);
 
+/** A position without its move counters, so move orders that meet compare equal. */
+export const positionKey = (fen: string): string => fen.split(' ').slice(0, 4).join(' ');
+
+const keyCache = new WeakMap<string[], string[]>();
+
+/** The position before each move of a line, and after its last. */
+export function lineKeys(line: HasMoves): string[] {
+  let keys = keyCache.get(line.moves);
+  if (!keys) {
+    keys = [START_FEN, ...playLine(START_FEN, line.moves).map((s) => s.fen)].map(positionKey);
+    keyCache.set(line.moves, keys);
+  }
+  return keys;
+}
+
+/** The move a line plays from a position, or undefined if it never reaches it or ends there. */
+export function moveFrom(line: HasMoves, key: string): string | undefined {
+  const i = lineKeys(line).indexOf(key);
+  return i < 0 ? undefined : line.moves[i];
+}
+
 /**
  * Line stats share the puzzle store, keyed by the moves rather than a database
  * id — so a re-export keeps them, and a reworded line starts afresh.

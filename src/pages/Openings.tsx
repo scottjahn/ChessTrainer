@@ -4,7 +4,9 @@ import { Chess } from 'chess.js';
 import { useLocalApi } from '../App';
 import { Board } from '../components/Board';
 import { START_FEN, playLine } from '../lib/chessutil';
-import { isYourPly, leafLines, lineRef, lineSan, pickLine, startsWith } from '../lib/openings';
+import {
+  isYourPly, leafLines, lineKeys, lineRef, lineSan, moveFrom, pickLine, positionKey,
+} from '../lib/openings';
 import { loadPack } from '../lib/puzzles';
 import { loadStats, recordAttempt, statFor } from '../lib/stats';
 import type { Color, ExportedOpening, ExportedOpeningLine, PuzzlePack } from '../lib/types';
@@ -110,8 +112,8 @@ function Drill({ opening }: { opening: ExportedOpening }) {
   const color = opening.color;
   const lines = useMemo(() => leafLines(opening.lines), [opening]);
   const [stats, setStats] = useState(() => loadStats());
-  // The line being followed. It decides the opponent's replies, and changes
-  // when you answer with a move that belongs to a different line.
+  // The line being followed: the one hints and the solution come from. It
+  // changes whenever a move, yours or theirs, is drawn from a different line.
   const [line, setLine] = useState<ExportedOpeningLine | null>(null);
   // Every move on the board so far, both sides, from the starting position.
   const [path, setPath] = useState<string[]>([]);
@@ -160,11 +162,16 @@ function Drill({ opening }: { opening: ExportedOpening }) {
   }, []);
 
   const done = phase === 'solved' || phase === 'revealed';
-  const solution = useMemo(() => (line ? playLine(START_FEN, line.moves) : []), [line]);
-  const steps = useMemo(
-    () => (phase === 'revealed' ? solution : playLine(START_FEN, path)),
-    [phase, solution, path]
-  );
+  const played = useMemo(() => playLine(START_FEN, path), [path]);
+  const fen = played.length ? played[played.length - 1].fen : START_FEN;
+  // Lines are matched on the position, not the moves that led to it, so the
+  // line being followed may have got here by another move order.
+  const here = positionKey(fen);
+  const solution = useMemo(() => {
+    const i = line ? lineKeys(line).indexOf(here) : -1;
+    return playLine(START_FEN, i < 0 ? path : [...path, ...line!.moves.slice(i)]);
+  }, [line, here, path]);
+  const steps = phase === 'revealed' ? solution : played;
   const yourTurn = isYourPly(color, path.length);
   // Frame i is the position after i moves, so the live one is path.length.
   const index = Math.min(step, steps.length);
@@ -195,19 +202,20 @@ function Drill({ opening }: { opening: ExportedOpening }) {
     (from: string, to: string, promotion?: string) => {
       if (!line || done || !yourTurn) return false;
       const at = path.length;
+      const chess = new Chess(fen);
       let move;
       try {
-        move = new Chess(at ? steps[at - 1].fen : START_FEN).move({ from, to, promotion: promotion ?? 'q' });
+        move = chess.move({ from, to, promotion: promotion ?? 'q' });
       } catch {
         return false;
       }
       const uci = `${move.from}${move.to}${move.promotion ?? ''}`;
 
       let target = line;
-      if (uci !== line.moves[at]) {
-        // Not this line's move — but another line may answer the same position
-        // this way, and then that is the one to follow.
-        const branch = pickLine(lines.filter((l) => l.moves[at] === uci && startsWith(l.moves, path)), color, stats);
+      if (uci !== solution[at]?.uci) {
+        // Not this line's move — but other lines may answer the same position
+        // this way, and then one of those is the one to follow.
+        const branch = pickLine(lines.filter((l) => moveFrom(l, here) === uci), color, stats);
         if (!branch) {
           slipped.current = true;
           setPhase('failed');
@@ -222,13 +230,18 @@ function Drill({ opening }: { opening: ExportedOpening }) {
       setPath([...path, uci]);
       setWrong(null);
       setStep(at + 1);
-      const reply = target.moves[at + 1];
+      // Their reply is drawn afresh from every line that reaches this position,
+      // so lines with the same first moves do not always go the same way.
+      const after = positionKey(chess.fen());
+      const onward = pickLine(lines.filter((l) => moveFrom(l, after)), color, stats);
+      const reply = onward && moveFrom(onward, after);
       if (!reply) {
         // Scored on the first try: one wrong move on the way makes it a miss.
         settle(target, !slipped.current, false);
         setPhase('solved');
         return true;
       }
+      if (onward !== target) setLine(onward);
       setPhase('waiting');
       window.clearTimeout(replyTimer.current);
       replyTimer.current = window.setTimeout(() => {
@@ -237,7 +250,7 @@ function Drill({ opening }: { opening: ExportedOpening }) {
       }, 500);
       return true;
     },
-    [line, done, yourTurn, path, steps, lines, color, stats, settle]
+    [line, done, yourTurn, path, fen, here, solution, lines, color, stats, settle]
   );
 
   const reveal = useCallback(() => {
@@ -246,8 +259,8 @@ function Drill({ opening }: { opening: ExportedOpening }) {
     settle(line, false, true);
     setPhase('revealed');
     // Land on the move that was being asked for, not the end of the line.
-    setStep(Math.min(line.moves.length, path.length + (yourTurn ? 1 : 2)));
-  }, [line, done, settle, path.length, yourTurn]);
+    setStep(Math.min(solution.length, path.length + (yourTurn ? 1 : 2)));
+  }, [line, done, settle, solution.length, path.length, yourTurn]);
 
   const hint = useCallback(() => {
     setUsedHint(true);

@@ -191,6 +191,22 @@ export interface OpeningLine {
   created_at: string;
 }
 
+/** A chess.com game offered as the source of an opening line. */
+export interface OpeningGame {
+  url: string | null;
+  opponent: string | null;
+  opponent_elo: number | null;
+  elo: number | null;
+  result: 'win' | 'loss' | 'draw';
+  ended_at: string | null;
+  time_class: string | null;
+  /** chess.com's name for the opening, when it gives one. */
+  opening: string | null;
+  ply_count: number;
+  /** UCI moves from the start; long games are cut off well past the opening. */
+  moves: string[];
+}
+
 /* ---- the exported (public) shape the trainer reads ---- */
 
 export interface ExportedGame {
