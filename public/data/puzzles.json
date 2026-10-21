@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "exportedAt": "2026-10-21T01:18:49.794Z",
+  "exportedAt": "2026-10-21T23:26:58.888Z",
   "counts": {
-    "puzzles": 64,
-    "games": 19,
+    "puzzles": 65,
+    "games": 20,
     "openings": 7,
     "lines": 52
   },
@@ -406,6 +406,27 @@
       "heroResult": "draw",
       "whiteAccuracy": 62.91,
       "blackAccuracy": 63.45
+    },
+    "21": {
+      "id": 21,
+      "url": "https://www.chess.com/game/daily/1042358054",
+      "event": "Let's Play!",
+      "white": "scottjahn",
+      "black": "JimMackessy",
+      "whiteElo": 695,
+      "blackElo": 309,
+      "result": "1-0",
+      "playedAt": "2026-10-10T22:13:12Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "B02",
+      "ecoUrl": "https://www.chess.com/openings/Alekhines-Defense-Normal-Variation-3.Bc4",
+      "termination": "scottjahn won by checkmate",
+      "hero": "scottjahn",
+      "heroColor": "w",
+      "heroResult": "win",
+      "whiteAccuracy": 87.78,
+      "blackAccuracy": 69.1
     }
   },
   "openings": [
@@ -3447,6 +3468,36 @@
       "fenPrev": "1r3k2/P7/2p2pp1/2P1p3/2Q3p1/1N4q1/2K5/R7 b - - 0 39",
       "prevSan": "Ra8",
       "prevUci": "b8a8",
+      "note": null
+    },
+    {
+      "id": 79,
+      "gameId": 21,
+      "ply": 60,
+      "fen": "4k3/3p1pR1/2n1p3/2P1q3/pP6/5Q2/P6N/6RK w - - 1 31",
+      "sideToMove": "w",
+      "playedSan": "Rg8+",
+      "playedUci": "g7g8",
+      "solutionSan": "Qxf7+",
+      "solutionUci": "f3f7",
+      "altSolutions": [
+        "g7f7",
+        "b4b5"
+      ],
+      "continuation": [],
+      "classification": "miss",
+      "wpLoss": 2.8952907931009264,
+      "evalBefore": {
+        "type": "mate",
+        "value": 2
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 954
+      },
+      "fenPrev": "1n2k3/3p1pR1/4p3/2P1q3/pP6/5Q2/P6N/6RK b - - 0 30",
+      "prevSan": "Nc6",
+      "prevUci": "b8c6",
       "note": null
     }
   ]
