@@ -64,7 +64,16 @@ export function classifyMove({
   const wpLoss = Math.max(0, before - after);
 
   if (playedUci && bestUci && playedUci === bestUci) return { classification: 'best', wpLoss: 0 };
+  // Mate 0 after the move means it delivered checkmate; any mate is as good as
+  // the engine's.
+  if (evalAfter?.type === 'mate' && evalAfter.value === 0) return { classification: 'best', wpLoss: 0 };
   if (isBook) return { classification: 'book', wpLoss };
+
+  // Every forced mate maps to 100%, so passing up a mate in 1 for a mate in 5,
+  // or for a merely winning position, costs nothing on the win-probability
+  // scale. Short mates are exactly the patterns worth drilling, so catch them
+  // directly.
+  if (missedMate(evalBefore, evalAfter)) return { classification: 'miss', wpLoss };
 
   const stillFine = !evalAfter || (evalAfter.type === 'mate' ? evalAfter.value > 0 : evalAfter.value > -100);
   if (isWinning(evalBefore) && !isWinning(evalAfter) && stillFine && wpLoss >= thresholds.mistake) {
@@ -76,6 +85,21 @@ export function classifyMove({
   if (wpLoss >= thresholds.inaccuracy) return { classification: 'inaccuracy', wpLoss };
   if (wpLoss >= 2) return { classification: 'good', wpLoss };
   return { classification: 'excellent', wpLoss };
+}
+
+/** Longest forced mate we expect a player to find over the board. */
+export const MAX_MISSED_MATE = 5;
+
+/**
+ * You had a mate in N (N ≤ MAX_MISSED_MATE) and either lost it or let it drag
+ * out three or more moves longer than the best line. Both scores are from the
+ * mover's side; after the move, keeping pace would be a mate in N − 1. A move
+ * or two slower is usually just a different route to the same mate.
+ */
+export function missedMate(evalBefore: Score | null, evalAfter: Score | null): boolean {
+  if (evalBefore?.type !== 'mate' || evalBefore.value <= 0 || evalBefore.value > MAX_MISSED_MATE) return false;
+  if (evalAfter?.type !== 'mate' || evalAfter.value < 0) return true;
+  return evalAfter.value >= evalBefore.value + 2;
 }
 
 export const CLASSIFICATION_META: Record<Classification, { label: string; color: string; icon: string }> = {
