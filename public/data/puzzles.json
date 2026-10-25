@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "exportedAt": "2026-10-21T23:26:58.888Z",
+  "exportedAt": "2026-10-25T14:38:32.342Z",
   "counts": {
-    "puzzles": 65,
-    "games": 20,
+    "puzzles": 68,
+    "games": 21,
     "openings": 7,
     "lines": 52
   },
@@ -427,6 +427,27 @@
       "heroResult": "win",
       "whiteAccuracy": 87.78,
       "blackAccuracy": 69.1
+    },
+    "22": {
+      "id": 22,
+      "url": "https://www.chess.com/game/daily/1045249646",
+      "event": "Let's Play!",
+      "white": "timbajimba",
+      "black": "scottjahn",
+      "whiteElo": 801,
+      "blackElo": 680,
+      "result": "1-0",
+      "playedAt": "2026-10-16T15:09:35Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "D00",
+      "ecoUrl": "https://www.chess.com/openings/Queens-Pawn-Opening-Accelerated-London-System-2...Nf6-3.e3-c5",
+      "termination": "timbajimba won by checkmate",
+      "hero": "scottjahn",
+      "heroColor": "b",
+      "heroResult": "loss",
+      "whiteAccuracy": 87.97,
+      "blackAccuracy": 76.18
     }
   },
   "openings": [
@@ -3499,6 +3520,93 @@
       "prevSan": "Nc6",
       "prevUci": "b8c6",
       "note": null
+    },
+    {
+      "id": 80,
+      "gameId": 22,
+      "ply": 21,
+      "fen": "r2q1rk1/1p2bppp/p1b1pn2/2ppN3/3P1B2/2P1P3/PPQN1PPP/R3K2R b KQ - 5 11",
+      "sideToMove": "b",
+      "playedSan": "Ne4",
+      "playedUci": "f6e4",
+      "solutionSan": "Be8",
+      "solutionUci": "c6e8",
+      "altSolutions": [
+        "c6b5",
+        "c5d4"
+      ],
+      "continuation": [],
+      "classification": "mistake",
+      "wpLoss": 16.269477528830343,
+      "evalBefore": {
+        "type": "cp",
+        "value": 56
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -123
+      },
+      "fenPrev": "r2q1rk1/1p2bppp/p1b1pn2/2ppN3/3P1B2/2P1P3/PPQ2PPP/RN2K2R w KQ - 4 11",
+      "prevSan": "Nd2",
+      "prevUci": "b1d2",
+      "note": "Ne4 loses a pawn after all trades complete"
+    },
+    {
+      "id": 81,
+      "gameId": 22,
+      "ply": 29,
+      "fen": "r4rk1/3qbppp/p1p1p3/2p5/3PQB2/2P1P3/PP3PPP/2KR3R b - - 2 15",
+      "sideToMove": "b",
+      "playedSan": "Qb7",
+      "playedUci": "d7b7",
+      "solutionSan": "c4",
+      "solutionUci": "c5c4",
+      "altSolutions": [],
+      "continuation": [],
+      "classification": "mistake",
+      "wpLoss": 12.626049897660284,
+      "evalBefore": {
+        "type": "cp",
+        "value": -120
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -277
+      },
+      "fenPrev": "r4rk1/3qbppp/p1p1p3/2p5/3PQB2/2P1P3/PP3PPP/R3K2R w KQ - 1 15",
+      "prevSan": "O-O-O",
+      "prevUci": "e1c1",
+      "note": "Unblocks bishop"
+    },
+    {
+      "id": 82,
+      "gameId": 22,
+      "ply": 33,
+      "fen": "r4rk1/1q2bppp/p1p1p3/8/2pPQB2/2P1P3/PP2RPPP/2KR4 b - - 1 17",
+      "sideToMove": "b",
+      "playedSan": "f5",
+      "playedUci": "f7f5",
+      "solutionSan": "a5",
+      "solutionUci": "a6a5",
+      "altSolutions": [
+        "f8d8",
+        "b7b5"
+      ],
+      "continuation": [],
+      "classification": "blunder",
+      "wpLoss": 29.45243342681588,
+      "evalBefore": {
+        "type": "cp",
+        "value": -113
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -588
+      },
+      "fenPrev": "r4rk1/1q2bppp/p1p1p3/8/2pPQB2/2P1P3/PP3PPP/2KRR3 w - - 0 17",
+      "prevSan": "Re2",
+      "prevUci": "e1e2",
+      "note": "f5?? does not work (loses 2 pawns after Qxe6+ followed by Qxc4"
     }
   ]
 }
