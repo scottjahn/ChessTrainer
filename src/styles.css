@@ -436,6 +436,28 @@ button.wide { justify-content: center; }
 .opening-card:hover { border-color: var(--accent); }
 .opening-card p { margin: 0; }
 
+.month-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; align-items: start; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-weekday { font-size: 11px; text-align: center; color: var(--text-faint); padding-bottom: 2px; }
+.cal-day {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--bg-sunken);
+  color: var(--text);
+  font-size: 13.5px;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+}
+a.cal-day:hover { border-color: var(--accent); }
+.cal-day.is-done { background: var(--accent); border-color: var(--accent); color: #14180c; }
+.cal-day.is-blank { background: none; border-color: transparent; color: var(--text-faint); }
+.cal-day.is-today { outline: 2px solid var(--c-inaccuracy); outline-offset: 1px; }
+.good-text { color: var(--c-best); }
+
 /* The opening editor keeps the board in view while its lists scroll beside it. */
 .editor-cols { grid-template-columns: minmax(320px, 520px) minmax(0, 1fr); }
 .board-pin { position: sticky; top: 66px; }
@@ -459,4 +481,10 @@ button.wide { justify-content: center; }
   .main { padding: 16px 14px 40px; }
   .topbar { padding: 10px 14px; gap: 12px; }
   .brand span:last-child { display: none; }
+  .tabs { min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  .tab { white-space: nowrap; }
+}
+
+@media (max-width: 560px) {
+  .mode-pill { display: none; }
 }

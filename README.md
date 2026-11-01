@@ -122,6 +122,22 @@ place. In the trainer:
 An opening with *Show in trainer* unticked, or with no lines, is left out of the
 trainer and the export.
 
+## Calendar
+
+The **Calendar** tab drills white-to-move mate-in-2 positions from a printed
+calendar. They live in `public/data/calendar.json`, which `npm run export` does
+not touch:
+
+```json
+{ "version": 1, "puzzles": [{ "date": "2026-11-01", "fen": "<pieces> w - - 0 1", "credit": "Composer, year" }] }
+```
+
+To add a page, give Claude Code a photo and have it append the positions, then
+run `npm run check-calendar`. It solves each one and fails on any without a
+forced mate in 2, which is how a misread piece shows up. Answers are worked out
+in the browser, so only the position is stored. Done and not done is kept in the
+browser's localStorage, per date.
+
 ## Publishing
 
 `npm run export` (or the Export button) writes `public/data/puzzles.json`.

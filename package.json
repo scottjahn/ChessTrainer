@@ -10,6 +10,7 @@
     "dev:web": "vite",
     "engine": "node scripts/copy-engine.mjs",
     "export": "node server/export.mjs",
+    "check-calendar": "node scripts/check-calendar.mjs",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview --port 4173"
