@@ -138,6 +138,29 @@ forced mate in 2, which is how a misread piece shows up. Answers are worked out
 in the browser, so only the position is stored. Done and not done is kept in the
 browser's localStorage, per date.
 
+## Workbooks
+
+The **Workbooks** tab works through puzzles from printed chess workbooks, in book
+order. They live in `public/data/workbooks.json`, which `npm run export` does not
+touch:
+
+```json
+{ "version": 1, "puzzles": [{ "id": "step-1-plus-p3-1", "book": "Step 1 Plus", "theme": "Twofold attack", "type": "best-move", "page": 3, "number": 1, "fen": "<pieces> w - - 0 1", "solution": ["e3d5", "b7d5", "d4d5"] }] }
+```
+
+To add a page, give Claude Code a photo and have it append the positions, then
+run `npm run check-workbooks`, which fails when Stockfish disagrees with a stored
+answer and warns when no move stands out. Reading the photo:
+
+- `number` counts the diagrams left to right, then top to bottom.
+- The page number is in the bottom corner: right on right-hand pages, left on left-hand ones.
+- A black dot to the right of h8 means black to move. Otherwise it is white to move.
+- `type` comes from the theme. Twofold attack is `best-move`.
+- `solution` is the answer followed by the play that shows what it wins, and
+  `alternatives` lists any other first moves that are just as good.
+
+Done and not done is kept in the browser's localStorage, per puzzle id.
+
 ## Publishing
 
 `npm run export` (or the Export button) writes `public/data/puzzles.json`.

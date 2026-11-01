@@ -11,6 +11,7 @@
     "engine": "node scripts/copy-engine.mjs",
     "export": "node server/export.mjs",
     "check-calendar": "node scripts/check-calendar.mjs",
+    "check-workbooks": "node scripts/check-workbooks.mjs",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview --port 4173"
