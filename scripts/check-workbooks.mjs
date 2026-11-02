@@ -58,7 +58,7 @@ let errors = 0;
 let warnings = 0;
 const seen = new Set();
 
-for (const { id, book, theme, type, page, number, fen, solution, alternatives = [] } of puzzles) {
+for (const { id, book, theme, type, page, number, fen, solution, alternatives = [], engineDisagrees } of puzzles) {
   const problems = [];
   const notes = [];
   let answer = '';
@@ -84,8 +84,9 @@ for (const { id, book, theme, type, page, number, fen, solution, alternatives = 
 
     const [best, second] = await topMoves(fen);
     const accepted = [solution[0], ...alternatives];
-    if (!accepted.includes(best.uci)) problems.push(`engine prefers ${best.uci} (${best.score})`);
-    else if (second && !accepted.includes(second.uci) && best.score - second.score < CLEAR_MARGIN) {
+    if (!accepted.includes(best.uci)) {
+      (engineDisagrees ? notes : problems).push(`engine prefers ${best.uci} (${best.score})`);
+    } else if (second && !accepted.includes(second.uci) && best.score - second.score < CLEAR_MARGIN) {
       notes.push(`no clear best: ${second.uci} is within ${best.score - second.score}`);
     }
   } catch (e) {

@@ -155,9 +155,13 @@ answer and warns when no move stands out. Reading the photo:
 - `number` counts the diagrams left to right, then top to bottom.
 - The page number is in the bottom corner: right on right-hand pages, left on left-hand ones.
 - A black dot to the right of h8 means black to move. Otherwise it is white to move.
-- `type` comes from the theme. Twofold attack is `best-move`.
+- `type` comes from the theme. Twofold attack and Mix are `best-move`, and Choose
+  the correct capture is `correct-capture`.
+- A page's numbering can skip a slot taken by an illustration, so follow the answer key.
 - `solution` is the answer followed by the play that shows what it wins, and
   `alternatives` lists any other first moves that are just as good.
+- When the position matches the photo but Stockfish prefers another move to the
+  book's answer, keep the book's and set `engineDisagrees` to make the failure a warning.
 
 Solving a puzzle moves on to the next one not yet solved in one attempt. A solve
 counts as one attempt when that visit to the puzzle had no wrong move, hint or

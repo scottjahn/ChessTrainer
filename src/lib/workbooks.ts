@@ -1,4 +1,4 @@
-export type WorkbookPuzzleType = 'best-move';
+export type WorkbookPuzzleType = 'best-move' | 'correct-capture';
 
 export interface WorkbookPuzzle {
   /** Stable across corrections to the position, since progress is keyed on it. */
@@ -15,10 +15,13 @@ export interface WorkbookPuzzle {
   solution: string[];
   /** Other first moves that are just as good, in UCI. */
   alternatives?: string[];
+  /** The position was rechecked against the photo and the book's answer stands over Stockfish's. */
+  engineDisagrees?: boolean;
 }
 
 export const TYPE_PROMPT: Record<WorkbookPuzzleType, string> = {
   'best-move': 'find the best move',
+  'correct-capture': 'choose the correct capture',
 };
 
 const DONE_KEY = 'chesstrainer.workbooks.v1';

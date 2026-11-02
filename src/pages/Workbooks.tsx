@@ -244,7 +244,7 @@ function Drill({
     const uci = `${move.from}${move.to}${move.promotion ?? ''}`;
 
     if (uci !== puzzle.solution[0] && !puzzle.alternatives?.includes(uci)) {
-      setRefused((r) => ({ text: `${move.san} is not the best move.`, square: move.to, tries: (r?.tries ?? 0) + 1 }));
+      setRefused((r) => ({ text: `${move.san} is not it.`, square: move.to, tries: (r?.tries ?? 0) + 1 }));
       setSlipped(true);
       return false;
     }
