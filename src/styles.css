@@ -456,7 +456,12 @@ a.cal-day:hover { border-color: var(--accent); }
 .cal-day.is-done { background: var(--accent); border-color: var(--accent); color: #14180c; }
 .cal-day.is-blank { background: none; border-color: transparent; color: var(--text-faint); }
 .cal-day.is-today { outline: 2px solid var(--c-inaccuracy); outline-offset: 1px; }
+.cal-day.is-partial { background: var(--c-inaccuracy); border-color: var(--c-inaccuracy); color: #14180c; }
 .good-text { color: var(--c-best); }
+.partial-text { color: var(--c-inaccuracy); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend .cal-day { width: 14px; border-radius: 4px; }
 
 /* The opening editor keeps the board in view while its lists scroll beside it. */
 .editor-cols { grid-template-columns: minmax(320px, 520px) minmax(0, 1fr); }

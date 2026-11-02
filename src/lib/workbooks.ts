@@ -21,9 +21,10 @@ export const TYPE_PROMPT: Record<WorkbookPuzzleType, string> = {
   'best-move': 'find the best move',
 };
 
-const STORAGE_KEY = 'chesstrainer.workbooks.v1';
+const DONE_KEY = 'chesstrainer.workbooks.v1';
+const CLEAN_KEY = 'chesstrainer.workbooks.clean.v1';
 
-/** Date solved or ticked off, by puzzle id. */
+/** Date of the tick, by puzzle id. */
 export type DoneMap = Record<string, string>;
 
 /** Separate from puzzles.json, which every export overwrites. */
@@ -51,31 +52,43 @@ export function inBookOrder(puzzles: WorkbookPuzzle[]): WorkbookPuzzle[] {
   );
 }
 
-/** Like the puzzle stats, this lives only in this browser. */
-export function loadDone(): DoneMap {
+function load(key: string): DoneMap {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as DoneMap) : {};
   } catch {
     return {};
   }
 }
 
-export function setDone(done: DoneMap, id: string, isDone: boolean): DoneMap {
-  const next = { ...done };
-  if (isDone) next[id] = new Date().toISOString();
+function update(key: string, map: DoneMap, id: string, on: boolean): DoneMap {
+  const next = { ...map };
+  if (on) next[id] = new Date().toISOString();
   else delete next[id];
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    localStorage.setItem(key, JSON.stringify(next));
   } catch {
     /* private mode or a full quota: the ticks last until the page closes */
   }
   return next;
 }
 
-/** The first undone puzzle after this one, wrapping round to the start. */
-export function nextUndone(puzzles: WorkbookPuzzle[], done: DoneMap, afterId?: string): WorkbookPuzzle | null {
+/** Like the puzzle stats, these live only in this browser. Done means solved at all. */
+export const loadDone = () => load(DONE_KEY);
+export const setDone = (done: DoneMap, id: string, on: boolean) => update(DONE_KEY, done, id, on);
+
+/** Clean means solved at some point with no wrong move, hint or shown solution. */
+export const loadClean = () => load(CLEAN_KEY);
+export const setClean = (clean: DoneMap, id: string, on: boolean) => update(CLEAN_KEY, clean, id, on);
+
+/** The next puzzle after this one not yet solved cleanly, wrapping round to the start. */
+export function nextToSolve(puzzles: WorkbookPuzzle[], clean: DoneMap, afterId: string): WorkbookPuzzle | null {
   const after = puzzles.findIndex((p) => p.id === afterId);
-  const undone = (p: WorkbookPuzzle) => !done[p.id] && p.id !== afterId;
-  return puzzles.slice(after + 1).find(undone) ?? puzzles.find(undone) ?? null;
+  const open = (p: WorkbookPuzzle) => !clean[p.id] && p.id !== afterId;
+  return puzzles.slice(after + 1).find(open) ?? puzzles.find(open) ?? null;
+}
+
+/** Where to pick up: the first puzzle never solved, then the first not yet solved cleanly. */
+export function resumeAt(puzzles: WorkbookPuzzle[], done: DoneMap, clean: DoneMap): WorkbookPuzzle | null {
+  return puzzles.find((p) => !done[p.id]) ?? puzzles.find((p) => !clean[p.id]) ?? null;
 }

@@ -159,7 +159,12 @@ answer and warns when no move stands out. Reading the photo:
 - `solution` is the answer followed by the play that shows what it wins, and
   `alternatives` lists any other first moves that are just as good.
 
-Done and not done is kept in the browser's localStorage, per puzzle id.
+Solving a puzzle moves on to the next one not yet solved in one attempt. A solve
+counts as one attempt when that visit to the puzzle had no wrong move, hint or
+shown solution; Start over does not clear a slip, but coming back later does. Each
+page lists what is still open. Progress is kept in the browser's localStorage, per
+puzzle id, in `chesstrainer.workbooks.v1` (solved at all) and
+`chesstrainer.workbooks.clean.v1` (solved in one attempt).
 
 ## Publishing
 
