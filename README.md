@@ -145,23 +145,31 @@ order. They live in `public/data/workbooks.json`, which `npm run export` does no
 touch:
 
 ```json
-{ "version": 1, "puzzles": [{ "id": "step-1-plus-p3-1", "book": "Step 1 Plus", "theme": "Twofold attack", "type": "best-move", "page": 3, "number": 1, "fen": "<pieces> w - - 0 1", "solution": ["e3d5", "b7d5", "d4d5"] }] }
+{ "version": 1, "puzzles": [{ "id": "step-1-plus-p3-1", "book": "Step 1 Plus", "section": "Material", "theme": "Twofold attack", "type": "best-move", "page": 3, "number": 1, "fen": "<pieces> w - - 0 1", "solution": ["e3d5", "b7d5", "d4d5"] }] }
 ```
 
 To add a page, give Claude Code a photo and have it append the positions, then
-run `npm run check-workbooks`, which fails when Stockfish disagrees with a stored
-answer and warns when no move stands out. Reading the photo:
+run `npm run check-workbooks -- --write`. It ranks every legal move, stores any
+that Stockfish rates at least as highly as the book's answer in `alternatives`,
+and warns when no move stands out. Without `--write` it only checks, and fails
+when `alternatives` is out of date. It takes around ten seconds per puzzle.
+Reading the photo:
 
 - `number` counts the diagrams left to right, then top to bottom.
 - The page number is in the bottom corner: right on right-hand pages, left on left-hand ones.
 - A black dot to the right of h8 means black to move. Otherwise it is white to move.
-- `type` comes from the theme. Twofold attack and Mix are `best-move`, and Choose
-  the correct capture is `correct-capture`.
+- `section` is the heading at the top left and `theme` the one at the top right.
+- `type` comes from the theme. Choose the correct capture is `correct-capture`,
+  and everything else so far is `best-move`.
+- `bookAlternatives` holds any other first move the answer key gives. These are
+  always accepted, whatever Stockfish thinks of them.
+- When the key's move is written for the wrong side, trust the black dot and the
+  position, as with Defending Mix A puzzle 7, which is really Black's move.
+- When a key's move could be either of two pieces, as with two rooks reaching the
+  same square, take the one its notes point to and let the check confirm it.
 - A page's numbering can skip a slot taken by an illustration, so follow the answer key.
-- `solution` is the answer followed by the play that shows what it wins, and
-  `alternatives` lists any other first moves that are just as good.
-- When the position matches the photo but Stockfish prefers another move to the
-  book's answer, keep the book's and set `engineDisagrees` to make the failure a warning.
+- `solution` is the book's answer followed by the play that shows what it wins.
+  Hints and Show solution always use it, even when `alternatives` has better moves.
 
 Solving a puzzle moves on to the next one not yet solved in one attempt. A solve
 counts as one attempt when that visit to the puzzle had no wrong move, hint or

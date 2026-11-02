@@ -4,7 +4,9 @@ export interface WorkbookPuzzle {
   /** Stable across corrections to the position, since progress is keyed on it. */
   id: string;
   book: string;
-  /** The heading printed on the page, such as "Twofold attack". */
+  /** The heading at the top left of the page, such as "Material". */
+  section: string;
+  /** The heading at the top right of the page, such as "Twofold attack". */
   theme: string;
   type: WorkbookPuzzleType;
   page: number;
@@ -13,10 +15,10 @@ export interface WorkbookPuzzle {
   fen: string;
   /** UCI moves: the answer, then the play that shows why it works. */
   solution: string[];
-  /** Other first moves that are just as good, in UCI. */
+  /** Other first moves the book's answer key also gives, in UCI. */
+  bookAlternatives?: string[];
+  /** Other first moves Stockfish rates at least as highly, in UCI. */
   alternatives?: string[];
-  /** The position was rechecked against the photo and the book's answer stands over Stockfish's. */
-  engineDisagrees?: boolean;
 }
 
 export const TYPE_PROMPT: Record<WorkbookPuzzleType, string> = {

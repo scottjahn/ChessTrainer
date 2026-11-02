@@ -117,7 +117,7 @@ function WorkbookPage({
         <h2>{puzzles[0].book}, page {puzzles[0].page}</h2>
       </div>
       <p className="tiny muted" style={{ margin: '0 0 10px' }}>
-        {puzzles[0].theme} · {puzzles.length - open.length} of {puzzles.length} in one attempt
+        {puzzles[0].section} · {puzzles[0].theme} · {puzzles.length - open.length} of {puzzles.length} in one attempt
       </p>
       <div className="cal-grid">
         {puzzles.map((p) => (
@@ -243,7 +243,7 @@ function Drill({
     }
     const uci = `${move.from}${move.to}${move.promotion ?? ''}`;
 
-    if (uci !== puzzle.solution[0] && !puzzle.alternatives?.includes(uci)) {
+    if (uci !== puzzle.solution[0] && !puzzle.bookAlternatives?.includes(uci) && !puzzle.alternatives?.includes(uci)) {
       setRefused((r) => ({ text: `${move.san} is not it.`, square: move.to, tries: (r?.tries ?? 0) + 1 }));
       setSlipped(true);
       return false;
@@ -302,7 +302,7 @@ function Drill({
         <div className="card-head" style={{ marginBottom: 0 }}>
           <h2>{puzzle.book}</h2>
         </div>
-        <span className="tiny muted">{puzzle.theme} · page {puzzle.page} · puzzle {puzzle.number}</span>
+        <span className="tiny muted">{puzzle.section} · {puzzle.theme} · page {puzzle.page} · puzzle {puzzle.number}</span>
         <span className={`tiny ${isClean ? 'good-text' : isDone ? 'partial-text' : 'muted'}`}>
           {isClean ? '✓ Solved in one attempt' : isDone ? 'Solved, not yet in one attempt' : 'Not solved yet'}
         </span>
@@ -315,6 +315,13 @@ function Drill({
           {phase === 'revealed' && <span className="shown">{lineText(answer, !whiteToMove)}</span>}
           {phase === 'playing' && refused && <span className="bad">✗ {refused.text}</span>}
         </div>
+        {phase === 'solved' && line[0] !== puzzle.solution[0] && (
+          <span className="tiny muted">
+            {puzzle.bookAlternatives?.includes(line[0])
+              ? `The book also gives ${answer[0]?.san}.`
+              : `Stockfish rates this at least as highly. The book plays ${answer[0]?.san}.`}
+          </span>
+        )}
 
         <div className="row">
           <button onClick={() => { setHinted(true); setSlipped(true); }} disabled={phase !== 'playing'}>Hint</button>

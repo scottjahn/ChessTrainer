@@ -1,17 +1,24 @@
 // Checks public/data/workbooks.json after transcribing a workbook page. Each puzzle
-// should have one clear best move, so an engine that disagrees with the stored
-// answer, or sees no clear winner, usually means a misread piece.
+// should have one clear best move, so a stored answer the engine ranks well down,
+// or no clear winner, usually means a misread piece.
+//
+// The book's answer stays the solution, but any move Stockfish rates at least as
+// highly is accepted too. Run with --write to store those as `alternatives`.
 import { spawn } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { Chess } from 'chess.js';
 
 const DEPTH = 16;
 // How far ahead of the next move the answer should be, in centipawns.
 const CLEAR_MARGIN = 100;
+const MATE = 100000;
 
-const file = process.argv[2] ?? new URL('../public/data/workbooks.json', import.meta.url);
-const { puzzles } = JSON.parse(readFileSync(file, 'utf8'));
+const write = process.argv.includes('--write');
+const file = process.argv.slice(2).find((a) => a !== '--write')
+  ?? fileURLToPath(new URL('../public/data/workbooks.json', import.meta.url));
+const pack = JSON.parse(readFileSync(file, 'utf8'));
+const { puzzles } = pack;
 
 const engine = spawn('node', [
   fileURLToPath(new URL('../node_modules/stockfish/bin/stockfish-19-lite-single.js', import.meta.url)),
@@ -33,32 +40,35 @@ const until = (prefix, onLine = () => {}) =>
     };
   });
 
-/** The two best first moves, best first, with scores in centipawns. */
-async function topMoves(fen) {
-  const found = [];
+/** A score for every legal move, best first. A sooner mate scores higher. */
+async function rankMoves(fen) {
+  send('ucinewgame');
+  send('isready');
+  await until('readyok');
+  const scores = new Map();
   const done = until('bestmove', (line) => {
-    const m = line.match(/ multipv (\d) score (cp|mate) (-?\d+).* pv (\S+)/);
+    if (line.includes('bound')) return;
+    const m = line.match(/ score (cp|mate) (-?\d+).* pv (\S+)/);
     if (!m) return;
-    const score = m[2] === 'cp' ? Number(m[3]) : Math.sign(Number(m[3])) * 100000;
-    found[Number(m[1]) - 1] = { uci: m[4], score };
+    const n = Number(m[2]);
+    scores.set(m[3], m[1] === 'cp' ? n : n > 0 ? MATE - n : -MATE - n);
   });
   send(`position fen ${fen}`);
   send(`go depth ${DEPTH}`);
   await done;
-  return found;
+  return [...scores].map(([uci, score]) => ({ uci, score })).sort((a, b) => b.score - a.score);
 }
 
 send('uci');
 await until('uciok');
-send('setoption name MultiPV value 2');
-send('isready');
-await until('readyok');
+send('setoption name MultiPV value 256');
 
 let errors = 0;
 let warnings = 0;
 const seen = new Set();
 
-for (const { id, book, theme, type, page, number, fen, solution, alternatives = [], engineDisagrees } of puzzles) {
+for (const puzzle of puzzles) {
+  const { id, book, theme, type, page, number, fen, solution, alternatives = [], bookAlternatives = [] } = puzzle;
   const problems = [];
   const notes = [];
   let answer = '';
@@ -82,12 +92,23 @@ for (const { id, book, theme, type, page, number, fen, solution, alternatives = 
     }
     answer = sans.join(' ');
 
-    const [best, second] = await topMoves(fen);
-    const accepted = [solution[0], ...alternatives];
-    if (!accepted.includes(best.uci)) {
-      (engineDisagrees ? notes : problems).push(`engine prefers ${best.uci} (${best.score})`);
-    } else if (second && !accepted.includes(second.uci) && best.score - second.score < CLEAR_MARGIN) {
-      notes.push(`no clear best: ${second.uci} is within ${best.score - second.score}`);
+    const ranked = await rankMoves(fen);
+    const bookScore = ranked.find((m) => m.uci === solution[0])?.score;
+    if (bookScore === undefined) throw new Error(`engine did not rank ${solution[0]}`);
+    const fromBook = [solution[0], ...bookAlternatives];
+    const asGood = ranked.filter((m) => !fromBook.includes(m.uci) && m.score >= bookScore).map((m) => m.uci);
+
+    if (write) {
+      if (asGood.length) puzzle.alternatives = asGood;
+      else delete puzzle.alternatives;
+    } else {
+      const missing = asGood.filter((uci) => !alternatives.includes(uci));
+      if (missing.length) problems.push(`engine rates these at least as highly: ${missing.join(' ')}`);
+    }
+    if (asGood.length) notes.push(`also accepted: ${asGood.join(' ')}`);
+    const next = ranked.find((m) => !fromBook.includes(m.uci) && !asGood.includes(m.uci));
+    if (!asGood.length && next && bookScore - next.score < CLEAR_MARGIN) {
+      notes.push(`no clear best: ${next.uci} is within ${bookScore - next.score}`);
     }
   } catch (e) {
     problems.push(`bad FEN or line: ${e.message}`);
@@ -96,9 +117,15 @@ for (const { id, book, theme, type, page, number, fen, solution, alternatives = 
   errors += problems.length;
   warnings += notes.length;
   const status = problems.length ? 'FAIL' : notes.length ? 'WARN' : 'ok  ';
-  console.log(`${status} ${id}  ${answer}${[...problems, ...notes].map((p) => `\n     ${p}: ${fen}`).join('')}`);
+  console.log(`${status} ${id}  ${answer}${[...problems, ...notes].map((p) => `\n     ${p}`).join('')}`);
 }
 
 engine.kill();
+
+if (write && !errors) {
+  const pad = (p) => JSON.stringify(p).replace(/":/g, '": ').replace(/,"/g, ', "').replace(/^\{/, '{ ').replace(/\}$/, ' }');
+  writeFileSync(file, `{\n  "version": ${pack.version},\n  "puzzles": [\n${puzzles.map((p) => `    ${pad(p)}`).join(',\n')}\n  ]\n}\n`);
+}
+
 console.log(`\n${puzzles.length} puzzles, ${errors} errors, ${warnings} warnings`);
 process.exit(errors ? 1 : 0);
