@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "exportedAt": "2026-11-01T16:09:00.617Z",
+  "exportedAt": "2026-11-03T01:11:43.455Z",
   "counts": {
-    "puzzles": 68,
-    "games": 21,
+    "puzzles": 69,
+    "games": 22,
     "openings": 7,
     "lines": 52
   },
@@ -448,6 +448,27 @@
       "heroResult": "loss",
       "whiteAccuracy": 87.97,
       "blackAccuracy": 76.18
+    },
+    "23": {
+      "id": 23,
+      "url": "https://www.chess.com/game/daily/1049899734",
+      "event": "Let's Play!",
+      "white": "scottjahn",
+      "black": "timbajimba",
+      "whiteElo": 667,
+      "blackElo": 819,
+      "result": "0-1",
+      "playedAt": "2026-10-24T19:35:18Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "B08",
+      "ecoUrl": "https://www.chess.com/openings/Pirc-Defense-Classical-Variation-4...Bg7",
+      "termination": "timbajimba won by resignation",
+      "hero": "scottjahn",
+      "heroColor": "w",
+      "heroResult": "loss",
+      "whiteAccuracy": 83.82,
+      "blackAccuracy": 91.69
     }
   },
   "openings": [
@@ -3607,6 +3628,37 @@
       "prevSan": "Re2",
       "prevUci": "e1e2",
       "note": "f5?? does not work (loses 2 pawns after Qxe6+ followed by Qxc4"
+    },
+    {
+      "id": 83,
+      "gameId": 23,
+      "ply": 26,
+      "fen": "r2qnr2/pppn1pkp/3pp1p1/8/2B1P3/2N2Q1P/PPP2PP1/3R1RK1 w - - 2 14",
+      "sideToMove": "w",
+      "playedSan": "h4",
+      "playedUci": "h3h4",
+      "solutionSan": "b3",
+      "solutionUci": "b2b3",
+      "altSolutions": [
+        "f3e3",
+        "a2a3",
+        "f3g3"
+      ],
+      "continuation": [],
+      "classification": "blunder",
+      "wpLoss": 22.439664218478413,
+      "evalBefore": {
+        "type": "cp",
+        "value": -149
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -489
+      },
+      "fenPrev": "rn1qnr2/ppp2pkp/3pp1p1/8/2B1P3/2N2Q1P/PPP2PP1/3R1RK1 b - - 1 13",
+      "prevSan": "Nd7",
+      "prevUci": "b8d7",
+      "note": null
     }
   ]
 }
