@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "exportedAt": "2026-11-03T01:11:43.455Z",
+  "exportedAt": "2026-11-05T04:08:23.308Z",
   "counts": {
-    "puzzles": 69,
-    "games": 22,
+    "puzzles": 73,
+    "games": 24,
     "openings": 7,
     "lines": 52
   },
@@ -469,6 +469,48 @@
       "heroResult": "loss",
       "whiteAccuracy": 83.82,
       "blackAccuracy": 91.69
+    },
+    "24": {
+      "id": 24,
+      "url": "https://www.chess.com/game/daily/1053897632",
+      "event": "Let's Play!",
+      "white": "E000000000",
+      "black": "scottjahn",
+      "whiteElo": 904,
+      "blackElo": 698,
+      "result": "0-1",
+      "playedAt": "2026-10-31T01:52:52Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "C70",
+      "ecoUrl": "https://www.chess.com/openings/Ruy-Lopez-Opening-Morphy-Defense-Caro-Graz-Variation",
+      "termination": "scottjahn won by checkmate",
+      "hero": "scottjahn",
+      "heroColor": "b",
+      "heroResult": "win",
+      "whiteAccuracy": 59.34,
+      "blackAccuracy": 76.86
+    },
+    "25": {
+      "id": 25,
+      "url": "https://www.chess.com/game/daily/1048152434",
+      "event": "Let's Play!",
+      "white": "JimMackessy",
+      "black": "scottjahn",
+      "whiteElo": 300,
+      "blackElo": 702,
+      "result": "0-1",
+      "playedAt": "2026-10-21T20:52:22Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "D00",
+      "ecoUrl": "https://www.chess.com/openings/Queens-Pawn-Opening-Chigorin-Variation-2...Nf6-3.Nf3",
+      "termination": "scottjahn won by checkmate",
+      "hero": "scottjahn",
+      "heroColor": "b",
+      "heroResult": "win",
+      "whiteAccuracy": 74.13,
+      "blackAccuracy": 82.31
     }
   },
   "openings": [
@@ -3658,6 +3700,117 @@
       "fenPrev": "rn1qnr2/ppp2pkp/3pp1p1/8/2B1P3/2N2Q1P/PPP2PP1/3R1RK1 b - - 1 13",
       "prevSan": "Nd7",
       "prevUci": "b8d7",
+      "note": null
+    },
+    {
+      "id": 84,
+      "gameId": 24,
+      "ply": 15,
+      "fen": "r1bqk2r/2pp1ppp/p1n2n2/1pb5/3pP3/1BP2N2/PP3PPP/RNBQ1RK1 b kq - 1 8",
+      "sideToMove": "b",
+      "playedSan": "dxc3",
+      "playedUci": "d4c3",
+      "solutionSan": "Nxe4",
+      "solutionUci": "f6e4",
+      "altSolutions": [
+        "d7d5",
+        "d7d6"
+      ],
+      "continuation": [],
+      "classification": "mistake",
+      "wpLoss": 15.643398211050059,
+      "evalBefore": {
+        "type": "cp",
+        "value": -90
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -282
+      },
+      "fenPrev": "r1bqk2r/2pp1ppp/p1n2n2/1pb5/3pP3/1BP2N2/PP3PPP/RNBQK2R w KQkq - 0 8",
+      "prevSan": "O-O",
+      "prevUci": "e1g1",
+      "note": "Don't want e pawn threatening the knight (by pushing)"
+    },
+    {
+      "id": 85,
+      "gameId": 24,
+      "ply": 17,
+      "fen": "r1bqk2r/2pp1ppp/p1n2n2/1pb5/4P3/1BN2N2/PP3PPP/R1BQ1RK1 b kq - 0 9",
+      "sideToMove": "b",
+      "playedSan": "O-O",
+      "playedUci": "e8g8",
+      "solutionSan": "d6",
+      "solutionUci": "d7d6",
+      "altSolutions": [],
+      "continuation": [],
+      "classification": "mistake",
+      "wpLoss": 15.416803155388248,
+      "evalBefore": {
+        "type": "cp",
+        "value": -102
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -294
+      },
+      "fenPrev": "r1bqk2r/2pp1ppp/p1n2n2/1pb5/4P3/1Bp2N2/PP3PPP/RNBQ1RK1 w kq - 0 9",
+      "prevSan": "Nxc3",
+      "prevUci": "b1c3",
+      "note": "Don't want e pawn pushing and threatening the knight"
+    },
+    {
+      "id": 86,
+      "gameId": 24,
+      "ply": 25,
+      "fen": "r1bqnrk1/2ppbpp1/p1n4p/1p2P3/7B/1BN2N2/PP3PPP/R2QR1K1 b - - 2 13",
+      "sideToMove": "b",
+      "playedSan": "d6",
+      "playedUci": "d7d6",
+      "solutionSan": "Bxh4",
+      "solutionUci": "e7h4",
+      "altSolutions": [],
+      "continuation": [],
+      "classification": "blunder",
+      "wpLoss": 25.70114981254671,
+      "evalBefore": {
+        "type": "cp",
+        "value": 213
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -77
+      },
+      "fenPrev": "r1bqnrk1/2ppbpp1/p1n4p/1p2P3/7B/1BN2N2/PP3PPP/R2Q1RK1 w - - 1 13",
+      "prevSan": "Re1",
+      "prevUci": "f1e1",
+      "note": null
+    },
+    {
+      "id": 87,
+      "gameId": 25,
+      "ply": 13,
+      "fen": "r1bqk2r/ppp2ppp/2n2n2/3pP1N1/1b6/2NQP3/PPP2PPP/R1B1KB1R b KQkq - 0 7",
+      "sideToMove": "b",
+      "playedSan": "Ne4",
+      "playedUci": "f6e4",
+      "solutionSan": "Nxe5",
+      "solutionUci": "c6e5",
+      "altSolutions": [],
+      "continuation": [],
+      "classification": "blunder",
+      "wpLoss": 26.04845715034405,
+      "evalBefore": {
+        "type": "cp",
+        "value": 108
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -183
+      },
+      "fenPrev": "r1bqk2r/ppp2ppp/2n2n2/3pp1N1/1b1P4/2NQP3/PPP2PPP/R1B1KB1R w KQkq - 1 7",
+      "prevSan": "dxe5",
+      "prevUci": "d4e5",
       "note": null
     }
   ]
