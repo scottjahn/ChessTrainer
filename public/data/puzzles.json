@@ -3564,10 +3564,7 @@
       "playedUci": "g7g8",
       "solutionSan": "Qxf7+",
       "solutionUci": "f3f7",
-      "altSolutions": [
-        "g7f7",
-        "b4b5"
-      ],
+      "altSolutions": [],
       "continuation": [],
       "classification": "miss",
       "wpLoss": 2.8952907931009264,
