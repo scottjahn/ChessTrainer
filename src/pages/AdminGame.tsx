@@ -256,8 +256,14 @@ function GameReview({ gameId }: { gameId: number }) {
         if (!autoAltRef.current || !lines.length) return;
         autoAltRef.current = false;
         const best = winPercent(lines[0].score);
+        // When the best move forces mate, only a mate just as quick is as good:
+        // a slower mate, or a move that merely keeps a winning position, is not.
+        const top = lines[0].score;
+        const mates = top.type === 'mate' && top.value > 0;
         const close = lines
-          .filter((l) => best - winPercent(l.score) <= settings.altMargin)
+          .filter((l) => (mates
+            ? l.score.type === 'mate' && l.score.value === top.value
+            : best - winPercent(l.score) <= settings.altMargin))
           .map((l) => l.uci);
         setDraft((d) => {
           if (!d) return d;
