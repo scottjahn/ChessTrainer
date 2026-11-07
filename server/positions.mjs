@@ -15,13 +15,17 @@ export function gamePositions(pgn) {
   chess.loadPgn(pgn, { strict: false });
   const moves = chess.history({ verbose: true });
 
-  const replay = new Chess();
+  // Odds games and other set-up positions carry their start in the FEN header;
+  // replaying from the normal start would make their moves illegal.
+  const headers = chess.header();
+  const replay = headers.SetUp === '1' && headers.FEN ? new Chess(headers.FEN) : new Chess();
   const plies = moves.map((m, i) => {
     const fenBefore = replay.fen();
+    const moveNumber = Number(fenBefore.split(' ')[5]);
     replay.move(m.san);
     return {
       ply: i,
-      moveNumber: Math.floor(i / 2) + 1,
+      moveNumber,
       color: m.color,
       san: m.san,
       uci: toUci(m),
