@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="75%">
+      <stop offset="0" stop-color="#8fb75c"/>
+      <stop offset="1" stop-color="#4f7330"/>
+    </radialGradient>
+    <linearGradient id="piece" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f7f5ec"/>
+      <stop offset="1" stop-color="#d9d5c6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Full-bleed background (safe for maskable/rounded crops) -->
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <!-- Subtle board squares behind the piece -->
+  <g fill="#ffffff" opacity="0.07">
+    <rect x="0" y="0" width="128" height="128"/>
+    <rect x="256" y="0" width="128" height="128"/>
+    <rect x="128" y="128" width="128" height="128"/>
+    <rect x="384" y="128" width="128" height="128"/>
+    <rect x="0" y="256" width="128" height="128"/>
+    <rect x="256" y="256" width="128" height="128"/>
+    <rect x="128" y="384" width="128" height="128"/>
+    <rect x="384" y="384" width="128" height="128"/>
+  </g>
+
+  <g stroke="#14180c" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+    <!-- Pawn base -->
+    <rect x="160" y="384" width="192" height="38" rx="14" fill="url(#piece)"/>
+    <!-- Pawn body -->
+    <path d="M224 300 C224 342 198 366 178 388 L334 388 C314 366 288 342 288 300 Z" fill="url(#piece)"/>
+    <!-- Collar -->
+    <ellipse cx="256" cy="296" rx="64" ry="15" fill="url(#piece)"/>
+    <!-- Head -->
+    <circle cx="256" cy="226" r="60" fill="url(#piece)"/>
+
+    <!-- Bow tie -->
+    <path d="M256 318 L228 304 L228 334 Z" fill="#d0574a"/>
+    <path d="M256 318 L284 304 L284 334 Z" fill="#d0574a"/>
+    <circle cx="256" cy="318" r="7" fill="#d0574a"/>
+
+    <!-- Glasses -->
+    <circle cx="232" cy="232" r="18" fill="#cfe3f2" fill-opacity="0.55" stroke-width="7"/>
+    <circle cx="280" cy="232" r="18" fill="#cfe3f2" fill-opacity="0.55" stroke-width="7"/>
+    <path d="M250 230 Q256 224 262 230" fill="none" stroke-width="6"/>
+
+    <!-- Mortarboard: skull cap, then board -->
+    <path d="M204 150 L204 182 Q256 200 308 182 L308 150 Z" fill="#23261a"/>
+    <path d="M256 96 L374 136 L256 176 L138 136 Z" fill="#2b2f20"/>
+  </g>
+
+  <!-- Tassel -->
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <path d="M256 136 L350 150 L350 196" fill="none" stroke="#14180c" stroke-width="11"/>
+    <path d="M256 136 L350 150 L350 196" fill="none" stroke="#f7c631" stroke-width="5"/>
+    <path d="M341 194 L359 194 L364 228 L336 228 Z" fill="#f7c631" stroke="#14180c" stroke-width="6"/>
+    <circle cx="256" cy="136" r="9" fill="#f7c631" stroke="#14180c" stroke-width="5"/>
+  </g>
+</svg>
