@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "exportedAt": "2026-11-07T17:35:49.975Z",
+  "exportedAt": "2026-11-09T04:18:22.692Z",
   "counts": {
-    "puzzles": 89,
-    "games": 27,
+    "puzzles": 98,
+    "games": 30,
     "openings": 7,
     "lines": 52
   },
@@ -574,6 +574,69 @@
       "heroResult": "win",
       "whiteAccuracy": 66.48,
       "blackAccuracy": 53.72
+    },
+    "30": {
+      "id": 30,
+      "url": "https://www.chess.com/game/live/186760486770",
+      "event": "Live Chess",
+      "white": "scottjahn",
+      "black": "cceid",
+      "whiteElo": 402,
+      "blackElo": 343,
+      "result": "1-0",
+      "playedAt": "2026-11-08T04:49:55Z",
+      "timeControl": "600",
+      "timeClass": "rapid",
+      "eco": "C45",
+      "ecoUrl": "https://www.chess.com/openings/Scotch-Game",
+      "termination": "scottjahn won by checkmate",
+      "hero": "scottjahn",
+      "heroColor": "w",
+      "heroResult": "win",
+      "whiteAccuracy": 77.52,
+      "blackAccuracy": 70.27
+    },
+    "31": {
+      "id": 31,
+      "url": "https://www.chess.com/game/live/186761089014",
+      "event": "Live Chess",
+      "white": "scottjahn",
+      "black": "timbajimba",
+      "whiteElo": 459,
+      "blackElo": 1005,
+      "result": "1-0",
+      "playedAt": "2026-11-08T05:08:26Z",
+      "timeControl": "600",
+      "timeClass": "rapid",
+      "eco": "B08",
+      "ecoUrl": "https://www.chess.com/openings/Pirc-Defense-Classical-Variation-4...Bg7",
+      "termination": "scottjahn won by checkmate",
+      "hero": "scottjahn",
+      "heroColor": "w",
+      "heroResult": "win",
+      "whiteAccuracy": 77.65,
+      "blackAccuracy": 76.52
+    },
+    "33": {
+      "id": 33,
+      "url": "https://www.chess.com/game/daily/1053897994",
+      "event": "Let's Play!",
+      "white": "disduckri",
+      "black": "scottjahn",
+      "whiteElo": 842,
+      "blackElo": 753,
+      "result": "0-1",
+      "playedAt": "2026-10-31T01:54:17Z",
+      "timeControl": "1/259200",
+      "timeClass": "daily",
+      "eco": "C25",
+      "ecoUrl": "https://www.chess.com/openings/Vienna-Game-Anderssen-Defense-3.Bc4-Nf6",
+      "termination": "scottjahn won by resignation",
+      "hero": "scottjahn",
+      "heroColor": "b",
+      "heroResult": "win",
+      "whiteAccuracy": 64.14,
+      "blackAccuracy": 84.13
     }
   },
   "openings": [
@@ -4316,6 +4379,261 @@
       "prevSan": "Kg8",
       "prevUci": "g7g8",
       "note": null
+    },
+    {
+      "id": 105,
+      "gameId": 30,
+      "ply": 8,
+      "fen": "r1bqkbnr/ppp2ppp/2n5/3P4/3Pp3/5N2/PPP2PPP/RNBQKB1R w KQkq - 0 5",
+      "sideToMove": "w",
+      "playedSan": "Ne5",
+      "playedUci": "f3e5",
+      "solutionSan": "dxc6",
+      "solutionUci": "d5c6",
+      "altSolutions": [],
+      "continuation": [],
+      "classification": "miss",
+      "wpLoss": 11.800366473912106,
+      "evalBefore": {
+        "type": "cp",
+        "value": 408
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 230
+      },
+      "fenPrev": "r1bqkbnr/ppp2ppp/2n5/3Pp3/3P4/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 4",
+      "prevSan": "e4",
+      "prevUci": "e5e4",
+      "note": "After trades, white can recapture moving queen while black has to double pawns (and then white can immediately recapture doubled pawn)"
+    },
+    {
+      "id": 106,
+      "gameId": 30,
+      "ply": 12,
+      "fen": "r1bqk1nr/ppp2ppp/8/3PP3/1b2p3/8/PPP2PPP/RNBQKB1R w KQkq - 1 7",
+      "sideToMove": "w",
+      "playedSan": "Nd2",
+      "playedUci": "b1d2",
+      "solutionSan": "c3",
+      "solutionUci": "c2c3",
+      "altSolutions": [],
+      "continuation": [],
+      "classification": "miss",
+      "wpLoss": 20.819110434913227,
+      "evalBefore": {
+        "type": "cp",
+        "value": 307
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 52
+      },
+      "fenPrev": "r1bqkbnr/ppp2ppp/8/3PP3/4p3/8/PPP2PPP/RNBQKB1R b KQkq - 0 6",
+      "prevSan": "Bb4+",
+      "prevUci": "f8b4",
+      "note": null
+    },
+    {
+      "id": 107,
+      "gameId": 30,
+      "ply": 14,
+      "fen": "r1b1k1nr/ppp2ppp/8/3qP3/1b2p3/8/PPPN1PPP/R1BQKB1R w KQkq - 0 8",
+      "sideToMove": "w",
+      "playedSan": "Bc4",
+      "playedUci": "f1c4",
+      "solutionSan": "c3",
+      "solutionUci": "c2c3",
+      "altSolutions": [],
+      "continuation": [],
+      "classification": "blunder",
+      "wpLoss": 44.334037827918166,
+      "evalBefore": {
+        "type": "cp",
+        "value": 65
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -551
+      },
+      "fenPrev": "r1bqk1nr/ppp2ppp/8/3PP3/1b2p3/8/PPPN1PPP/R1BQKB1R b KQkq - 2 7",
+      "prevSan": "Qxd5",
+      "prevUci": "d8d5",
+      "note": null
+    },
+    {
+      "id": 108,
+      "gameId": 30,
+      "ply": 22,
+      "fen": "r3k1nr/ppp3pp/4p3/2b1q3/4p3/P7/1PPN1PPP/R1BQ1RK1 w kq - 1 12",
+      "sideToMove": "w",
+      "playedSan": "Nc4",
+      "playedUci": "d2c4",
+      "solutionSan": "Nxe4",
+      "solutionUci": "d2e4",
+      "altSolutions": [],
+      "continuation": [],
+      "classification": "mistake",
+      "wpLoss": 11.241490524378484,
+      "evalBefore": {
+        "type": "cp",
+        "value": 91
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -32
+      },
+      "fenPrev": "r3k1nr/ppp3pp/4p3/4q3/1b2p3/P7/1PPN1PPP/R1BQ1RK1 b kq - 0 11",
+      "prevSan": "Bc5",
+      "prevUci": "b4c5",
+      "note": "If they capture back with Qxe4, Qh5+ wins the bishop"
+    },
+    {
+      "id": 109,
+      "gameId": 30,
+      "ply": 24,
+      "fen": "r3k1nr/ppp3pp/4p3/2b5/2Nqp3/P7/1PP2PPP/R1BQ1RK1 w kq - 3 13",
+      "sideToMove": "w",
+      "playedSan": "Qxd4",
+      "playedUci": "d1d4",
+      "solutionSan": "Qh5+",
+      "solutionUci": "d1h5",
+      "altSolutions": [],
+      "continuation": [
+        "g7g6",
+        "h5e2",
+        "b7b5",
+        "c4d2",
+        "e8c8",
+        "d2e4"
+      ],
+      "classification": "blunder",
+      "wpLoss": 22.86532958148944,
+      "evalBefore": {
+        "type": "cp",
+        "value": 257
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -9
+      },
+      "fenPrev": "r3k1nr/ppp3pp/4p3/2b1q3/2N1p3/P7/1PP2PPP/R1BQ1RK1 b kq - 2 12",
+      "prevSan": "Qd4",
+      "prevUci": "e5d4",
+      "note": "Can win the pawn instead of trading queens"
+    },
+    {
+      "id": 110,
+      "gameId": 30,
+      "ply": 40,
+      "fen": "2k4r/p1p3pp/4pn2/2p1N3/4p3/P1P5/1P3PPP/3R2K1 w - - 2 21",
+      "sideToMove": "w",
+      "playedSan": "Rd7",
+      "playedUci": "d1d7",
+      "solutionSan": "Nc6",
+      "solutionUci": "e5c6",
+      "altSolutions": [
+        "g1f1",
+        "c3c4"
+      ],
+      "continuation": [],
+      "classification": "blunder",
+      "wpLoss": 40.69745485473308,
+      "evalBefore": {
+        "type": "cp",
+        "value": 13
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -582
+      },
+      "fenPrev": "2k3nr/p1p3pp/4p3/2p1N3/4p3/P1P5/1P3PPP/3R2K1 b - - 1 20",
+      "prevSan": "Nf6",
+      "prevUci": "g8f6",
+      "note": null
+    },
+    {
+      "id": 111,
+      "gameId": 31,
+      "ply": 28,
+      "fen": "r1bq2k1/ppp1rpbp/6p1/4P3/3Bp3/2N5/PPPQ1PPP/R3R1K1 w - - 0 15",
+      "sideToMove": "w",
+      "playedSan": "Rxe4",
+      "playedUci": "e1e4",
+      "solutionSan": "Nxe4",
+      "solutionUci": "c3e4",
+      "altSolutions": [],
+      "continuation": [],
+      "classification": "blunder",
+      "wpLoss": 29.713642560741206,
+      "evalBefore": {
+        "type": "cp",
+        "value": 179
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -154
+      },
+      "fenPrev": "r1bq2k1/ppp1rpbp/6p1/3pP3/3BB3/2N5/PPPQ1PPP/R3R1K1 b - - 0 14",
+      "prevSan": "dxe4",
+      "prevUci": "d5e4",
+      "note": "Capturing with the knight leaves the rook able to defend after trades"
+    },
+    {
+      "id": 112,
+      "gameId": 31,
+      "ply": 30,
+      "fen": "r1bq2k1/ppp2pbp/6p1/4r3/3BR3/2N5/PPPQ1PPP/R5K1 w - - 0 16",
+      "sideToMove": "w",
+      "playedSan": "Rae1",
+      "playedUci": "a1e1",
+      "solutionSan": "Rxe5",
+      "solutionUci": "e4e5",
+      "altSolutions": [
+        "a1d1"
+      ],
+      "continuation": [],
+      "classification": "blunder",
+      "wpLoss": 34.01335574816711,
+      "evalBefore": {
+        "type": "cp",
+        "value": 8
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": -436
+      },
+      "fenPrev": "r1bq2k1/ppp1rpbp/6p1/4P3/3BR3/2N5/PPPQ1PPP/R5K1 b - - 0 15",
+      "prevSan": "Rxe5",
+      "prevUci": "e7e5",
+      "note": "Capturing is fine (trades down to even game)"
+    },
+    {
+      "id": 113,
+      "gameId": 33,
+      "ply": 7,
+      "fen": "rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P1P1/2N5/PPPP1P1P/R1BQK1NR b KQkq - 0 4",
+      "sideToMove": "b",
+      "playedSan": "d6",
+      "playedUci": "d7d6",
+      "solutionSan": "d5",
+      "solutionUci": "d7d5",
+      "altSolutions": [],
+      "continuation": [],
+      "classification": "mistake",
+      "wpLoss": 10.316298527441326,
+      "evalBefore": {
+        "type": "cp",
+        "value": 167
+      },
+      "evalAfter": {
+        "type": "cp",
+        "value": 50
+      },
+      "fenPrev": "rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/2N5/PPPP1PPP/R1BQK1NR w KQkq - 4 4",
+      "prevSan": "g4",
+      "prevUci": "g2g4",
+      "note": "Allows you to win the b pawn with tempo on the queen"
     }
   ]
 }
