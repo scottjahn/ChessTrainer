@@ -2,6 +2,11 @@
   "version": 1,
   "puzzles": [
     {"date": "2026-01-21", "fen": "3Q4/3B4/3b4/1PRNRb2/3k4/3p4/3N4/3K4 w - - 0 1", "credit": "Thomas Rowland, 1887"},
-    {"date": "2026-01-23", "fen": "8/4K3/2P5/3pk3/3N1pR1/8/2P1P3/2R3B1 w - - 0 1", "credit": "Antonio Tarnawiecki, 2023"}
+    {"date": "2026-01-23", "fen": "8/4K3/2P5/3pk3/3N1pR1/8/2P1P3/2R3B1 w - - 0 1", "credit": "Antonio Tarnawiecki, 2023"},
+    {"date": "2026-01-27", "fen": "8/3k4/8/P7/1K1N1Q2/3B4/8/3R4 w - - 0 1", "credit": "Ole Balslev, 1964"},
+    {"date": "2026-01-28", "fen": "8/qr6/1Q6/8/k7/8/KR4r1/1R6 w - - 0 1", "credit": "P.C.S. Burt, 1954"},
+    {"date": "2026-01-29", "fen": "1Q4r1/6N1/2brB1p1/4n1p1/2p2kp1/2B2PRn/K4R2/5N2 w - - 0 1", "credit": "Michel Caillaud, 1989"},
+    {"date": "2026-01-30", "fen": "Q1n5/1Nq1p3/p3p1RK/Rn1rk3/4P2B/4PP1b/1N1p4/4b3 w - - 0 1", "credit": "Ioan Camaras, 1963"},
+    {"date": "2026-01-31", "fen": "8/7B/5Q2/6p1/6k1/8/5K2/8 w - - 0 1", "credit": "Joseph Campbell, 1861"}
   ]
 }
