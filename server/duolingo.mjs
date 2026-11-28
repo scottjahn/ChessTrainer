@@ -113,7 +113,9 @@ function normalizeMatch(entry, match, heroName) {
   const [white, black] = color === 'black' ? [opponent, me] : color === 'white' ? [me, opponent] : [null, null];
   const outcome = match.outcome ?? entry.outcome;
   const result = outcome === 'white' ? '1-0' : outcome === 'black' ? '0-1' : outcome === 'draw' ? '1/2-1/2' : '*';
-  const when = pickDate(match) ?? pickDate(entry);
+  // Match ids look like "bot|1795840000|jwl7s3uh": the middle part is the start time.
+  const idTime = String(matchId ?? '').match(/\|(\d{10,13})\|/)?.[1];
+  const when = pickDate(match) ?? pickDate(entry) ?? pickDate({ date: idTime });
 
   let pgn = null;
   let plyCount = null;

@@ -128,7 +128,7 @@ app.get('/api/duolingo/recent', wrap(async (req, res) => {
   const hero = duolingoHero();
   const games = await fetchRecentDuolingoGames(allSettings().duolingoJwt, hero, Number(req.query.limit ?? 25));
   const known = new Set(db.prepare('SELECT url FROM games WHERE url IS NOT NULL').all().map((r) => r.url));
-  res.json(games.map(({ pgn, ...g }) => ({ ...g, importable: Boolean(pgn), imported: known.has(g.url) })));
+  res.json(games.map((g) => ({ ...g, importable: Boolean(g.pgn), imported: known.has(g.url) })));
 }));
 
 app.post('/api/games/import/duolingo', wrap(async (req, res) => {

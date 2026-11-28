@@ -460,6 +460,32 @@ function DuolingoGamesCard({ hasToken, onImport }: { hasToken: boolean; onImport
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const copyPgn = async (g: DuolingoGame) => {
+    if (!g.pgn) return;
+    await navigator.clipboard.writeText(g.pgn);
+    setCopied(g.match_id);
+    window.setTimeout(() => setCopied((id) => (id === g.match_id ? null : id)), 1800);
+  };
+
+  // chess.com's analysis board takes a pasted PGN, so copy first, then open it.
+  const analyse = async (g: DuolingoGame) => {
+    // Copy before opening: the clipboard refuses writes once the page loses focus.
+    await copyPgn(g);
+    window.open('https://www.chess.com/analysis', '_blank', 'noopener');
+  };
+
+  const downloadAll = () => {
+    const pgns = (remote ?? []).map((g) => g.pgn).filter(Boolean);
+    const blob = new Blob([pgns.join('\n\n')], { type: 'application/x-chess-pgn' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `duolingo-games-${new Date().toISOString().slice(0, 10)}.pgn`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+
   const importGame = async (g: DuolingoGame) => {
     setImporting(g.match_id);
     const ok = await onImport(g);
@@ -484,6 +510,11 @@ function DuolingoGamesCard({ hasToken, onImport }: { hasToken: boolean; onImport
     <div className="card">
       <div className="card-head">
         <h2>Recent Duolingo games</h2>
+        {remote?.some((g) => g.pgn) && (
+          <button className="small ghost" onClick={downloadAll} title="One .pgn file with every listed game">
+            Download all PGN
+          </button>
+        )}
         <button className="small" disabled={loading || !hasToken} onClick={load}>
           {loading ? 'Loading…' : 'Fetch'}
         </button>
@@ -493,7 +524,7 @@ function DuolingoGamesCard({ hasToken, onImport }: { hasToken: boolean; onImport
       {!remote && !error && (
         <p className="tiny faint" style={{ margin: 0 }}>
           {hasToken
-            ? 'Pull your latest 25 Duolingo Chess matches and import the ones worth reviewing.'
+            ? 'Pull your latest 25 Duolingo Chess matches. Import the ones worth reviewing, or copy a PGN to paste into chess.com\'s analysis board.'
             : 'Add your Duolingo token in Settings (and save) to list your Duolingo Chess matches.'}
         </p>
       )}
@@ -520,7 +551,18 @@ function DuolingoGamesCard({ hasToken, onImport }: { hasToken: boolean; onImport
                 <td className="tiny muted">{g.played_at ? formatDate(g.played_at) : '—'}</td>
                 <td className="num tiny muted">{g.ply_count != null ? Math.ceil(g.ply_count / 2) : '—'}</td>
                 <td className="mono tiny">{g.result ?? '—'}</td>
-                <td className="num">
+                <td className="num" style={{ whiteSpace: 'nowrap' }}>
+                  <button className="small ghost" disabled={!g.pgn} onClick={() => copyPgn(g)}>
+                    {copied === g.match_id ? 'Copied' : 'Copy PGN'}
+                  </button>{' '}
+                  <button
+                    className="small"
+                    disabled={!g.pgn}
+                    title="Copies the PGN and opens chess.com's analysis board: paste it there"
+                    onClick={() => analyse(g)}
+                  >
+                    chess.com ↗
+                  </button>{' '}
                   <button
                     className="small"
                     disabled={g.imported || !g.importable || importing !== null}

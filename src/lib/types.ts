@@ -92,6 +92,8 @@ export interface DuolingoGame {
   result: string | null;
   played_at: string | null;
   ply_count: number | null;
+  /** The match as PGN, for pasting into another site's analysis board. */
+  pgn: string | null;
   /** False when the match's moves could not be replayed. */
   importable: boolean;
   imported: boolean;
