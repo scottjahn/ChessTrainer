@@ -33,6 +33,8 @@ export interface Settings {
   skipOpeningPlies: number;
   thresholds: Thresholds;
   onlyHeroMoves: boolean;
+  /** The duolingo.com jwt_token cookie, used to list and fetch Duolingo matches. */
+  duolingoJwt: string;
 }
 
 export interface Ply {
@@ -79,6 +81,20 @@ export interface Game {
   created_at: string;
   puzzle_count: number;
   analyzed_plies: number;
+}
+
+/** A Duolingo match as listed but not yet imported. */
+export interface DuolingoGame {
+  match_id: string;
+  url: string;
+  white: string | null;
+  black: string | null;
+  result: string | null;
+  played_at: string | null;
+  ply_count: number | null;
+  /** False when the match's moves could not be replayed. */
+  importable: boolean;
+  imported: boolean;
 }
 
 /** A game as listed by chess.com but not yet imported. */

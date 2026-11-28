@@ -446,7 +446,7 @@ function GameReview({ gameId }: { gameId: number }) {
         <div className="spacer" />
         <GameStep game={neighbours.prev} label="← Previous" />
         <GameStep game={neighbours.next} label="Next →" />
-        {game.url && <a className="btn small" href={game.url} target="_blank" rel="noreferrer">chess.com ↗</a>}
+        {game.url?.startsWith('http') && <a className="btn small" href={game.url} target="_blank" rel="noreferrer">chess.com ↗</a>}
       </div>
 
       {error && <div className="banner err">{error}</div>}

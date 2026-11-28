@@ -1,6 +1,6 @@
 import type {
   AnalysisRow, Color, Game, LineMoveReview, Opening, OpeningGame, OpeningLine, PackCounts, Ply, Puzzle,
-  PuzzleIndexRow, PuzzlePack, RemoteGame, Settings,
+  PuzzleIndexRow, PuzzlePack, RemoteGame, Settings, DuolingoGame,
 } from './types';
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -77,6 +77,10 @@ export const api = {
     ),
   recentGames: (username: string, limit = 20) =>
     request<RemoteGame[]>(`/api/games/recent?username=${encodeURIComponent(username)}&limit=${limit}`),
+
+  duolingoGames: (limit = 25) => request<DuolingoGame[]>(`/api/duolingo/recent?limit=${limit}`),
+  importDuolingo: (matchId: string, opponent?: string | null) =>
+    post<{ id: number; duplicate: boolean; game: Game }>('/api/games/import/duolingo', { matchId, opponent }),
 
   saveAnalysis: (gameId: number, rows: unknown[], depth: number) =>
     request<{ ok: true; saved: number }>(`/api/games/${gameId}/analysis`, {

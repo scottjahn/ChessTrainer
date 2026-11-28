@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { AdminTabs, formatDate, formatTimeControl } from '../components/bits';
 import { api } from '../lib/api';
 import { CLASSIFICATION_META } from '../lib/classify';
-import type { Game, PuzzleIndexRow, RemoteGame, Settings } from '../lib/types';
+import type { DuolingoGame, Game, PuzzleIndexRow, RemoteGame, Settings } from '../lib/types';
 
 export function AdminHome() {
   const [settings, setSettings] = useState<Settings | null>(null);
@@ -75,6 +75,17 @@ export function AdminHome() {
         onImport={(url) =>
           run('recent', async () => {
             const { duplicate } = await api.importUrl(url);
+            return duplicate ? 'That game was already imported.' : 'Game imported.';
+          })
+        }
+      />
+
+      <DuolingoGamesCard
+        hasToken={Boolean(settings.duolingoJwt?.trim())}
+        onImport={(g) =>
+          run('duolingo', async () => {
+            const opponent = g.white === (settings.heroUsername.trim() || 'You') ? g.black : g.white;
+            const { duplicate } = await api.importDuolingo(g.match_id, opponent);
             return duplicate ? 'That game was already imported.' : 'Game imported.';
           })
         }
@@ -272,8 +283,21 @@ function SettingsCard({ settings, onSave }: { settings: Settings; onSave: (s: Se
           Only flag my own moves
         </label>
       </div>
+      <label className="field" style={{ marginTop: 12 }}>
+        <span>Duolingo token (optional)</span>
+        <input
+          type="password"
+          autoComplete="off"
+          value={draft.duolingoJwt ?? ''}
+          placeholder="jwt_token cookie from duolingo.com"
+          onChange={(e) => setDraft({ ...draft, duolingoJwt: e.target.value })}
+        />
+      </label>
       <p className="tiny faint" style={{ marginTop: 10, marginBottom: 0 }}>
-        The username decides which side of each game is yours, which is what makes a mistake "yours".
+        The username decides which side of each game is yours, which is what makes a mistake "yours";
+        Duolingo games are filed under it too. Duolingo has no public API: to pull your games, sign in at
+        duolingo.com, open the developer tools, and copy the <span className="mono">jwt_token</span> cookie
+        (Application → Cookies). It stays in your local database and expires now and then.
       </p>
     </div>
   );
@@ -418,6 +442,92 @@ function RecentGamesCard({ username, onImport }: { username: string; onImport: (
                     onClick={() => g.url && importGame(g.url)}
                   >
                     {g.imported ? 'Imported' : importing === g.url ? 'Importing…' : 'Import'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
+
+/** Duolingo Chess matches, fetched with the account's own session token. */
+function DuolingoGamesCard({ hasToken, onImport }: { hasToken: boolean; onImport: (g: DuolingoGame) => Promise<boolean> }) {
+  const [importing, setImporting] = useState<string | null>(null);
+  const [remote, setRemote] = useState<DuolingoGame[] | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const importGame = async (g: DuolingoGame) => {
+    setImporting(g.match_id);
+    const ok = await onImport(g);
+    setImporting(null);
+    if (ok) setRemote((rows) => rows && rows.map((r) => (r.match_id === g.match_id ? { ...r, imported: true } : r)));
+  };
+
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      setRemote(await api.duolingoGames(25));
+    } catch (e) {
+      setError((e as Error).message);
+      setRemote(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="card">
+      <div className="card-head">
+        <h2>Recent Duolingo games</h2>
+        <button className="small" disabled={loading || !hasToken} onClick={load}>
+          {loading ? 'Loading…' : 'Fetch'}
+        </button>
+      </div>
+
+      {error && <div className="banner err">{error}</div>}
+      {!remote && !error && (
+        <p className="tiny faint" style={{ margin: 0 }}>
+          {hasToken
+            ? 'Pull your latest 25 Duolingo Chess matches and import the ones worth reviewing.'
+            : 'Add your Duolingo token in Settings (and save) to list your Duolingo Chess matches.'}
+        </p>
+      )}
+      {remote && !remote.length && <p className="tiny faint" style={{ margin: 0 }}>No Duolingo matches found.</p>}
+
+      {remote && remote.length > 0 && (
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Players</th>
+              <th>Played</th>
+              <th className="num">Moves</th>
+              <th>Result</th>
+              <th />
+            </tr>
+          </thead>
+          <tbody>
+            {remote.map((g) => (
+              <tr key={g.match_id}>
+                <td>
+                  {g.white ?? '?'}
+                  {g.black && <><span className="faint"> vs </span>{g.black}</>}
+                </td>
+                <td className="tiny muted">{g.played_at ? formatDate(g.played_at) : '—'}</td>
+                <td className="num tiny muted">{g.ply_count != null ? Math.ceil(g.ply_count / 2) : '—'}</td>
+                <td className="mono tiny">{g.result ?? '—'}</td>
+                <td className="num">
+                  <button
+                    className="small"
+                    disabled={g.imported || !g.importable || importing !== null}
+                    title={g.importable ? undefined : 'Duolingo did not return playable moves for this match'}
+                    onClick={() => importGame(g)}
+                  >
+                    {g.imported ? 'Imported' : importing === g.match_id ? 'Importing…' : 'Import'}
                   </button>
                 </td>
               </tr>

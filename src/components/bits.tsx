@@ -143,7 +143,7 @@ export function GameMeta({ game, side }: { game: ExportedGame | undefined; side:
         ) : null}
       </dl>
 
-      {game.url ? (
+      {game.url?.startsWith('http') ? (
         <a href={game.url} target="_blank" rel="noreferrer" className="tiny">
           View the full game on chess.com ↗
         </a>

@@ -5,6 +5,7 @@ import { db, allSettings, setSetting } from './db.mjs';
 import {
   fetchArchiveMonths, fetchGameByUrl, fetchOpeningGames, fetchRecentGames, gameFromPgn,
 } from './chesscom.mjs';
+import { fetchDuolingoGame, fetchRecentDuolingoGames } from './duolingo.mjs';
 import { START_FEN, gamePositions, lineIsLegal, uciToSan } from './positions.mjs';
 import { writePuzzleExport } from './export.mjs';
 import {
@@ -118,6 +119,23 @@ app.get('/api/games/recent', wrap(async (req, res) => {
   const games = await fetchRecentGames(req.query.username, Number(req.query.limit ?? 20));
   const known = new Set(db.prepare('SELECT url FROM games WHERE url IS NOT NULL').all().map((r) => r.url));
   res.json(games.map(({ pgn: _pgn, ...g }) => ({ ...g, imported: known.has(g.url) })));
+}));
+
+/* Duolingo games are only reachable with the account's own session token. */
+const duolingoHero = () => allSettings().heroUsername?.trim() || 'You';
+
+app.get('/api/duolingo/recent', wrap(async (req, res) => {
+  const hero = duolingoHero();
+  const games = await fetchRecentDuolingoGames(allSettings().duolingoJwt, hero, Number(req.query.limit ?? 25));
+  const known = new Set(db.prepare('SELECT url FROM games WHERE url IS NOT NULL').all().map((r) => r.url));
+  res.json(games.map(({ pgn, ...g }) => ({ ...g, importable: Boolean(pgn), imported: known.has(g.url) })));
+}));
+
+app.post('/api/games/import/duolingo', wrap(async (req, res) => {
+  const hero = duolingoHero();
+  const game = applyHero(await fetchDuolingoGame(allSettings().duolingoJwt, hero, req.body.matchId, req.body.opponent), hero);
+  const { id, duplicate } = insertGame(game);
+  res.json({ id, duplicate, game: getGame(id) });
 }));
 
 app.get('/api/games', (_req, res) => {

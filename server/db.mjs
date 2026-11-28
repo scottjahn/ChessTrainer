@@ -184,6 +184,8 @@ export const DEFAULT_SETTINGS = {
   skipOpeningPlies: 6,
   thresholds: { inaccuracy: 5, mistake: 10, blunder: 20 },
   onlyHeroMoves: true,
+  /** The duolingo.com jwt_token cookie; it never leaves this machine. */
+  duolingoJwt: '',
 };
 
 export function allSettings() {
